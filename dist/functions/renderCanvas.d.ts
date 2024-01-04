@@ -1,4 +1,10 @@
-import { NativeFunction } from "forgescript";
-declare const _default: NativeFunction<import("forgescript").IArg<import("forgescript").ArgType, boolean, boolean, import("forgescript").EnumLike<any>>[], false>;
+import { ArgType, NativeFunction } from "forgescript";
+declare const _default: NativeFunction<[{
+    name: string;
+    description: string;
+    rest: false;
+    type: ArgType.String;
+    required: true;
+}], true>;
 export default _default;
 //# sourceMappingURL=renderCanvas.d.ts.map

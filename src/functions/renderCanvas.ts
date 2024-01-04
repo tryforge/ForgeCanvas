@@ -1,15 +1,25 @@
 import { AttachmentBuilder } from "discord.js"
-import { NativeFunction } from "forgescript"
+import { ArgType, NativeFunction } from "forgescript"
 import { ForgeCanvas } from ".."
 
 export default new NativeFunction({
     name: "$renderCanvas",
     version: "1.0.0",
     description: "Returns the version of ForgeDB",
-    unwrap: false,
-    execute(ctx) {
+    unwrap: true,
+    brackets: true,
+    args: [
+        {
+            name: "name",
+            description: "The name with the extension of the image to be attached as",
+            rest: false,
+            type: ArgType.String,
+            required: true,
+        }
+    ],
+    execute(ctx, [name]) {
         const attachment = new AttachmentBuilder(ForgeCanvas.render(),{
-            name: "test.png"
+            name
         })
         ctx.container.files.push(attachment)
         return this.success()

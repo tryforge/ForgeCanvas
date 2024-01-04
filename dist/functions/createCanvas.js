@@ -4,6 +4,7 @@ const forgescript_1 = require("forgescript");
 const __1 = require("..");
 exports.default = new forgescript_1.NativeFunction({
     name: "$createCanvas",
+    version: "1.0.0",
     description: "Create new blank canvas.",
     unwrap: true,
     args: [

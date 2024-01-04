@@ -4,6 +4,7 @@ const forgescript_1 = require("forgescript");
 const __1 = require("..");
 exports.default = new forgescript_1.NativeFunction({
     name: "$drawImage",
+    version: "1.0.0",
     description: "Draws an image on canvas",
     unwrap: true,
     args: [
