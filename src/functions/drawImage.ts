@@ -1,5 +1,6 @@
 import { ArgType, NativeFunction } from "forgescript"
 import { ForgeCanvas } from ".."
+import CanvasBuilder from "../classes/builder"
 
 export default new NativeFunction({
     name: "$drawImage",
@@ -8,10 +9,17 @@ export default new NativeFunction({
     unwrap: true,
     args: [
         {
-            name: "url",
-            description: "The url of the image",
+            name: "canvas",
+            description: "The name of the canvas where the image will be placed.",
             rest: false,
-            type: ArgType.URL,
+            type: ArgType.String,
+            required: true,
+        },
+        {
+            name: "link",
+            description: "The link to the image",
+            rest: false,
+            type: ArgType.String,
             required: true,
         },
         {
@@ -41,11 +49,22 @@ export default new NativeFunction({
             rest: false,
             type: ArgType.Number,
             required: false,
+        },
+        {
+            name: "radius",
+            description: "The radius of image corners.",
+            rest: false,
+            type: ArgType.Number,
+            required: false,
         }
     ],
     brackets: true,
-    async execute(_ctx, [url, x, y, height, width]) {
-        await ForgeCanvas.drawImage(url, x, y, height, width)
+    async execute(_ctx, [canvas, link, x, y, width, height, radius]) {
+        if (!_ctx.canvases || !_ctx.canvases[canvas] || !(_ctx.canvases[canvas] instanceof CanvasBuilder))
+          return this.customError("No canvas with provided name.");
+
+        _ctx.canvases[canvas].drawImage(link, x, y, width, height, radius);
+  
         return this.success()
     },
 })
