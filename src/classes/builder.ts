@@ -35,10 +35,18 @@ class CanvasBuilder {
   }
 
   public static drawText(text: string, x: number, y: number, font: string, color: string) {
-    this.ctx.font = font
-    this.ctx.fillStyle = color
+    const ctx = this.ctx
 
-    this.ctx.fillText(text, x, y)
+    const oldfont = ctx.font
+    const oldcolor = ctx.fillStyle
+
+    ctx.font = font
+    ctx.fillStyle = color
+
+    ctx.fillText(text, x, y)
+
+    ctx.font = oldfont
+    ctx.fillStyle = oldcolor
 
     return this
   }
