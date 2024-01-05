@@ -52,7 +52,7 @@ export default new NativeFunction({
             required: false
         }
     ],
-    execute(ctx, [canvas, x, y, text, font, color]) {
+    execute(ctx, [canvas, text, x, y, font, color]) {
         if (!ctx.canvases || !ctx.canvases[canvas] || !(ctx.canvases[canvas] instanceof CanvasBuilder))
           return this.customError("No canvas with provided name.");
 
