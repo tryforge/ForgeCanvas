@@ -27,9 +27,18 @@ class CanvasBuilder {
       ctx.arcTo(x, y, x + width, y, radius)
       
       ctx.closePath()
-      ctx.clip();
-      ctx.drawImage(image, x, y, width, height);
+      ctx.clip()
+      ctx.drawImage(image, x, y, width, height)
     };
+
+    return this
+  }
+
+  public static drawText(text: string, x: number, y: number, font: string, color: string) {
+    this.ctx.font = font
+    this.ctx.fillStyle = color
+
+    this.ctx.fillText(text, x, y)
 
     return this
   }
