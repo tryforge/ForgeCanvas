@@ -8,8 +8,28 @@ class CanvasBuilder {
   }
 
   public static async drawImage(image: any, x: number, y: number, width?: number | null, height?: number | null, radius?: number | null) {
-    image = await loadImage(image)
-    ctx.drawImage(image, x, y, (width ?? image.width), (height ?? image.height))
+    image  = await loadImage(image)
+    width  = width ?? image.width
+    height = height ?? image.height
+
+    const ctx = this.ctx
+    
+    if (!radius || radius < 0) {
+      ctx.drawImage(image, x, y, width, height)
+    } else {
+      ctx.save()
+      ctx.beginPath()
+      ctx.moveTo(x + radius, y)
+      
+      ctx.arcTo(x + width, y, x + width, y + height, radius)
+      ctx.arcTo(x + width, y + height, x, y + height, radius)
+      ctx.arcTo(x, y + height, x, y, cornerRadius)
+      ctx.arcTo(x, y, x + width, y, radius)
+      
+      ctx.closePath()
+      ctx.clip();
+      ctx.drawImage(image, x, y, width, height);
+    };
 
     return this
   }
