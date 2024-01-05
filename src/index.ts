@@ -12,6 +12,5 @@ export class ForgeCanvas extends ForgeExtension {
 
     init(client: ForgeClient): void {
         this.load(__dirname + "/functions")
-        client.canvas = ForgeCanvas.ctx
     }
 }
