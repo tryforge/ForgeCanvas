@@ -1,4 +1,3 @@
-import { Canvas, Image, SKRSContext2D, createCanvas, loadImage } from "@napi-rs/canvas";
 import { ForgeClient, ForgeExtension } from "forgescript";
 
 export class ForgeCanvas extends ForgeExtension {
