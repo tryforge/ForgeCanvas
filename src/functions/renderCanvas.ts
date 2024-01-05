@@ -30,7 +30,7 @@ export default new NativeFunction({
         if (!ctx.canvases || !ctx.canvases[canvas] || !(ctx.canvases[canvas] instanceof CanvasBuilder))
           return this.customError("No canvas with provided name.");
 
-        const attachment = new AttachmentBuilder(ctx.canvases[canvas].buffer(), {
+        const attachment = new AttachmentBuilder(ctx.canvases[canvas].render(), {
             name + ".png"
         })
 
