@@ -5,7 +5,7 @@ import CanvasBuilder from "../classes/builder"
 export default new NativeFunction({
     name: "$renderCanvas",
     version: "1.0.0",
-    description: "Returns the version of ForgeDB",
+    description: "Adds canvas as attachment.",
     unwrap: true,
     brackets: true,
     args: [
