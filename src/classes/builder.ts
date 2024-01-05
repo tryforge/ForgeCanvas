@@ -23,7 +23,7 @@ class CanvasBuilder {
       
       ctx.arcTo(x + width, y, x + width, y + height, radius)
       ctx.arcTo(x + width, y + height, x, y + height, radius)
-      ctx.arcTo(x, y + height, x, y, cornerRadius)
+      ctx.arcTo(x, y + height, x, y, radius)
       ctx.arcTo(x, y, x + width, y, radius)
       
       ctx.closePath()
