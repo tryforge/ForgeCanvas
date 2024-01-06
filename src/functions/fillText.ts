@@ -1,6 +1,7 @@
 import { ArgType, NativeFunction } from "forgescript"
 import { ForgeCanvas } from ".."
 import { CanvasBuilder } from "../classes"
+import { GlobalFonts } from "@napi-rs/canvas"
 
 export default new NativeFunction({
     name: "$fillText",
@@ -48,7 +49,7 @@ export default new NativeFunction({
             name: "color",
             description: "The text color.",
             rest: false,
-            type: ArgType.Number,
+            type: ArgType.Color,
             required: true
         }
     ],
@@ -57,7 +58,6 @@ export default new NativeFunction({
           return this.customError("No canvas with provided name.");
 
         ForgeCanvas.canvases[canvas].fillText(text, x, y, font, color)
-
         return this.success()
     },
 })

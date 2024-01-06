@@ -20,7 +20,7 @@ export default new NativeFunction({
             name: "color",
             description: "The color of rect.",
             rest: false,
-            type: ArgType.String,
+            type: ArgType.Color,
             required: true
         },
         {
@@ -57,7 +57,6 @@ export default new NativeFunction({
           return this.customError("No canvas with provided name.");
 
         ForgeCanvas.canvases[canvas].fillRect(color, x, y, width, height)
-
         return this.success()
     },
 })
