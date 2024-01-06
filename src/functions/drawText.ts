@@ -3,7 +3,7 @@ import { ArgType, NativeFunction } from "forgescript"
 import CanvasBuilder from "../classes/builder"
 
 export default new NativeFunction({
-    name: "$drawText",
+    name: "$fillText",
     version: "1.0.0",
     description: "Draws text in provided canvas.",
     unwrap: true,
