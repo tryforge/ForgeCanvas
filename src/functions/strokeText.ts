@@ -5,7 +5,7 @@ import CanvasBuilder from "../classes/builder"
 export default new NativeFunction({
     name: "$strokeText",
     version: "1.0.0",
-    description: "Draws text in provided canvas.",
+    description: "Draws text stroke in provided canvas.",
     unwrap: true,
     brackets: true,
     args: [
