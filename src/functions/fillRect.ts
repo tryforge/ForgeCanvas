@@ -49,7 +49,7 @@ export default new NativeFunction({
             description: "The rect height.",
             rest: false,
             type: ArgType.Number,
-            required: false
+            required: true
         }
     ],
     execute(ctx, [canvas, color, x, y, width, height]) {
