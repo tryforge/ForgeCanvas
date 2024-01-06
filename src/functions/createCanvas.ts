@@ -1,6 +1,6 @@
 import { ArgType, NativeFunction } from "forgescript"
 import { ForgeCanvas } from ".."
-import CanvasBuilder from "../classes/builder"
+import { CanvasBuilder } from "../classes"
 
 export default new NativeFunction({
     name: "$createCanvas",
@@ -32,11 +32,10 @@ export default new NativeFunction({
     ],
     brackets: true,
     async execute(_ctx, [name, width, height]) {
-        if (!_ctx.canvases)
-          _ctx.canvases = {};
-
-        _ctx.canvases[name] = new CanvasBuilder(width, height)
-
+        if (!ForgeCanvas.canvases)
+        ForgeCanvas.canvases = {};
+       
+        ForgeCanvas.canvases[name] = new CanvasBuilder(width, height)
         return this.success()
     },
 })

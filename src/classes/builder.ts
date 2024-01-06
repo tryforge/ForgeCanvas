@@ -1,18 +1,18 @@
-import { Canvas, Image, SKRSContext2D, createCanvas, loadImage } from "@napi-rs/canvas";
+import { Canvas, SKRSContext2D, createCanvas, loadImage } from "@napi-rs/canvas";
 
-class CanvasBuilder {
+export class CanvasBuilder {
   public static ctx: SKRSContext2D
-  
+
   public constructor(width: number, height: number) {
-     this.ctx = createCanvas(width, height).getContext("2d")
+    CanvasBuilder.ctx = createCanvas(width, height).getContext("2d");
   }
 
-  public static async drawImage(image: any, x: number, y: number, width?: number | null, height?: number | null, radius?: number | null) {
-    image  = await loadImage(image)
-    width  = width ?? image.width
-    height = height ?? image.height
+  public drawImage = async (image: any, x: number, y: number, width?: number, height?: number, radius?: number) => {
+    image = await loadImage(image)
+    width = width ?? image.width as number
+    height = height ?? image.height as number
 
-    const ctx = this.ctx
+    const ctx = CanvasBuilder.ctx
     
     if (!radius || radius < 0) {
       ctx.drawImage(image, x, y, width, height)
@@ -31,11 +31,11 @@ class CanvasBuilder {
       ctx.drawImage(image, x, y, width, height)
     };
 
-    return this
+    return ctx
   }
 
-  public static fillText(text: string, x: number, y: number, font: string, color: string) {
-    const ctx = this.ctx
+  public fillText = (text: string, x: number, y: number, font: string, color: string) => {
+    const ctx = CanvasBuilder.ctx
 
     const oldfont = ctx.font
     const oldcolor = ctx.fillStyle
@@ -48,11 +48,11 @@ class CanvasBuilder {
     ctx.font = oldfont
     ctx.fillStyle = oldcolor
 
-    return this
+    return ctx
   }
 
-  public static strokeText(text: string, x: number, y: number, font: string, color: string, width: number) {
-    const ctx = this.ctx
+  public strokeText = (text: string, x: number, y: number, font: string, color: string, width: number) => {
+    const ctx = CanvasBuilder.ctx
 
     const oldfont = ctx.font
     const oldcolor = ctx.strokeStyle
@@ -68,11 +68,11 @@ class CanvasBuilder {
     ctx.strokeStyle = oldcolor
     ctx.lineWidth = oldwidth
 
-    return this
+    return ctx
   }
 
-  public static fillRect(color: string, x: number, y: number, width: number, height: number) {
-    const ctx = this.ctx
+  public fillRect = (color: string, x: number, y: number, width: number, height: number) => {
+    const ctx = CanvasBuilder.ctx
     
     const oldcolor = ctx.fillStyle
 
@@ -81,11 +81,11 @@ class CanvasBuilder {
 
     ctx.fillStyle = oldcolor
 
-    return this
+    return ctx
   }
 
-  public static strokeRect(color: string, x: number, y: number, width: number, height: number, lineWidth: number) {
-    const ctx = this.ctx
+  public strokeRect = (color: string, x: number, y: number, width: number, height: number, lineWidth: number) => {
+    const ctx = CanvasBuilder.ctx
     
     const oldcolor = ctx.strokeStyle
     const oldwidth = ctx.lineWidth
@@ -96,12 +96,10 @@ class CanvasBuilder {
     ctx.strokeStyle = oldcolor
     ctx.lineWidth = oldwidth
 
-    return this
+    return ctx
   }
 
-  public static render = () => {
-    return this.ctx.canvas.toBuffer("image/png")
+  public render = () => {
+    return CanvasBuilder.ctx.canvas.toBuffer("image/png")
   }
 }
-
-export default CanvasBuilder;

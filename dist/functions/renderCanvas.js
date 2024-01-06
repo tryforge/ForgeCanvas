@@ -11,6 +11,13 @@ exports.default = new forgescript_1.NativeFunction({
     brackets: true,
     args: [
         {
+            name: "canvas",
+            description: "The name of the canvas where the image will be placed.",
+            rest: false,
+            type: forgescript_1.ArgType.String,
+            required: true,
+        },
+        {
             name: "name",
             description: "The name with the extension of the image to be attached as",
             rest: false,
@@ -18,8 +25,8 @@ exports.default = new forgescript_1.NativeFunction({
             required: true,
         }
     ],
-    execute(ctx, [name]) {
-        const attachment = new discord_js_1.AttachmentBuilder(__1.ForgeCanvas.render(), {
+    execute(ctx, [canvas, name]) {
+        const attachment = new discord_js_1.AttachmentBuilder(__1.ForgeCanvas.canvases[canvas].render(), {
             name
         });
         ctx.container.files.push(attachment);

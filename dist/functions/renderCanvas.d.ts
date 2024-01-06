@@ -5,6 +5,12 @@ declare const _default: NativeFunction<[{
     rest: false;
     type: ArgType.String;
     required: true;
+}, {
+    name: string;
+    description: string;
+    rest: false;
+    type: ArgType.String;
+    required: true;
 }], true>;
 export default _default;
 //# sourceMappingURL=renderCanvas.d.ts.map

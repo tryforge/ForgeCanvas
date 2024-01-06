@@ -9,7 +9,25 @@ declare const _default: NativeFunction<[{
     name: string;
     description: string;
     rest: false;
+    type: ArgType.String;
+    required: true;
+}, {
+    name: string;
+    description: string;
+    rest: false;
     type: ArgType.Number;
+    required: true;
+}, {
+    name: string;
+    description: string;
+    rest: false;
+    type: ArgType.Number;
+    required: true;
+}, {
+    name: string;
+    description: string;
+    rest: false;
+    type: ArgType.String;
     required: true;
 }, {
     name: string;
@@ -19,4 +37,4 @@ declare const _default: NativeFunction<[{
     required: true;
 }], true>;
 export default _default;
-//# sourceMappingURL=createCanvas.d.ts.map
+//# sourceMappingURL=fillRect.d.ts.map

@@ -1,39 +1,33 @@
 import { AttachmentBuilder } from "discord.js"
 import { ArgType, NativeFunction } from "forgescript"
-import CanvasBuilder from "../classes/builder"
+import { ForgeCanvas } from ".."
 
 export default new NativeFunction({
     name: "$renderCanvas",
     version: "1.0.0",
-    description: "Adds canvas as attachment.",
+    description: "Returns the version of ForgeDB",
     unwrap: true,
     brackets: true,
     args: [
         {
-            name: "canvas",
-            description: "The name of canvas to attach.",
-            rest: false,
-            type: ArgType.String,
-            required: true,
+        name: "canvas",
+        description: "The name of the canvas where the image will be placed.",
+        rest: false,
+        type: ArgType.String,
+        required: true,
         },
         {
             name: "name",
-            description: "The file name to attach canvas with.",
+            description: "The name with the extension of the image to be attached as",
             rest: false,
             type: ArgType.String,
-            required: false,
+            required: true,
         }
     ],
     execute(ctx, [canvas, name]) {
-        name = name ?? canvas
-        
-        if (!ctx.canvases || !ctx.canvases[canvas] || !(ctx.canvases[canvas] instanceof CanvasBuilder))
-          return this.customError("No canvas with provided name.");
-
-        const attachment = new AttachmentBuilder(ctx.canvases[canvas].render(), {
-            name + ".png"
+        const attachment = new AttachmentBuilder(ForgeCanvas.canvases[canvas].render(),{
+            name
         })
-
         ctx.container.files.push(attachment)
         return this.success()
     },

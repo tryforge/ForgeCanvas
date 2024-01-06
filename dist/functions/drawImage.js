@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("forgescript");
 const __1 = require("..");
+const classes_1 = require("../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: "$drawImage",
     version: "1.0.0",
@@ -9,10 +10,17 @@ exports.default = new forgescript_1.NativeFunction({
     unwrap: true,
     args: [
         {
-            name: "url",
-            description: "The url of the image",
+            name: "canvas",
+            description: "The name of the canvas where the image will be placed.",
             rest: false,
-            type: forgescript_1.ArgType.URL,
+            type: forgescript_1.ArgType.String,
+            required: true,
+        },
+        {
+            name: "link",
+            description: "The link to the image",
+            rest: false,
+            type: forgescript_1.ArgType.String,
             required: true,
         },
         {
@@ -42,11 +50,20 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false,
             type: forgescript_1.ArgType.Number,
             required: false,
+        },
+        {
+            name: "radius",
+            description: "The radius of image corners.",
+            rest: false,
+            type: forgescript_1.ArgType.Number,
+            required: false,
         }
     ],
     brackets: true,
-    async execute(_ctx, [url, x, y, height, width]) {
-        await __1.ForgeCanvas.drawImage(url, x, y, height, width);
+    async execute(_ctx, [canvas, link, x, y, width, height, radius]) {
+        if (!__1.ForgeCanvas.canvases || !__1.ForgeCanvas.canvases[canvas] || !(__1.ForgeCanvas.canvases[canvas] instanceof classes_1.CanvasBuilder))
+            return this.customError("No canvas with provided name.");
+        await __1.ForgeCanvas.canvases[canvas].drawImage(link, x, y, width, height, radius);
         return this.success();
     },
 });

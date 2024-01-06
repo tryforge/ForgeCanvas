@@ -1,6 +1,6 @@
 import { ArgType, NativeFunction } from "forgescript"
 import { ForgeCanvas } from ".."
-import CanvasBuilder from "../classes/builder"
+import { CanvasBuilder } from "../classes"
 
 export default new NativeFunction({
     name: "$drawImage",
@@ -60,11 +60,9 @@ export default new NativeFunction({
     ],
     brackets: true,
     async execute(_ctx, [canvas, link, x, y, width, height, radius]) {
-        if (!_ctx.canvases || !_ctx.canvases[canvas] || !(_ctx.canvases[canvas] instanceof CanvasBuilder))
+        if (!ForgeCanvas.canvases || !ForgeCanvas.canvases[canvas] || !(ForgeCanvas.canvases[canvas] instanceof CanvasBuilder))
           return this.customError("No canvas with provided name.");
-
-        _ctx.canvases[canvas].drawImage(link, x, y, width, height, radius);
-  
+        await ForgeCanvas.canvases[canvas].drawImage(link, x, y, width, height, radius);
         return this.success()
     },
 })

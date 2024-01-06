@@ -27,20 +27,20 @@ declare const _default: NativeFunction<[{
     name: string;
     description: string;
     rest: false;
-    type: ArgType.Number;
-    required: false;
+    type: ArgType.String;
+    required: true;
 }, {
     name: string;
     description: string;
     rest: false;
     type: ArgType.Number;
-    required: false;
+    required: true;
 }, {
     name: string;
     description: string;
     rest: false;
     type: ArgType.Number;
-    required: false;
+    required: true;
 }], true>;
 export default _default;
-//# sourceMappingURL=drawImage.d.ts.map
+//# sourceMappingURL=strokeRect.d.ts.map
