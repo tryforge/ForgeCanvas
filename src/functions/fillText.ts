@@ -49,7 +49,7 @@ export default new NativeFunction({
             description: "The text color.",
             rest: false,
             type: ArgType.Number,
-            required: false
+            required: true
         }
     ],
     execute(ctx, [canvas, text, x, y, font, color]) {
