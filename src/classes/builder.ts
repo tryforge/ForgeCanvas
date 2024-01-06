@@ -34,19 +34,67 @@ class CanvasBuilder {
     return this
   }
 
-  public static drawText(text: string, x: number, y: number, font: string, color: string) {
+  public static fillText(text: string, x: number, y: number, font: string, color: string) {
     const ctx = this.ctx
 
     const oldfont = ctx.font
     const oldcolor = ctx.fillStyle
-
+    
     ctx.font = font
     ctx.fillStyle = color
-
+    
     ctx.fillText(text, x, y)
-
+    
     ctx.font = oldfont
     ctx.fillStyle = oldcolor
+
+    return this
+  }
+
+  public static strokeText(text: string, x: number, y: number, font: string, color: string, width: number) {
+    const ctx = this.ctx
+
+    const oldfont = ctx.font
+    const oldcolor = ctx.strokeStyle
+    const oldwidth = ctx.lineWidth
+    
+    ctx.font = font
+    ctx.strokeStyle = color
+    ctx.lineWidth = width
+    
+    ctx.strokeText(text, x, y)
+    
+    ctx.font = oldfont
+    ctx.strokeStyle = oldcolor
+    ctx.lineWidth = oldwidth
+
+    return this
+  }
+
+  public static fillRect(color: string, x: number, y: number, width: number, height: number) {
+    const ctx = this.ctx
+    
+    const oldcolor = ctx.fillStyle
+
+    ctx.fillStyle = color
+    ctx.fillRect(x, y, width, height)
+
+    ctx.fillStyle = oldcolor
+
+    return this
+  }
+
+  public static strokeRect(color: string, x: number, y: number, width: number, height: number, lineWidth: number) {
+    const ctx = this.ctx
+    
+    const oldcolor = ctx.strokeStyle
+    const oldwidth = ctx.lineWidth
+
+    ctx.strokeStyle = color
+    ctx.strokeRect(x, y, width, height)
+
+    ctx.strokeStyle = oldcolor
+    ctx.lineWidth = oldwidth
 
     return this
   }
