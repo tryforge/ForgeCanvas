@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("forgescript");
 const classes_1 = require("../classes");
+const __1 = require("..");
 exports.default = new forgescript_1.NativeFunction({
     name: "$strokeText",
     version: "1.0.0",
@@ -60,9 +61,9 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     execute(_ctx, [canvas, text, x, y, font, color, width]) {
-        if (!ForgeCanvas.canvases || !ForgeCanvas.canvases[canvas] || !(ForgeCanvas.canvases[canvas] instanceof classes_1.CanvasBuilder))
+        if (!__1.ForgeCanvas.canvases || !__1.ForgeCanvas.canvases[canvas] || !(__1.ForgeCanvas.canvases[canvas] instanceof classes_1.CanvasBuilder))
             return this.customError("No canvas with provided name.");
-        ForgeCanvas.canvases[canvas].strokeText(text, x, y, font, color, width);
+        __1.ForgeCanvas.canvases[canvas].strokeText(text, x, y, font, color, width);
         return this.success();
     },
 });

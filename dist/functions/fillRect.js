@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("forgescript");
+const __1 = require("..");
 const classes_1 = require("../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: "$fillRect",
@@ -53,9 +54,9 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     execute(_ctx, [canvas, color, x, y, width, height]) {
-        if (!ForgeCanvas.canvases || !ForgeCanvas.canvases[canvas] || !(ForgeCanvas.canvases[canvas] instanceof classes_1.CanvasBuilder))
+        if (!__1.ForgeCanvas.canvases || !__1.ForgeCanvas.canvases[canvas] || !(__1.ForgeCanvas.canvases[canvas] instanceof classes_1.CanvasBuilder))
             return this.customError("No canvas with provided name.");
-        ForgeCanvas.canvases[canvas].fillRect(color, x, y, width, height);
+        __1.ForgeCanvas.canvases[canvas].fillRect(color, x, y, width, height);
         return this.success();
     },
 });

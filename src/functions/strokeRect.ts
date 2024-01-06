@@ -1,6 +1,7 @@
 import { ArgType, NativeFunction } from "forgescript"
-import { CanvasBuilder } from "../classes"
 import { ForgeCanvas } from "..";
+import { CanvasBuilder } from "../classes"
+
 export default new NativeFunction({
     name: "$strokeRect",
     version: "1.0.0",

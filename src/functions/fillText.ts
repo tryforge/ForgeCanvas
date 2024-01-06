@@ -1,4 +1,5 @@
 import { ArgType, NativeFunction } from "forgescript"
+import { ForgeCanvas } from ".."
 import { CanvasBuilder } from "../classes"
 
 export default new NativeFunction({

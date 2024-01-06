@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("forgescript");
-const classes_1 = require("../classes");
 const __1 = require("..");
+const classes_1 = require("../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: "$strokeRect",
     version: "1.0.0",

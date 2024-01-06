@@ -1,5 +1,6 @@
 import { ArgType, NativeFunction } from "forgescript"
 import { CanvasBuilder } from "../classes"
+import { ForgeCanvas } from ".."
 
 export default new NativeFunction({
     name: "$strokeText",
