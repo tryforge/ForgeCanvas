@@ -5,7 +5,7 @@ import { CanvasBuilder } from "../classes"
 export default new NativeFunction({
     name: "$strokeRect",
     version: "1.0.0",
-    description: "Draws rect stroke in provided canvas.",
+    description: "Draws stroke rect in provided canvas.",
     unwrap: true,
     brackets: true,
     args: [
@@ -20,7 +20,7 @@ export default new NativeFunction({
             name: "color",
             description: "The color of rect.",
             rest: false,
-            type: ArgType.Color,
+            type: ArgType.String,
             required: true
         },
         {
@@ -41,7 +41,7 @@ export default new NativeFunction({
             name: "width",
             description: "The rect width.",
             rest: false,
-            type: ArgType.String,
+            type: ArgType.Number,
             required: true
         },
         {
@@ -57,13 +57,20 @@ export default new NativeFunction({
             rest: false,
             type: ArgType.Number,
             required: true
+        },
+        {
+            name: "radius",
+            description: "The rect corners radius.",
+            rest: false,
+            type: ArgType.Number,
+            required: false
         }
     ],
-    execute(_ctx, [canvas, color, x, y, width, height, strokeWidth]) {
+    execute(_ctx, [canvas, color, x, y, width, height, strokeWidth, radius]) {
         if (!ForgeCanvas.canvases || !ForgeCanvas.canvases[canvas] || !(ForgeCanvas.canvases[canvas] instanceof CanvasBuilder))
           return this.customError("No canvas with provided name.");
 
-        ForgeCanvas.canvases[canvas].strokeRect(color, x, y, width, height, strokeWidth)
+        ForgeCanvas.canvases[canvas].strokeRect(color, x, y, width, height, strokeWidth, radius)
 
         return this.success()
     },
