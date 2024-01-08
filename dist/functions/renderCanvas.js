@@ -6,7 +6,7 @@ const __1 = require("..");
 exports.default = new forgescript_1.NativeFunction({
     name: "$renderCanvas",
     version: "0.1.0",
-    description: "Returns the version of ForgeDB",
+    description: "Renders and attaches the canvas.",
     unwrap: true,
     brackets: true,
     args: [
