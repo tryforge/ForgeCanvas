@@ -34,7 +34,7 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public fillText = async (text: string, x: number, y: number, font: string, color: string) => {
+  public fillText = (text: string, x: number, y: number, font: string, color: string) => {
     const ctx = CanvasBuilder.ctx
 
     const oldfont = ctx.font
@@ -43,7 +43,7 @@ export class CanvasBuilder {
     ctx.font = font
     ctx.fillStyle = color
     
-    await ctx.fillText(text, x, y);
+    ctx.fillText(text, x, y);
     
     ctx.font = oldfont
     ctx.fillStyle = oldcolor
