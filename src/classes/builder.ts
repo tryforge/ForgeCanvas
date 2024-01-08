@@ -14,9 +14,7 @@ export class CanvasBuilder {
 
     const ctx = CanvasBuilder.ctx
     
-    if (!radius || radius < 0) {
-      ctx.drawImage(image, x, y, width, height)
-    } else {
+    if (radius && radius > 0) {
       ctx.save()
       ctx.beginPath()
       ctx.moveTo(x + radius, y)
@@ -28,8 +26,8 @@ export class CanvasBuilder {
       
       ctx.closePath()
       ctx.clip()
-      ctx.drawImage(image, x, y, width, height)
     };
+    ctx.drawImage(image, x, y, width, height)
 
     return ctx
   }
@@ -43,7 +41,7 @@ export class CanvasBuilder {
     ctx.font = font
     ctx.fillStyle = color
     
-    ctx.fillText(text, x, y)
+    ctx.fillText(text, x, y);
     
     ctx.font = oldfont
     ctx.fillStyle = oldcolor
@@ -51,7 +49,7 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public strokeText = (text: string, x: number, y: number, font: string, color: string, width: number) => {
+  public strokeText = (text: string, x: number, y: number, font: string, color: string, width?: number) => {
     const ctx = CanvasBuilder.ctx
 
     const oldfont = ctx.font
@@ -60,7 +58,7 @@ export class CanvasBuilder {
     
     ctx.font = font
     ctx.strokeStyle = color
-    ctx.lineWidth = width
+    ctx.lineWidth = width ?? 3
     
     ctx.strokeText(text, x, y)
     
@@ -71,12 +69,26 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public fillRect = (color: string, x: number, y: number, width: number, height: number) => {
+  public fillRect = (color: string, x: number, y: number, width: number, height: number, radius?: number) => {
     const ctx = CanvasBuilder.ctx
     
     const oldcolor = ctx.fillStyle
 
     ctx.fillStyle = color
+   
+    if (radius && radius > 0) {
+      ctx.save()
+      ctx.beginPath()
+      ctx.moveTo(x + radius, y)
+      
+      ctx.arcTo(x + width, y, x + width, y + height, radius)
+      ctx.arcTo(x + width, y + height, x, y + height, radius)
+      ctx.arcTo(x, y + height, x, y, radius)
+      ctx.arcTo(x, y, x + width, y, radius)
+      
+      ctx.closePath()
+      ctx.clip()
+    };
     ctx.fillRect(x, y, width, height)
 
     ctx.fillStyle = oldcolor
@@ -84,13 +96,28 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public strokeRect = (color: string, x: number, y: number, width: number, height: number, lineWidth: number) => {
+  public strokeRect = (color: string, x: number, y: number, width: number, height: number, strokeWidth?: number, radius?: number) => {
     const ctx = CanvasBuilder.ctx
     
     const oldcolor = ctx.strokeStyle
     const oldwidth = ctx.lineWidth
 
     ctx.strokeStyle = color
+    ctx.lineWidth = strokeWidth ?? 3
+    
+    if (radius && radius > 0) {
+      ctx.save()
+      ctx.beginPath()
+      ctx.moveTo(x + radius, y)
+      
+      ctx.arcTo(x + width, y, x + width, y + height, radius)
+      ctx.arcTo(x + width, y + height, x, y + height, radius)
+      ctx.arcTo(x, y + height, x, y, radius)
+      ctx.arcTo(x, y, x + width, y, radius)
+      
+      ctx.closePath()
+      ctx.clip()
+    };
     ctx.strokeRect(x, y, width, height)
 
     ctx.strokeStyle = oldcolor
