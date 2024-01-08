@@ -8,7 +8,7 @@ Easy to use canvas for forge.
 
 Download this package:
 ```bash
-npm i github:tryforge/ForgeCanvas
+npm i forgecanvas
 ```
 
 Now, in your client initialization:
