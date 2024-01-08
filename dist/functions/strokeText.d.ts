@@ -33,14 +33,14 @@ declare const _default: NativeFunction<[{
     name: string;
     description: string;
     rest: false;
-    type: ArgType.Number;
+    type: ArgType.String;
     required: true;
 }, {
     name: string;
     description: string;
     rest: false;
     type: ArgType.Number;
-    required: true;
+    required: false;
 }], true>;
 export default _default;
 //# sourceMappingURL=strokeText.d.ts.map

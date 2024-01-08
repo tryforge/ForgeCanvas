@@ -21,7 +21,7 @@ exports.default = new forgescript_1.NativeFunction({
             name: "color",
             description: "The color of rect.",
             rest: false,
-            type: forgescript_1.ArgType.Color,
+            type: forgescript_1.ArgType.String,
             required: true
         },
         {
@@ -42,7 +42,7 @@ exports.default = new forgescript_1.NativeFunction({
             name: "width",
             description: "The rect width.",
             rest: false,
-            type: forgescript_1.ArgType.String,
+            type: forgescript_1.ArgType.Number,
             required: true
         },
         {
@@ -51,12 +51,19 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false,
             type: forgescript_1.ArgType.Number,
             required: true
+        },
+        {
+            name: "radius",
+            description: "The rect corners radius.",
+            rest: false,
+            type: forgescript_1.ArgType.Number,
+            required: false
         }
     ],
-    execute(_ctx, [canvas, color, x, y, width, height]) {
+    execute(_ctx, [canvas, color, x, y, width, height, radius]) {
         if (!__1.ForgeCanvas.canvases || !__1.ForgeCanvas.canvases[canvas] || !(__1.ForgeCanvas.canvases[canvas] instanceof classes_1.CanvasBuilder))
             return this.customError("No canvas with provided name.");
-        __1.ForgeCanvas.canvases[canvas].fillRect(color, x, y, width, height);
+        __1.ForgeCanvas.canvases[canvas].fillRect(color, x, y, width, height, radius);
         return this.success();
     },
 });

@@ -6,7 +6,7 @@ const classes_1 = require("../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: "$strokeRect",
     version: "1.0.0",
-    description: "Draws rect stroke in provided canvas.",
+    description: "Draws stroke rect in provided canvas.",
     unwrap: true,
     brackets: true,
     args: [
@@ -42,7 +42,7 @@ exports.default = new forgescript_1.NativeFunction({
             name: "width",
             description: "The rect width.",
             rest: false,
-            type: forgescript_1.ArgType.String,
+            type: forgescript_1.ArgType.Number,
             required: true
         },
         {
@@ -57,13 +57,20 @@ exports.default = new forgescript_1.NativeFunction({
             description: "The stroke width.",
             rest: false,
             type: forgescript_1.ArgType.Number,
-            required: true
+            required: false
+        },
+        {
+            name: "radius",
+            description: "The rect corners radius.",
+            rest: false,
+            type: forgescript_1.ArgType.Number,
+            required: false
         }
     ],
-    execute(_ctx, [canvas, color, x, y, width, height, strokeWidth]) {
+    execute(_ctx, [canvas, color, x, y, width, height, strokeWidth, radius]) {
         if (!__1.ForgeCanvas.canvases || !__1.ForgeCanvas.canvases[canvas] || !(__1.ForgeCanvas.canvases[canvas] instanceof classes_1.CanvasBuilder))
             return this.customError("No canvas with provided name.");
-        __1.ForgeCanvas.canvases[canvas].strokeRect(color, x, y, width, height, strokeWidth);
+        __1.ForgeCanvas.canvases[canvas].strokeRect(color, x, y, width, height, strokeWidth, radius);
         return this.success();
     },
 });

@@ -12,10 +12,7 @@ class CanvasBuilder {
         width = width ?? image.width;
         height = height ?? image.height;
         const ctx = CanvasBuilder.ctx;
-        if (!radius || radius < 0) {
-            ctx.drawImage(image, x, y, width, height);
-        }
-        else {
+        if (radius && radius > 0) {
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(x + radius, y);
@@ -25,9 +22,9 @@ class CanvasBuilder {
             ctx.arcTo(x, y, x + width, y, radius);
             ctx.closePath();
             ctx.clip();
-            ctx.drawImage(image, x, y, width, height);
         }
         ;
+        ctx.drawImage(image, x, y, width, height);
         return ctx;
     };
     fillText = (text, x, y, font, color) => {
@@ -48,26 +45,51 @@ class CanvasBuilder {
         const oldwidth = ctx.lineWidth;
         ctx.font = font;
         ctx.strokeStyle = color;
-        ctx.lineWidth = width;
+        ctx.lineWidth = width ?? 3;
         ctx.strokeText(text, x, y);
         ctx.font = oldfont;
         ctx.strokeStyle = oldcolor;
         ctx.lineWidth = oldwidth;
         return ctx;
     };
-    fillRect = (color, x, y, width, height) => {
+    fillRect = (color, x, y, width, height, radius) => {
         const ctx = CanvasBuilder.ctx;
         const oldcolor = ctx.fillStyle;
         ctx.fillStyle = color;
+        if (radius && radius > 0) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.arcTo(x + width, y, x + width, y + height, radius);
+            ctx.arcTo(x + width, y + height, x, y + height, radius);
+            ctx.arcTo(x, y + height, x, y, radius);
+            ctx.arcTo(x, y, x + width, y, radius);
+            ctx.closePath();
+            ctx.clip();
+        }
+        ;
         ctx.fillRect(x, y, width, height);
         ctx.fillStyle = oldcolor;
         return ctx;
     };
-    strokeRect = (color, x, y, width, height, lineWidth) => {
+    strokeRect = (color, x, y, width, height, strokeWidth, radius) => {
         const ctx = CanvasBuilder.ctx;
         const oldcolor = ctx.strokeStyle;
         const oldwidth = ctx.lineWidth;
         ctx.strokeStyle = color;
+        ctx.lineWidth = strokeWidth ?? 3;
+        if (radius && radius > 0) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.arcTo(x + width, y, x + width, y + height, radius);
+            ctx.arcTo(x + width, y + height, x, y + height, radius);
+            ctx.arcTo(x, y + height, x, y, radius);
+            ctx.arcTo(x, y, x + width, y, radius);
+            ctx.closePath();
+            ctx.clip();
+        }
+        ;
         ctx.strokeRect(x, y, width, height);
         ctx.strokeStyle = oldcolor;
         ctx.lineWidth = oldwidth;
