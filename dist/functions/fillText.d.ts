@@ -35,6 +35,12 @@ declare const _default: NativeFunction<[{
     rest: false;
     type: ArgType.Color;
     required: true;
+}, {
+    name: string;
+    description: string;
+    rest: false;
+    type: ArgType.Number;
+    required: false;
 }], true>;
 export default _default;
 //# sourceMappingURL=fillText.d.ts.map

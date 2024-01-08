@@ -1,7 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CanvasBuilder = void 0;
+exports.CanvasBuilder = exports.RevesedTextAlign = exports.TextAlign = void 0;
 const canvas_1 = require("@napi-rs/canvas");
+var TextAlign;
+(function (TextAlign) {
+    TextAlign[TextAlign["start"] = 0] = "start";
+    TextAlign[TextAlign["left"] = 1] = "left";
+    TextAlign[TextAlign["center"] = 2] = "center";
+    TextAlign[TextAlign["right"] = 3] = "right";
+    TextAlign[TextAlign["end"] = 4] = "end";
+})(TextAlign || (exports.TextAlign = TextAlign = {}));
+var RevesedTextAlign;
+(function (RevesedTextAlign) {
+    RevesedTextAlign[RevesedTextAlign["end"] = 0] = "end";
+    RevesedTextAlign[RevesedTextAlign["right"] = 1] = "right";
+    RevesedTextAlign[RevesedTextAlign["center"] = 2] = "center";
+    RevesedTextAlign[RevesedTextAlign["left"] = 3] = "left";
+    RevesedTextAlign[RevesedTextAlign["start"] = 4] = "start";
+})(RevesedTextAlign || (exports.RevesedTextAlign = RevesedTextAlign = {}));
 class CanvasBuilder {
     static ctx;
     constructor(width, height) {
@@ -27,13 +43,13 @@ class CanvasBuilder {
         ctx.drawImage(image, x, y, width, height);
         return ctx;
     };
-    fillText = (text, x, y, font, color) => {
+    fillText = (text, x, y, font, color, maxWidth) => {
         const ctx = CanvasBuilder.ctx;
         const oldfont = ctx.font;
         const oldcolor = ctx.fillStyle;
         ctx.font = font;
         ctx.fillStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`;
-        ctx.fillText(text, x, y);
+        ctx.fillText(text, x, y, maxWidth);
         ctx.font = oldfont;
         ctx.fillStyle = oldcolor;
         return ctx;
@@ -93,6 +109,11 @@ class CanvasBuilder {
         ctx.strokeRect(x, y, width, height);
         ctx.strokeStyle = oldcolor;
         ctx.lineWidth = oldwidth;
+        return ctx;
+    };
+    setTextAlignment = (alignment) => {
+        const ctx = CanvasBuilder.ctx;
+        ctx.textAlign = RevesedTextAlign[alignment];
         return ctx;
     };
     render = () => {

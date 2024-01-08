@@ -51,13 +51,20 @@ export default new NativeFunction({
             rest: false,
             type: ArgType.Color,
             required: true
+        },
+        {
+            name: "maxWidth",
+            description: "The text max width.",
+            rest: false,
+            type: ArgType.Number,
+            required: false
         }
     ],
-    execute(_ctx, [canvas, text, x, y, font, color]) {
+    execute(_ctx, [canvas, text, x, y, font, color, maxWidth]) {
         if (!ForgeCanvas.canvases || !ForgeCanvas.canvases[canvas] || !(ForgeCanvas.canvases[canvas] instanceof CanvasBuilder))
           return this.customError("No canvas with provided name.");
 
-        ForgeCanvas.canvases[canvas].fillText(text, x, y, font, color)
+        ForgeCanvas.canvases[canvas].fillText(text, x, y, font, color, maxWidth)
         return this.success()
     },
 })

@@ -1,4 +1,7 @@
-import { Canvas, SKRSContext2D, createCanvas, loadImage } from "@napi-rs/canvas";
+import { SKRSContext2D, createCanvas, loadImage } from "@napi-rs/canvas";
+
+export enum TextAlign { start, left, center, right, end }
+export enum RevesedTextAlign { end, right, center, left, start }
 
 export class CanvasBuilder {
   public static ctx: SKRSContext2D
@@ -32,7 +35,7 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public fillText = (text: string, x: number, y: number, font: string, color: number) => {
+  public fillText = (text: string, x: number, y: number, font: string, color: number, maxWidth?:number) => {
     const ctx = CanvasBuilder.ctx
 
     const oldfont = ctx.font
@@ -41,7 +44,7 @@ export class CanvasBuilder {
     ctx.font = font
     ctx.fillStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`
     
-    ctx.fillText(text, x, y);
+    ctx.fillText(text, x, y, maxWidth);
     
     ctx.font = oldfont
     ctx.fillStyle = oldcolor
@@ -68,6 +71,7 @@ export class CanvasBuilder {
 
     return ctx
   }
+
 
   public fillRect = (color: number, x: number, y: number, width: number, height: number, radius?: number) => {
     const ctx = CanvasBuilder.ctx
@@ -123,6 +127,12 @@ export class CanvasBuilder {
     ctx.strokeStyle = oldcolor
     ctx.lineWidth = oldwidth
 
+    return ctx
+  }
+
+  public setTextAlignment = (alignment: TextAlign) => {
+    const ctx = CanvasBuilder.ctx
+    ctx.textAlign = RevesedTextAlign[alignment] as CanvasTextAlign
     return ctx
   }
 
