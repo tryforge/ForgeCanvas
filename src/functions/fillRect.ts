@@ -56,7 +56,7 @@ export default new NativeFunction({
             description: "The rect corners radius.",
             rest: false,
             type: ArgType.Number,
-            required: true
+            required: false
         }
     ],
     execute(_ctx, [canvas, color, x, y, width, height, radius]) {
