@@ -1,4 +1,22 @@
 {
+  "name": "forgecanvas",
+  "description": "Coming Soon",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "docgen": "tsc && typedoc src/index.ts && node dist/docgen",
+    "test": "tsc && node dist/__tests__"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tryforge/ForgeCanvas.git"
+  },
+  "author": "aggelos007",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tryforge/ForgeCanvas/issues"
+  },
+  "homepage": "https://github.com/tryforge/ForgeCanvas#readme",
   "devDependencies": {
     "@types/node": "^20.5.7",
     "typedoc": "^0.25.0",
@@ -7,23 +25,5 @@
   "dependencies": {
     "@napi-rs/canvas": "^0.1.44",
     "forgescript": "github:tryforge/ForgeScript#dev"
-  },
-  "name": "forgecanvas",
-  "description": "Coming Soon",
-  "version": "1.0.0",
-  "main": "dist/index.js",
-  "scripts": {
-    "docgen": "tsc && typedoc src/index.ts && node dist/docgen",
-    "test": "tsc && node dist/__tests__"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tryforge/forgeCanvas.git"
-  },
-  "author": "aggelos007",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/tryforge/forgeCanvas/issues"
-  },
-  "homepage": "https://github.com/tryforge/forgeCanvas#readme"
+  }
 }

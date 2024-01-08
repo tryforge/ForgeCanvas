@@ -5,7 +5,7 @@ import { GlobalFonts } from "@napi-rs/canvas"
 
 export default new NativeFunction({
     name: "$fillText",
-    version: "1.0.0",
+    version: "0.1.0",
     description: "Draws text in provided canvas.",
     unwrap: true,
     brackets: true,

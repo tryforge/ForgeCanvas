@@ -4,7 +4,7 @@ import { ForgeCanvas } from ".."
 
 export default new NativeFunction({
     name: "$renderCanvas",
-    version: "1.0.0",
+    version: "0.1.0",
     description: "Returns the version of ForgeDB",
     unwrap: true,
     brackets: true,

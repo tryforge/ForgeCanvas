@@ -4,7 +4,7 @@ import { CanvasBuilder } from "../classes"
 
 export default new NativeFunction({
     name: "$drawImage",
-    version: "1.0.0",
+    version: "0.1.0",
     description: "Draws an image on canvas",
     unwrap: true,
     args: [

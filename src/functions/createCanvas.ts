@@ -4,7 +4,7 @@ import { CanvasBuilder } from "../classes"
 
 export default new NativeFunction({
     name: "$createCanvas",
-    version: "1.0.0",
+    version: "0.1.0",
     description: "Create new blank canvas.",
     unwrap: true,
     args: [

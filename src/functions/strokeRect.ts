@@ -4,7 +4,7 @@ import { CanvasBuilder } from "../classes"
 
 export default new NativeFunction({
     name: "$strokeRect",
-    version: "1.0.0",
+    version: "0.1.0",
     description: "Draws stroke rect in provided canvas.",
     unwrap: true,
     brackets: true,

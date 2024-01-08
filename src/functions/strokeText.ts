@@ -4,7 +4,7 @@ import { ForgeCanvas } from ".."
 
 export default new NativeFunction({
     name: "$strokeText",
-    version: "1.0.0",
+    version: "0.1.0",
     description: "Draws text stroke in provided canvas.",
     unwrap: true,
     brackets: true,

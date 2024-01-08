@@ -5,7 +5,7 @@ const __1 = require("..");
 const classes_1 = require("../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: "$fillRect",
-    version: "1.0.0",
+    version: "0.1.0",
     description: "Draws rect in provided canvas.",
     unwrap: true,
     brackets: true,
