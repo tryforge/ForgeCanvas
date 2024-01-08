@@ -89,6 +89,8 @@ export class CanvasBuilder {
       ctx.closePath()
       ctx.clip()
     };
+    ctx.fillRect(x, y, width, height)
+
     ctx.fillStyle = oldcolor
 
     return ctx
