@@ -56,7 +56,7 @@ export default new NativeFunction({
             description: "The stroke width.",
             rest: false,
             type: ArgType.Number,
-            required: true
+            required: false
         },
         {
             name: "radius",
