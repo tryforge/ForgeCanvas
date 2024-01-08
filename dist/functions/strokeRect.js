@@ -21,7 +21,7 @@ exports.default = new forgescript_1.NativeFunction({
             name: "color",
             description: "The color of rect.",
             rest: false,
-            type: forgescript_1.ArgType.String,
+            type: forgescript_1.ArgType.Color,
             required: true
         },
         {

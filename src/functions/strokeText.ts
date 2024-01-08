@@ -48,7 +48,7 @@ export default new NativeFunction({
             name: "color",
             description: "The text color.",
             rest: false,
-            type: ArgType.String,
+            type: ArgType.Color,
             required: true
         },
         {

@@ -32,14 +32,14 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public fillText = (text: string, x: number, y: number, font: string, color: string) => {
+  public fillText = (text: string, x: number, y: number, font: string, color: number) => {
     const ctx = CanvasBuilder.ctx
 
     const oldfont = ctx.font
     const oldcolor = ctx.fillStyle
     
     ctx.font = font
-    ctx.fillStyle = color
+    ctx.fillStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`
     
     ctx.fillText(text, x, y);
     
@@ -49,7 +49,7 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public strokeText = (text: string, x: number, y: number, font: string, color: string, width?: number) => {
+  public strokeText = (text: string, x: number, y: number, font: string, color: number, width?: number) => {
     const ctx = CanvasBuilder.ctx
 
     const oldfont = ctx.font
@@ -57,7 +57,7 @@ export class CanvasBuilder {
     const oldwidth = ctx.lineWidth
     
     ctx.font = font
-    ctx.strokeStyle = color
+    ctx.strokeStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`
     ctx.lineWidth = width ?? 3
     
     ctx.strokeText(text, x, y)
@@ -69,12 +69,12 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public fillRect = (color: string, x: number, y: number, width: number, height: number, radius?: number) => {
+  public fillRect = (color: number, x: number, y: number, width: number, height: number, radius?: number) => {
     const ctx = CanvasBuilder.ctx
     
     const oldcolor = ctx.fillStyle
 
-    ctx.fillStyle = color
+    ctx.fillStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`
    
     if (radius && radius > 0) {
       ctx.save()
@@ -96,13 +96,13 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public strokeRect = (color: string, x: number, y: number, width: number, height: number, strokeWidth?: number, radius?: number) => {
+  public strokeRect = (color: number, x: number, y: number, width: number, height: number, strokeWidth?: number, radius?: number) => {
     const ctx = CanvasBuilder.ctx
     
     const oldcolor = ctx.strokeStyle
     const oldwidth = ctx.lineWidth
 
-    ctx.strokeStyle = color
+    ctx.strokeStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`
     ctx.lineWidth = strokeWidth ?? 3
     
     if (radius && radius > 0) {

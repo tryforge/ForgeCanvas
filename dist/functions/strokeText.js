@@ -49,7 +49,7 @@ exports.default = new forgescript_1.NativeFunction({
             name: "color",
             description: "The text color.",
             rest: false,
-            type: forgescript_1.ArgType.String,
+            type: forgescript_1.ArgType.Color,
             required: true
         },
         {
