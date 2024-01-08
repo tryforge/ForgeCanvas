@@ -63,7 +63,7 @@ export default new NativeFunction({
         if (!ForgeCanvas.canvases || !ForgeCanvas.canvases[canvas] || !(ForgeCanvas.canvases[canvas] instanceof CanvasBuilder))
           return this.customError("No canvas with provided name.");
         
-        ForgeCanvas.canvases[canvas].fillRect(color, x, y, width, height)
+        ForgeCanvas.canvases[canvas].fillRect(color, x, y, width, height, radius)
         return this.success()
     },
 })
