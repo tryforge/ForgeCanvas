@@ -48,7 +48,7 @@ export default new NativeFunction({
             name: "color",
             description: "The text color.",
             rest: false,
-            type: ArgType.Number,
+            type: ArgType.String,
             required: true
         },
         {
@@ -56,7 +56,7 @@ export default new NativeFunction({
             description: "The stroke width.",
             rest: false,
             type: ArgType.Number,
-            required: true
+            required: false
         }
     ],
     execute(_ctx, [canvas, text, x, y, font, color, width]) {
