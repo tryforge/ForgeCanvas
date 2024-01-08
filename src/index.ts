@@ -1,5 +1,4 @@
 import { ForgeClient, ForgeExtension } from "forgescript";
-import { CanvasBuilder } from "./classes";
 
 export class ForgeCanvas extends ForgeExtension {
     public static canvases: any
