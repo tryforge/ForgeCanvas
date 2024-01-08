@@ -84,13 +84,15 @@ export class CanvasBuilder {
     return ctx
   }
 
-  public strokeRect = (color: string, x: number, y: number, width: number, height: number, lineWidth: number) => {
+  public strokeRect = (color: string, x: number, y: number, width: number, height: number, strokeWidth: number) => {
     const ctx = CanvasBuilder.ctx
     
     const oldcolor = ctx.strokeStyle
     const oldwidth = ctx.lineWidth
 
     ctx.strokeStyle = color
+    ctx.lineWidth = strokeWidth
+    
     ctx.strokeRect(x, y, width, height)
 
     ctx.strokeStyle = oldcolor
