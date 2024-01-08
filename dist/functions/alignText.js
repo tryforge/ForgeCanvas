@@ -4,7 +4,7 @@ const forgescript_1 = require("forgescript");
 const __1 = require("..");
 const classes_1 = require("../classes");
 exports.default = new forgescript_1.NativeFunction({
-    name: "$setTextAlignment",
+    name: "$alignText",
     version: "0.2.0",
     description: "Change the text alignment for related functions.",
     unwrap: true,
@@ -33,4 +33,4 @@ exports.default = new forgescript_1.NativeFunction({
         return this.success();
     },
 });
-//# sourceMappingURL=setTextAlignment.js.map
+//# sourceMappingURL=alignText.js.map

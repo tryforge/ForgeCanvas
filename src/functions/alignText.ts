@@ -5,7 +5,7 @@ import { CanvasBuilder, TextAlign } from '../classes'
 
 
 export default new NativeFunction({
-    name: "$setTextAlignment",
+    name: "$alignText",
     version: "0.2.0",
     description: "Change the text alignment for related functions.",
     unwrap: true,

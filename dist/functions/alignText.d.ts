@@ -15,4 +15,4 @@ declare const _default: NativeFunction<[{
     required: true;
 }], true>;
 export default _default;
-//# sourceMappingURL=setTextAlignment.d.ts.map
+//# sourceMappingURL=alignText.d.ts.map
