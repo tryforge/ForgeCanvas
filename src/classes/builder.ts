@@ -42,7 +42,7 @@ export class CanvasBuilder {
     const oldcolor = ctx.fillStyle
     
     ctx.font = font
-    ctx.fillStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`
+    ctx.fillStyle = `rgb(${color >> 16},${(color >> 8) & 0xFF},${color & 0xFF})`
     
     ctx.fillText(text, x, y, maxWidth);
     
@@ -60,7 +60,7 @@ export class CanvasBuilder {
     const oldwidth = ctx.lineWidth
     
     ctx.font = font
-    ctx.strokeStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`
+    ctx.strokeStyle = `rgb(${color >> 16},${(color >> 8) & 0xFF},${color & 0xFF})`
     ctx.lineWidth = width ?? 3
     
     ctx.strokeText(text, x, y)
@@ -78,7 +78,7 @@ export class CanvasBuilder {
     
     const oldcolor = ctx.fillStyle
 
-    ctx.fillStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`
+    ctx.fillStyle = `rgb(${color >> 16},${(color >> 8) & 0xFF},${color & 0xFF})`
    
     if (radius && radius > 0) {
       ctx.save()
@@ -106,7 +106,7 @@ export class CanvasBuilder {
     const oldcolor = ctx.strokeStyle
     const oldwidth = ctx.lineWidth
 
-    ctx.strokeStyle = `rgb(${(color >> 16) & 0xFF},${(color >> 8) & 0xFF},${color & 0xFF})`
+    ctx.strokeStyle = `rgb(${color >> 16},${(color >> 8) & 0xFF},${color & 0xFF})`
     ctx.lineWidth = strokeWidth ?? 3
     
     if (radius && radius > 0) {
