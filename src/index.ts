@@ -5,7 +5,7 @@ export class ForgeCanvas extends ForgeExtension {
 
     name: string = "ForgeCanvas"
     description: string = "A fast and reliable canvas extension for Forge"
-    version: string = "1.0.0"
+    version: string = "0.2.0"
 
     public constructor(){
         super()
