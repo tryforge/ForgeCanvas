@@ -6,7 +6,7 @@ class ForgeCanvas extends forgescript_1.ForgeExtension {
     static canvases;
     name = "ForgeCanvas";
     description = "A fast and reliable canvas extension for Forge";
-    version = "1.0.0";
+    version = "0.2.0";
     constructor() {
         super();
     }
