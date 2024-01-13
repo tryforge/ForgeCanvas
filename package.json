@@ -20,10 +20,10 @@
   "devDependencies": {
     "@types/node": "^20.5.7",
     "typedoc": "^0.25.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "forgescript": "github:tryforge/ForgeScript#dev"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.44",
-    "forgescript": "github:tryforge/ForgeScript#dev"
+    "@napi-rs/canvas": "^0.1.44"
   }
 }
