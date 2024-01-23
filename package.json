@@ -1,6 +1,6 @@
 {
-  "name": "forgecanvas",
-  "description": "Coming Soon",
+  "name": "forge.canvas",
+  "description": "Easy to use canvas for forge",
   "version": "0.2.0",
   "main": "dist/index.js",
   "scripts": {
