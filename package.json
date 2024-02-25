@@ -1,5 +1,5 @@
 {
-  "name": "forge.canvas",
+  "name": "@tryforge/forge.canvas",
   "description": "Easy to use canvas for forge",
   "version": "0.2.0",
   "main": "dist/index.js",
