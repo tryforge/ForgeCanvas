@@ -1,4 +1,4 @@
-import { ArgType, NativeFunction } from "forgescript"
+import { ArgType, NativeFunction } from "@tryforge/forgescript"
 import { ForgeCanvas } from "..";
 import { CanvasBuilder } from "../classes"
 

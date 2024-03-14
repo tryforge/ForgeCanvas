@@ -1,7 +1,6 @@
-import { ArgType, NativeFunction } from "forgescript"
+import { ArgType, NativeFunction } from "@tryforge/forgescript"
 import { ForgeCanvas } from ".."
 import { CanvasBuilder } from "../classes"
-import { GlobalFonts } from "@napi-rs/canvas"
 
 export default new NativeFunction({
     name: "$fillText",

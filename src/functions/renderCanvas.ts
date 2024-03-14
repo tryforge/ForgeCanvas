@@ -1,5 +1,5 @@
 import { AttachmentBuilder } from "discord.js"
-import { ArgType, NativeFunction } from "forgescript"
+import { ArgType, NativeFunction } from "@tryforge/forgescript"
 import { ForgeCanvas } from ".."
 
 export default new NativeFunction({

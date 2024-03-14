@@ -1,4 +1,4 @@
-import { ForgeClient, ForgeExtension } from "forgescript";
+import { ForgeClient, ForgeExtension } from "@tryforge/forgescript";
 export declare class ForgeCanvas extends ForgeExtension {
     static canvases: any;
     name: string;

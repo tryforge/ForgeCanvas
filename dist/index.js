@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ForgeCanvas = void 0;
-const forgescript_1 = require("forgescript");
+const forgescript_1 = require("@tryforge/forgescript");
 class ForgeCanvas extends forgescript_1.ForgeExtension {
     static canvases;
     name = "ForgeCanvas";

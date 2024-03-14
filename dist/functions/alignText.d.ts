@@ -1,4 +1,4 @@
-import { ArgType, NativeFunction } from "forgescript";
+import { ArgType, NativeFunction } from "@tryforge/forgescript";
 import { TextAlign } from '../classes';
 declare const _default: NativeFunction<[{
     name: string;
