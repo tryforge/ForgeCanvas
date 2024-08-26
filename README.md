@@ -8,8 +8,15 @@
 </p>
 <br>
 <h2 align="center">Contents</h2>
-sooon
-<h3 align="center">Why use ForgeCanvas?</h3><hr>
+
+1. [Why ForgeCanvas?](#why-forgecanvas)
+2. [Installation](#installation)
+3. [Contributing](#contributing)
+4. [Documentation](https://docs.botforge.org/p/ForgeCanvas/)
+5. [Need help!](#need-help)
+6. [Credits](#credits)
+<br>
+<h3 align="center">Why ForgeCanvas?</h3><hr>
 bla bla bla answers
 <br>
 <h3 align="center">Installation</h3><hr>
@@ -38,7 +45,7 @@ bla bla bla answers
 <br>
 <h3 align="center">Contributing</h3><hr>
 <p align="center">We're always welcome for brave adventurers to join our quest! Just fork, clone, commit, push, pull request and the usual.</p>
-<h3 align="center">Need help? Contact us!</h3><hr>
+<h3 align="center">Need help!</h3><hr>
 <p align="center">Having trouble? Don't fret! Join our <a href="https://botforge.org/discord">Discord server</a> to get some help!</p>
 <br>
 <h3 align="center">Credits</h3>
