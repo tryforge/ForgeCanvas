@@ -1,4 +1,4 @@
-<p align="center"><img src="" alt="ForgeCanvas logo"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/Aurea6/ForgeCanvas/dev/assets/20240826_165223.png" alt="ForgeCanvas logo"></p>
 <h1 align="center">ForgeCanvas</h1>
 <p align="center">Elevate your Discord app's visual appeal with ease. Create beautiful images using simple canvas functions.</p>
 <p align="center">
