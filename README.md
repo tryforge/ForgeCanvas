@@ -1,4 +1,4 @@
-<p align="center"><img height="128" width="128" src="https://raw.githubusercontent.com/Aurea6/ForgeCanvas/dev/assets/20240826_165223.png" alt="ForgeCanvas logo"></p>
+<p align="center"><img height="128" width="128" src="https://raw.githubusercontent.com/Aurea6/ForgeCanvas/patch-1/assets/forgecanvas.png" alt="ForgeCanvas logo"></p>
 <h1 align="center">ForgeCanvas</h1>
 <p align="center">Elevate your Discord app's visual appeal with ease. Create beautiful images using simple canvas functions.</p>
 <p align="center">
@@ -17,9 +17,7 @@
 6. [Credits](#credits)
 <br>
 <h3 align="center">Why ForgeCanvas?</h3><hr>
-
-ForgeCanvas simplifies image creation, integrates seamlessly with ForgeScript, and makes canvas-related tasks quicker and easier for bot development.
-
+<p align="center">ForgeCanvas simplifies image creation, integrates seamlessly with ForgeScript, and makes canvas-related tasks quicker and easier for bot development.</p>
 <br>
 <h3 align="center">Installation</h3><hr>
 <p align="center">Just a few simple steps and you'll be a cook, cooking awesome images by sprinkling magic coding dust.</p>
