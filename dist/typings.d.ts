@@ -1,7 +1,8 @@
 import { Context as ctx } from "@tryforge/forgescript";
-import { CanvasManager } from "./classes";
+import { CanvasManager, GradientManager } from "./classes";
 export declare class Context extends ctx {
     canvasManager?: CanvasManager;
+    gradientManager?: GradientManager;
 }
 export declare enum FillOrStroke {
     fill = 0,
@@ -45,11 +46,16 @@ export declare enum textBaseline {
     bottom = 5
 }
 export declare enum textAlign {
-    start = "end",
-    right = "left",
-    center = "center",
-    left = "right",
-    end = "start"
+    start = 0,
+    right = 1,
+    center = 2,
+    left = 3,
+    end = 4
+}
+export declare enum GradientType {
+    linear = 0,
+    radial = 1,
+    conic = 2
 }
 export declare enum MeasureTextProperty {
     actualBoundingBoxAscent = 0,

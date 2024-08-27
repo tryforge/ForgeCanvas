@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MeasureTextProperty = exports.textAlign = exports.textBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
+exports.MeasureTextProperty = exports.GradientType = exports.textAlign = exports.textBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
 class Context extends forgescript_1.Context {
     canvasManager;
+    gradientManager;
 }
 exports.Context = Context;
 ;
@@ -63,12 +64,19 @@ var textBaseline;
 ;
 var textAlign;
 (function (textAlign) {
-    textAlign["start"] = "end";
-    textAlign["right"] = "left";
-    textAlign["center"] = "center";
-    textAlign["left"] = "right";
-    textAlign["end"] = "start";
+    textAlign[textAlign["start"] = 0] = "start";
+    textAlign[textAlign["right"] = 1] = "right";
+    textAlign[textAlign["center"] = 2] = "center";
+    textAlign[textAlign["left"] = 3] = "left";
+    textAlign[textAlign["end"] = 4] = "end";
 })(textAlign || (exports.textAlign = textAlign = {}));
+;
+var GradientType;
+(function (GradientType) {
+    GradientType[GradientType["linear"] = 0] = "linear";
+    GradientType[GradientType["radial"] = 1] = "radial";
+    GradientType[GradientType["conic"] = 2] = "conic";
+})(GradientType || (exports.GradientType = GradientType = {}));
 ;
 var MeasureTextProperty;
 (function (MeasureTextProperty) {
