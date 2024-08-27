@@ -17,9 +17,7 @@
 6. [Credits](#credits)
 <br>
 <h3 align="center">Why ForgeCanvas?</h3><hr>
-
-ForgeCanvas simplifies image creation, integrates seamlessly with ForgeScript, and makes canvas-related tasks quicker and easier for bot development.
-
+<p align="center">ForgeCanvas simplifies image creation, integrates seamlessly with ForgeScript, and makes canvas-related tasks quicker and easier for bot development.</p>
 <br>
 <h3 align="center">Installation</h3><hr>
 <p align="center">Just a few simple steps and you'll be a cook, cooking awesome images by sprinkling magic coding dust.</p>
