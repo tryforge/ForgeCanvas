@@ -41,12 +41,21 @@ exports.default = new forgescript_1.NativeFunction({
             return this.customError('No canvas');
         if (!style)
             return this.success(canvas.ctx.strokeStyle);
-        if (t === __1.StyleType.color)
+        if (t === __1.StyleType.color) {
             style = __1.hexRegex.test(style) ? style
                 : (__1.rgbaRegex.test(style) ? (() => {
                     const match = style.match(__1.rgbaRegex);
                     return __1.CanvasUtil.rgbaToHex(parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3], 10), match[5] ? parseFloat(match[5]) : undefined);
                 })() : __1.Colors[style]);
+        }
+        else if (t === __1.StyleType.gradient) {
+            const gradient = ctx.gradientManager?.get(style);
+            if (!gradient)
+                return this.customError('No gradient');
+            // @ts-ignore
+            style = gradient;
+        }
+        ;
         if (!style)
             return this.customError('Invalid style');
         canvas.ctx.strokeStyle = style;

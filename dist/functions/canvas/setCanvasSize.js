@@ -26,7 +26,7 @@ exports.default = new forgescript_1.NativeFunction({
     ],
     async execute(ctx, [w, h]) {
         if (!ctx.canvasManager || !(ctx.canvasManager instanceof __1.CanvasManager))
-            ctx.canvasManager = new __1.CanvasManager();
+            ctx.canvasManager ??= new __1.CanvasManager();
         ctx.canvasManager.current.push(new __1.CanvasBuilder(w, h));
         return this.success();
     }

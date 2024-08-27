@@ -33,8 +33,8 @@ exports.default = new forgescript_1.NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
         return this.success(align
-            ? (canvas.textAlign = align, undefined)
-            : __1.textAlign[canvas.textAlign]);
+            ? (canvas.textAlign = (typeof align === 'number' ? __1.textAlign[align] : align),
+                undefined) : __1.textAlign[canvas.textAlign]);
     }
 });
 //# sourceMappingURL=textAlign.js.map
