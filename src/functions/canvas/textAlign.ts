@@ -34,8 +34,10 @@ export default new NativeFunction({
             return this.customError('No canvas');
  
         return this.success(align
-            ? (canvas.textAlign = align as CanvasTextAlign, undefined) 
-            : textAlign[canvas.textAlign]
+            ? (canvas.textAlign = (
+                typeof align === 'number' ? textAlign[align] : align) as CanvasTextAlign,
+                undefined
+            ) : textAlign[canvas.textAlign]
         );
     }
 });
