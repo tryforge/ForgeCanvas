@@ -20,7 +20,7 @@ exports.default = new forgescript_1.NativeFunction({
             name: 'baseline',
             description: 'The new baseline.',
             type: forgescript_1.ArgType.Enum,
-            enum: __1.textBaseline,
+            enum: __1.TextBaseline,
             required: false,
             rest: false
         }
@@ -33,8 +33,8 @@ exports.default = new forgescript_1.NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
         return this.success(baseline
-            ? (canvas.textBaseline = (typeof baseline === 'number' ? __1.textBaseline[baseline] : baseline), undefined)
-            : canvas.textBaseline);
+            ? (canvas.textBaseline = (typeof baseline === 'number' ? __1.TextBaseline[baseline] : baseline),
+                undefined) : canvas.textBaseline);
     }
 });
 //# sourceMappingURL=textBaseline.js.map

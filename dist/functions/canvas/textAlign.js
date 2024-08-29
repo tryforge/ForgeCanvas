@@ -20,7 +20,7 @@ exports.default = new forgescript_1.NativeFunction({
             name: 'align',
             description: 'The new align.',
             type: forgescript_1.ArgType.Enum,
-            enum: __1.textAlign,
+            enum: __1.TextAlign,
             required: false,
             rest: false
         }
@@ -33,8 +33,8 @@ exports.default = new forgescript_1.NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
         return this.success(align
-            ? (canvas.textAlign = align, undefined)
-            : __1.textAlign[canvas.textAlign]);
+            ? (canvas.textAlign = (typeof align === 'number' ? __1.TextAlign[align] : align),
+                undefined) : __1.TextAlign[canvas.textAlign]);
     }
 });
 //# sourceMappingURL=textAlign.js.map
