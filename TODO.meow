@@ -1,6 +1,7 @@
 [x] gradient funcs
 [x] pattern style
-[ ] line funcs
-[ ] transformation funcs
-[ ] path funcs
+[x] line funcs
+[x] transformation funcs
+[x] path funcs
+[ ] other stuff
 [ ] gif funcs
