@@ -37,7 +37,7 @@ export declare enum Filters {
     invert = 6,
     saturate = 7
 }
-export declare enum textBaseline {
+export declare enum TextBaseline {
     top = 0,
     hanging = 1,
     middle = 2,
@@ -45,7 +45,7 @@ export declare enum textBaseline {
     ideographic = 4,
     bottom = 5
 }
-export declare enum textAlign {
+export declare enum TextAlign {
     start = 0,
     right = 1,
     center = 2,
@@ -56,6 +56,15 @@ export declare enum GradientType {
     linear = 0,
     radial = 1,
     conic = 2
+}
+export declare enum FillRule {
+    evenodd = 0,
+    nonzero = 1
+}
+export declare enum LineJoinShape {
+    round = 0,
+    bevel = 1,
+    miter = 2
 }
 export declare enum MeasureTextProperty {
     actualBoundingBoxAscent = 0,
@@ -68,5 +77,33 @@ export declare enum MeasureTextProperty {
     emHeightAscent = 7,
     emHeightDescent = 8,
     width = 9
+}
+export declare enum CompositingOperation {
+    "source-over" = 0,
+    "source-in" = 1,
+    "source-out" = 2,
+    "source-atop" = 3,
+    "destination-over" = 4,
+    "destination-in" = 5,
+    "destination-out" = 6,
+    "destination-atop" = 7,
+    "lighter" = 8,
+    "copy" = 9,
+    "xor" = 10,
+    "multiply" = 11,
+    "screen" = 12,
+    "overlay" = 13,
+    "darken" = 14,
+    "lighten" = 15,
+    "color-dodge" = 16,
+    "color-burn" = 17,
+    "hard-light" = 18,
+    "soft-light" = 19,
+    "difference" = 20,
+    "exclusion" = 21,
+    "hue" = 22,
+    "saturation" = 23,
+    "color" = 24,
+    "luminosity" = 25
 }
 //# sourceMappingURL=typings.d.ts.map
