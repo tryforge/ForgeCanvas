@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, textBaseline } from '../..';
+import { Context, TextBaseline } from '../..';
 
 export default new NativeFunction({
     name: '$textBaseline',
@@ -19,7 +19,7 @@ export default new NativeFunction({
             name: 'baseline',
             description: 'The new baseline.',
             type: ArgType.Enum,
-            enum: textBaseline,
+            enum: TextBaseline,
             required: false,
             rest: false
         }
@@ -35,7 +35,7 @@ export default new NativeFunction({
  
         return this.success(baseline
             ? (canvas.textBaseline = (
-                typeof baseline === 'number' ? textBaseline[baseline] : baseline) as CanvasTextBaseline,
+                typeof baseline === 'number' ? TextBaseline[baseline] : baseline) as CanvasTextBaseline,
                 undefined
             ) : canvas.textBaseline
         );

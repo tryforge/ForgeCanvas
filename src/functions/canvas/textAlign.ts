@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, textAlign } from '../..';
+import { Context, TextAlign } from '../..';
 
 export default new NativeFunction({
     name: '$textAlign',
@@ -19,7 +19,7 @@ export default new NativeFunction({
             name: 'align',
             description: 'The new align.',
             type: ArgType.Enum,
-            enum: textAlign,
+            enum: TextAlign,
             required: false,
             rest: false
         }
@@ -35,9 +35,9 @@ export default new NativeFunction({
  
         return this.success(align
             ? (canvas.textAlign = (
-                typeof align === 'number' ? textAlign[align] : align) as CanvasTextAlign,
+                typeof align === 'number' ? TextAlign[align] : align) as CanvasTextAlign,
                 undefined
-            ) : textAlign[canvas.textAlign]
+            ) : TextAlign[canvas.textAlign]
         );
     }
 });

@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { textBaseline } from '../..';
+import { TextBaseline } from '../..';
 declare const _default: NativeFunction<[{
     name: string;
     description: string;
@@ -10,7 +10,7 @@ declare const _default: NativeFunction<[{
     name: string;
     description: string;
     type: ArgType.Enum;
-    enum: typeof textBaseline;
+    enum: typeof TextBaseline;
     required: false;
     rest: false;
 }], true>;

@@ -7,7 +7,7 @@ exports.default = new forgescript_1.NativeFunction({
     name: '$fillStyle',
     description: 'Sets or returns the fill style in a canvas.',
     version: '1.0.0',
-    brackets: true,
+    brackets: false,
     unwrap: true,
     args: [
         {
@@ -59,7 +59,6 @@ exports.default = new forgescript_1.NativeFunction({
         else {
             const splits = style.split(':'), type = splits.shift()?.toLowerCase(), repeat = splits.length > 0 && ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'].includes(splits[splits.length - 1]) ? splits.pop() : null;
             let image;
-            console.log(splits, type, repeat, repeat ? splits.join(':') : splits.join());
             if (type === 'canvas') {
                 const canvas_2 = ctx.canvasManager?.get(repeat ? splits.join(':') : splits.join())?.ctx;
                 if (!canvas_2)

@@ -6,7 +6,7 @@ export default new NativeFunction({
     name: '$fillStyle',
     description: 'Sets or returns the fill style in a canvas.',
     version: '1.0.0',
-    brackets: true,
+    brackets: false,
     unwrap: true,
     args: [
         {
@@ -62,7 +62,7 @@ export default new NativeFunction({
             // @ts-ignore
             style = gradient;
         } else {
-            const splits: string[] = style.split(':'),
+            const splits = style.split(':'),
                   type = splits.shift()?.toLowerCase(),
                   repeat = splits.length > 0 && ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'].includes(splits[splits.length - 1]) ? splits.pop() : null;
             let image: Image | ImageData;
