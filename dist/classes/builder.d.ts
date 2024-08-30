@@ -1,28 +1,26 @@
-/// <reference types="node" />
-import { SKRSContext2D } from "@napi-rs/canvas";
-export declare enum TextAlign {
-    start = 0,
-    left = 1,
-    center = 2,
-    right = 3,
-    end = 4
-}
-export declare enum RevesedTextAlign {
-    end = 0,
-    right = 1,
-    center = 2,
-    left = 3,
-    start = 4
-}
+import { SKRSContext2D, Image } from '@napi-rs/canvas';
+import { FillOrStroke, FillOrStrokeOrClear, FilterMethod, Filters } from '..';
+import { CanvasUtil } from '..';
 export declare class CanvasBuilder {
-    static ctx: SKRSContext2D;
+    ctx: SKRSContext2D;
+    utl: typeof CanvasUtil;
+    get width(): number;
+    get height(): number;
     constructor(width: number, height: number);
-    drawImage: (image: any, x: number, y: number, width?: number, height?: number, radius?: number) => Promise<SKRSContext2D>;
-    fillText: (text: string, x: number, y: number, font: string, color: number, maxWidth?: number) => SKRSContext2D;
-    strokeText: (text: string, x: number, y: number, font: string, color: number, width?: number) => SKRSContext2D;
-    fillRect: (color: number, x: number, y: number, width: number, height: number, radius?: number) => SKRSContext2D;
-    strokeRect: (color: number, x: number, y: number, width: number, height: number, strokeWidth?: number, radius?: number) => SKRSContext2D;
-    setTextAlignment: (alignment: TextAlign) => SKRSContext2D;
-    render: () => Buffer;
+    rect(type: FillOrStrokeOrClear, x: number, y: number, width?: number | null, height?: number | null, radius?: number | number[] | null): void;
+    text(type: FillOrStroke, text: string, x: number, y: number, font: string, maxWidth?: number | null, multiline?: boolean | null, wrap?: boolean | null, lineOffset?: number | null): void;
+    drawImage(image: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL, x: number, y: number, width?: number | null, height?: number | null, radius?: number | number[] | null): Promise<void>;
+    measureText(text: string, font: string): TextMetrics;
+    filter(method: FilterMethod, filter?: Filters | null, value?: number | null): string | {
+        filter: string;
+        value: string;
+        raw: string;
+    }[] | undefined;
+    rotate(angle: number): void;
+    trim(): void;
+    getPixels(x: number, y: number, width: number, height: number): string[];
+    setPixels(x: number, y: number, width: number, height: number, colors: string[]): void;
+    resize(width: number, height: number): void;
+    get buffer(): Buffer;
 }
 //# sourceMappingURL=builder.d.ts.map

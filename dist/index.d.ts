@@ -1,10 +1,14 @@
-import { ForgeClient, ForgeExtension } from "@tryforge/forgescript";
+import { ForgeExtension } from '@tryforge/forgescript';
+export declare const registerFonts: (fonts: {
+    src: string;
+    name?: string | null;
+}[]) => Promise<void>;
 export declare class ForgeCanvas extends ForgeExtension {
-    static canvases: any;
     name: string;
     description: string;
     version: string;
-    constructor();
-    init(client: ForgeClient): void;
+    init(): void;
 }
+export * from './classes';
+export * from './typings';
 //# sourceMappingURL=index.d.ts.map
