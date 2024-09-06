@@ -1,5 +1,5 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { CanvasBuilder, CanvasManager, Context } from '../../';
+import { CanvasBuilder, CanvasManager, Context } from '../..';
 
 export default new NativeFunction({
     name: '$setCanvasSize',
