@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../../';
+import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$resizeCanvas',
