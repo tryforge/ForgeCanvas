@@ -9,6 +9,7 @@ export class Context extends ctx {
 // Enums
 export enum FillOrStroke { fill, stroke };
 export enum FillOrStrokeOrClear { none, fill, stroke, clear };
+export enum WidthOrHeight { width, height };
 export enum StyleType { color, gradient, pattern };
 export enum FilterMethod { add, set, remove, clear, get, json };
 export enum Filters { none, blur, sepia, grayscale, brightness, contrast, invert, saturate };
