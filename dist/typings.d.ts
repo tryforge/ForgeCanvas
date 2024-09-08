@@ -14,6 +14,10 @@ export declare enum FillOrStrokeOrClear {
     stroke = 2,
     clear = 3
 }
+export declare enum WidthOrHeight {
+    width = 0,
+    height = 1
+}
 export declare enum StyleType {
     color = 0,
     gradient = 1,

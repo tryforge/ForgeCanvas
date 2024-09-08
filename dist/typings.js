@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
+exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
 class Context extends forgescript_1.Context {
     canvasManager;
@@ -22,6 +22,12 @@ var FillOrStrokeOrClear;
     FillOrStrokeOrClear[FillOrStrokeOrClear["stroke"] = 2] = "stroke";
     FillOrStrokeOrClear[FillOrStrokeOrClear["clear"] = 3] = "clear";
 })(FillOrStrokeOrClear || (exports.FillOrStrokeOrClear = FillOrStrokeOrClear = {}));
+;
+var WidthOrHeight;
+(function (WidthOrHeight) {
+    WidthOrHeight[WidthOrHeight["width"] = 0] = "width";
+    WidthOrHeight[WidthOrHeight["height"] = 1] = "height";
+})(WidthOrHeight || (exports.WidthOrHeight = WidthOrHeight = {}));
 ;
 var StyleType;
 (function (StyleType) {
