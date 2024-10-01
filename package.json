@@ -1,6 +1,6 @@
 {
   "name": "@tryforge/forge.canvas",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A forgescript extension that allows you to create and edit images with ease.",
   "main": "dist/index.js",
   "scripts": {
@@ -29,10 +29,10 @@
     "@tryforge/forgescript": "^1.4.0",
     "@types/node": "^22.5.0",
     "typedoc": "^0.26.6",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "discord.js": "^14.16.1"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.55",
-    "discord.js": "^14.16.1"
+    "@napi-rs/canvas": "^0.1.49"
   }
 }
