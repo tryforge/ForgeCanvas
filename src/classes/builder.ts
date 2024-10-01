@@ -6,17 +6,24 @@ export class CanvasBuilder {
     public ctx: SKRSContext2D;
     public utl = CanvasUtil;
     
-    public get width () { return this.ctx.canvas.width };
-    public get height () { return this.ctx.canvas.height };
+    public get width() { return this.ctx.canvas.width };
+    public get height() { return this.ctx.canvas.height };
 
-    constructor (width: number, height: number) {
-        this.ctx = createCanvas(width,height).getContext('2d');
+    constructor(width: number, height: number) {
+        this.ctx = createCanvas(width, height).getContext('2d');
     };
 
-    public rect (type: FillOrStrokeOrClear, x: number, y: number, width?: number | null, height?: number | null, radius?: number | number[] | null) {
+    public rect(
+        type: FillOrStrokeOrClear,
+        x: number,
+        y: number,
+        width?: number | null,
+        height?: number | null,
+        radius?: number | number[] | null
+    ) {
         const ctx = this.ctx;
-        width??= ctx.canvas.width;
-        height??= ctx.canvas.height;
+        width??= ctx.canvas.width - x;
+        height??= ctx.canvas.height - y;
         radius??= 0;
         
         if (type === FillOrStrokeOrClear.none)
@@ -35,7 +42,17 @@ export class CanvasBuilder {
         ctx.restore();
     };
 
-    public text (type: FillOrStroke, text: string, x: number, y: number, font: string, maxWidth?: number | null, multiline?: boolean | null, wrap?: boolean | null, lineOffset?: number | null) {
+    public text(
+        type: FillOrStroke,
+        text: string,
+        x: number,
+        y: number,
+        font: string,
+        maxWidth?: number | null,
+        multiline?: boolean | null,
+        wrap?: boolean | null,
+        lineOffset?: number | null
+    ) {
         const ctx = this.ctx,
             oldfont = ctx.font,
             fontsize = parseFloat((fontRegex.exec(font) as RegExpExecArray)[4]),
@@ -72,7 +89,14 @@ export class CanvasBuilder {
         ctx.font = oldfont;
     };
 
-    public async drawImage (image: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL, x: number, y: number, width?: number | null, height?: number | null, radius?: number | number[] | null) {
+    public async drawImage(
+        image: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL,
+        x: number,
+        y: number,
+        width?: number | null,
+        height?: number | null,
+        radius?: number | number[] | null
+    ) {
         const ctx = this.ctx;
         image = await loadImage(image);
         width??= image.width;
@@ -90,7 +114,7 @@ export class CanvasBuilder {
         return;
     };
 
-    public measureText (text: string, font: string) {
+    public measureText(text: string, font: string) {
         const ctx = this.ctx,
               oldcolor = ctx.fillStyle,
               oldfont = ctx.font;
@@ -106,7 +130,11 @@ export class CanvasBuilder {
         return metrics;
     };
 
-    public filter (method: FilterMethod, filter?: Filters | null, value?: number | null) {
+    public filter(
+        method: FilterMethod,
+        filter?: Filters | null,
+        value?: number | null
+    ) {
         const ctx = this.ctx;
     
         if (filter && typeof filter === 'string')
@@ -143,7 +171,7 @@ export class CanvasBuilder {
             return CanvasUtil.parseFilters(ctx.filter);
     };
 
-    public rotate (angle: number) {
+    public rotate(angle: number) {
         const ctx = this.ctx;
     
         const centerX = ctx.canvas.width / 2;
@@ -154,7 +182,7 @@ export class CanvasBuilder {
         ctx.translate(-centerX, -centerY);
     };
     
-    public trim () {
+    public trim() {
         let ctx = this.ctx,
             canvas = ctx.canvas,
             pixels = ctx.getImageData(0, 0, canvas.width, canvas.height),
@@ -191,7 +219,12 @@ export class CanvasBuilder {
         ctx.putImageData(trimmed, 0, 0);
     };
     
-    public getPixels (x: number, y: number, width: number, height: number) {
+    public getPixels(
+        x: number,
+        y: number,
+        width: number,
+        height: number
+    ) {
         const ctx = this.ctx;
         width??= ctx.canvas.width;
         height??= ctx.canvas.height;
@@ -211,7 +244,13 @@ export class CanvasBuilder {
         return colors;
     };
     
-    public setPixels (x: number, y: number, width: number, height: number, colors: string[]) {
+    public setPixels(
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        colors: string[]
+    ) {
         const ctx = this.ctx;
         width??= ctx.canvas.width;
         height??= ctx.canvas.height;
@@ -231,7 +270,7 @@ export class CanvasBuilder {
         ctx.putImageData(data, x, y);
     };
     
-    public resize (width: number, height: number) {
+    public resize(width: number, height: number) {
         const ctx = this.ctx,
               data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
     
