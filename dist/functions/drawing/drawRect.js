@@ -65,7 +65,7 @@ exports.default = new forgescript_1.NativeFunction({
             description: 'The rect radius.',
             type: forgescript_1.ArgType.Number,
             required: false,
-            rest: false
+            rest: true
         }
     ],
     async execute(ctx, [name, t, style, x, y, w, h, r]) {
@@ -112,7 +112,7 @@ exports.default = new forgescript_1.NativeFunction({
         }
         const styleT = t === __1.FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle', oldstyle = canvas.ctx[styleT];
         canvas.ctx[styleT] = s ?? '#000000';
-        canvas.rect(t, x, y, w, h, r);
+        canvas.rect(t, x, y, w, h, r.length === 1 ? r[0] : r);
         canvas.ctx[styleT] = oldstyle;
         return this.success();
     }

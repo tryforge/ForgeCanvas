@@ -55,7 +55,7 @@ export default new NativeFunction({
             description: 'The image radius.',
             type: ArgType.Number,
             required: false,
-            rest: false
+            rest: true
         }
     ],
     async execute (ctx: Context, [name, path, x, y, w, h, r]) {
@@ -67,7 +67,7 @@ export default new NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
 
-        await canvas.drawImage(path, x, y, w, h, r);
+        await canvas.drawImage(path, x, y, w, h, r.length === 1 ? r[0] : r);
         return this.success();
     }
 });

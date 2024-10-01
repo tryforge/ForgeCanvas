@@ -64,7 +64,7 @@ export default new NativeFunction({
             description: 'The rect radius.',
             type: ArgType.Number,
             required: false,
-            rest: false
+            rest: true
         }
     ],
     async execute (ctx: Context, [name, t, style, x, y, w, h, r]) {
@@ -123,7 +123,7 @@ export default new NativeFunction({
               oldstyle = canvas.ctx[styleT];
 
         canvas.ctx[styleT] = s ?? '#000000';
-        canvas.rect(t, x, y, w, h, r);
+        canvas.rect(t, x, y, w, h, r.length === 1 ? r[0] : r);
         canvas.ctx[styleT] = oldstyle;
 
         return this.success();

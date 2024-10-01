@@ -40,7 +40,7 @@ declare const _default: NativeFunction<[{
     description: string;
     type: ArgType.Number;
     required: false;
-    rest: false;
+    rest: true;
 }], true>;
 export default _default;
 //# sourceMappingURL=drawImage.d.ts.map

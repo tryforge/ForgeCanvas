@@ -55,7 +55,7 @@ exports.default = new forgescript_1.NativeFunction({
             description: 'The image radius.',
             type: forgescript_1.ArgType.Number,
             required: false,
-            rest: false
+            rest: true
         }
     ],
     async execute(ctx, [name, path, x, y, w, h, r]) {
@@ -65,7 +65,7 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
         if (!canvas)
             return this.customError('No canvas');
-        await canvas.drawImage(path, x, y, w, h, r);
+        await canvas.drawImage(path, x, y, w, h, r.length === 1 ? r[0] : r);
         return this.success();
     }
 });
