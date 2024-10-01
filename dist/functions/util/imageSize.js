@@ -6,7 +6,7 @@ const canvas_1 = require("@napi-rs/canvas");
 exports.default = new forgescript_1.NativeFunction({
     name: '$imageSize',
     description: 'Returns image\'s size.',
-    version: '1.0.0',
+    version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
