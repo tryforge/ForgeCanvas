@@ -31,18 +31,20 @@ export default new NativeFunction({
         
         if (!canvas)
             return this.customError('No canvas');
+        
+        if (typeof options === 'string') options = JSON.parse(options);
 
-        const shadowOptions: Record<string, any> = {
-            color: canvas.shadowColor,
-            blur: canvas.shadowBlur,
-            offsetX: canvas.shadowOffsetX,
-            offsetY: canvas.shadowOffsetY
+        const shadowOptions: Record<string, 'shadowColor' | 'shadowBlur' | 'shadowOffsetX' | 'shadowOffsetY'> = {
+            color: 'shadowColor',
+            blur: 'shadowBlur',
+            offsetX: 'shadowOffsetX',
+            offsetY: 'shadowOffsetY'
         };
 
         const res: any[] = [];
-        if (!Array.isArray(options))
-            Object.keys(options).forEach(x => shadowOptions[x] = options[x]);
-        else options.forEach(x => res.push(shadowOptions?.[x]));
+        if (!Array.isArray(options)) // @ts-ignore
+            Object.keys(options).forEach(x => canvas[shadowOptions?.[x]] = options[x]);
+        else options.forEach(x => res.push(canvas[shadowOptions[x]]));
 
         return this.success(Array.isArray(options) ? JSON.stringify(res) : undefined);
     }

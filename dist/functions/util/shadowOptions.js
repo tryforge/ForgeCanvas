@@ -30,17 +30,19 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null)?.ctx;
         if (!canvas)
             return this.customError('No canvas');
+        if (typeof options === 'string')
+            options = JSON.parse(options);
         const shadowOptions = {
-            color: canvas.shadowColor,
-            blur: canvas.shadowBlur,
-            offsetX: canvas.shadowOffsetX,
-            offsetY: canvas.shadowOffsetY
+            color: 'shadowColor',
+            blur: 'shadowBlur',
+            offsetX: 'shadowOffsetX',
+            offsetY: 'shadowOffsetY'
         };
         const res = [];
-        if (!Array.isArray(options))
-            Object.keys(options).forEach(x => shadowOptions[x] = options[x]);
+        if (!Array.isArray(options)) // @ts-ignore
+            Object.keys(options).forEach(x => canvas[shadowOptions?.[x]] = options[x]);
         else
-            options.forEach(x => res.push(shadowOptions?.[x]));
+            options.forEach(x => res.push(canvas[shadowOptions[x]]));
         return this.success(Array.isArray(options) ? JSON.stringify(res) : undefined);
     }
 });
