@@ -17,8 +17,8 @@ class CanvasBuilder {
     ;
     rect(type, x, y, width, height, radius) {
         const ctx = this.ctx;
-        width ??= ctx.canvas.width;
-        height ??= ctx.canvas.height;
+        width ??= ctx.canvas.width - x;
+        height ??= ctx.canvas.height - y;
         radius ??= 0;
         if (type === __1.FillOrStrokeOrClear.none)
             return ctx.roundRect(x, y, width, height, radius);

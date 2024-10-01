@@ -80,10 +80,8 @@ export default new NativeFunction({
             return this.customError('No style provided.');
 
         let s: any;
-        console.log(style);
         if (style) {
             s = style.split('://');
-            console.log(s);
             if (s[0] === 'gradient') {
                 const gradient = ctx.gradientManager?.get(s.slice(1).join('://'));
                 if (!gradient) return this.customError('No gradient');
@@ -94,8 +92,7 @@ export default new NativeFunction({
                     type = splits.shift()?.toLowerCase(),
                     repeat = splits.length > 0 && ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'].includes(splits[splits.length - 1]) ? splits.pop() : null;
                 let image: Image | ImageData;
-                console.log(splits, type, repeat, s.slice(1).join('://').split(':'), (repeat ? splits.join(':') : splits.join()));
-            
+                
                 if (type === 'canvas') {
                     const canvas_2 = ctx.canvasManager?.get(repeat ? splits.join(':') : splits.join())?.ctx;
             
@@ -120,7 +117,6 @@ export default new NativeFunction({
                         );
                     })() : Colors[style]);
             };
-            console.log(s);
         }
 
         const styleT = t === FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle',

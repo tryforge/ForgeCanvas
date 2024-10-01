@@ -78,10 +78,8 @@ exports.default = new forgescript_1.NativeFunction({
         if (!style && (t === __1.FillOrStrokeOrClear.fill || t === __1.FillOrStrokeOrClear.stroke))
             return this.customError('No style provided.');
         let s;
-        console.log(style);
         if (style) {
             s = style.split('://');
-            console.log(s);
             if (s[0] === 'gradient') {
                 const gradient = ctx.gradientManager?.get(s.slice(1).join('://'));
                 if (!gradient)
@@ -91,7 +89,6 @@ exports.default = new forgescript_1.NativeFunction({
             else if (s[0] === 'pattern') {
                 const splits = s.slice(1).join('://').split(':'), type = splits.shift()?.toLowerCase(), repeat = splits.length > 0 && ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'].includes(splits[splits.length - 1]) ? splits.pop() : null;
                 let image;
-                console.log(splits, type, repeat, s.slice(1).join('://').split(':'), (repeat ? splits.join(':') : splits.join()));
                 if (type === 'canvas') {
                     const canvas_2 = ctx.canvasManager?.get(repeat ? splits.join(':') : splits.join())?.ctx;
                     if (!canvas_2)
@@ -112,7 +109,6 @@ exports.default = new forgescript_1.NativeFunction({
                     })() : __1.Colors[style]);
             }
             ;
-            console.log(s);
         }
         const styleT = t === __1.FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle', oldstyle = canvas.ctx[styleT];
         canvas.ctx[styleT] = s ?? '#000000';
