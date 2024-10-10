@@ -25,9 +25,8 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(_, [src, name]) {
-        return await (0, __1.registerFonts)([{ src: src, name }])
-            .then(_ => this.success())
-            .catch(r => this.customError(r));
+        await (0, __1.registerFonts)([{ src: src, name }]);
+        return this.success();
     }
 });
 //# sourceMappingURL=registerFont.js.map
