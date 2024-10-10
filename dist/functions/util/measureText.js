@@ -47,8 +47,8 @@ exports.default = new forgescript_1.NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
         const res = canvas.measureText(text, font);
-        return this.success(property
-            ? res[__1.MeasureTextProperty[(typeof property === 'number' ? __1.MeasureTextProperty[property] : property)]]
+        return this.success(property !== null
+            ? res[__1.MeasureTextProperty[(typeof property === 'string' ? __1.MeasureTextProperty[property] : property)]]
             : JSON.stringify(res));
     }
 });

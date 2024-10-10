@@ -48,9 +48,9 @@ export default new NativeFunction({
             return this.customError('No canvas');
 
         const res = canvas.measureText(text, font) as Record<string, any>;
-        return this.success(property 
+        return this.success(property !== null
             ? res[MeasureTextProperty[
-                (typeof property === 'number' ? MeasureTextProperty[property] : property) as any
+                (typeof property === 'string' ? MeasureTextProperty[property] : property) as any
             ]]
             : JSON.stringify(res)
         );
