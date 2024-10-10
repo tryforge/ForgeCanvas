@@ -6,7 +6,7 @@ const __1 = require("..");
 const __2 = require("..");
 class CanvasBuilder {
     ctx;
-    utl = __2.CanvasUtil;
+    util = __2.CanvasUtil;
     get width() { return this.ctx.canvas.width; }
     ;
     get height() { return this.ctx.canvas.height; }
@@ -103,7 +103,8 @@ class CanvasBuilder {
         if (method === __1.FilterMethod.add) {
             if (!filter || !value)
                 return;
-            ctx.filter = __2.CanvasUtil.parseFilters((ctx.filter === 'none' ? '' : ctx.filter) + `${__1.Filters[filter]}(${value + PxOrPerc})`)?.map(x => x?.raw)?.join(' ')?.trim();
+            ctx.filter = __2.CanvasUtil.parseFilters((ctx.filter === 'none' ? '' : ctx.filter)
+                + `${__1.Filters[filter]}(${value + PxOrPerc})`)?.map(x => x?.raw)?.join(' ')?.trim();
         }
         else if (method === __1.FilterMethod.set) {
             if (!filter || !value)
