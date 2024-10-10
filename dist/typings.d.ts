@@ -112,7 +112,7 @@ export declare enum CompositingOperation {
     'color' = 24,
     'luminosity' = 25
 }
-export declare enum FontVariableCaps {
+export declare enum FontVariantCaps {
     'normal' = 0,
     'small-caps' = 1,
     'all-small-caps' = 2,

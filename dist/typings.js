@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FontVariableCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
+exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
 class Context extends forgescript_1.Context {
     canvasManager;
@@ -143,15 +143,15 @@ var CompositingOperation;
     CompositingOperation[CompositingOperation["luminosity"] = 25] = "luminosity";
 })(CompositingOperation || (exports.CompositingOperation = CompositingOperation = {}));
 ;
-var FontVariableCaps;
-(function (FontVariableCaps) {
-    FontVariableCaps[FontVariableCaps["normal"] = 0] = "normal";
-    FontVariableCaps[FontVariableCaps["small-caps"] = 1] = "small-caps";
-    FontVariableCaps[FontVariableCaps["all-small-caps"] = 2] = "all-small-caps";
-    FontVariableCaps[FontVariableCaps["petite-caps"] = 3] = "petite-caps";
-    FontVariableCaps[FontVariableCaps["all-petite-caps"] = 4] = "all-petite-caps";
-    FontVariableCaps[FontVariableCaps["unicase"] = 5] = "unicase";
-    FontVariableCaps[FontVariableCaps["titling-caps"] = 6] = "titling-caps";
-})(FontVariableCaps || (exports.FontVariableCaps = FontVariableCaps = {}));
+var FontVariantCaps;
+(function (FontVariantCaps) {
+    FontVariantCaps[FontVariantCaps["normal"] = 0] = "normal";
+    FontVariantCaps[FontVariantCaps["small-caps"] = 1] = "small-caps";
+    FontVariantCaps[FontVariantCaps["all-small-caps"] = 2] = "all-small-caps";
+    FontVariantCaps[FontVariantCaps["petite-caps"] = 3] = "petite-caps";
+    FontVariantCaps[FontVariantCaps["all-petite-caps"] = 4] = "all-petite-caps";
+    FontVariantCaps[FontVariantCaps["unicase"] = 5] = "unicase";
+    FontVariantCaps[FontVariantCaps["titling-caps"] = 6] = "titling-caps";
+})(FontVariantCaps || (exports.FontVariantCaps = FontVariantCaps = {}));
 ;
 //# sourceMappingURL=typings.js.map

@@ -59,7 +59,7 @@ export enum CompositingOperation {
     'color',
     'luminosity'
 };
-export enum FontVariableCaps {
+export enum FontVariantCaps {
     'normal',
     'small-caps',
     'all-small-caps',
