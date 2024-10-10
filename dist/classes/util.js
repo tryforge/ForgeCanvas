@@ -65,9 +65,52 @@ class CanvasUtil {
         ;
         return false;
     };
+    static parseStyle = async (self, ctx, canvas, style) => {
+        if (!style)
+            return '#000000';
+        let s = style.split('://');
+        if (s[0] === 'gradient') {
+            const gradient = ctx.gradientManager?.get(s.slice(1).join('://'));
+            if (!gradient)
+                return self.customError('No gradient');
+            s = gradient;
+        }
+        else if (s[0] === 'pattern') {
+            const splits = s.slice(1).join('://').split(':'), type = splits.shift()?.toLowerCase(), repeat = splits.length > 0 && ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'].includes(splits[splits.length - 1]) ? splits.pop() : null;
+            let image;
+            if (type === 'canvas') {
+                const canvas_2 = ctx.canvasManager?.get(repeat ? splits.join(':') : splits.join())?.ctx;
+                if (!canvas_2)
+                    return self.customError('No canvas with provided name found.');
+                image = canvas_2.getImageData(0, 0, canvas_2.canvas.width, canvas_2.canvas.height);
+            }
+            else if (type === 'image') {
+                if (splits?.join(':')?.startsWith('images://')) {
+                    const img = ctx?.imageManager?.get(splits.join(':').slice(9));
+                    if (!img)
+                        return self.customError('No image with provided name found.');
+                    image = img;
+                }
+                else
+                    image = await (0, canvas_1.loadImage)(repeat ? splits.join(':') : splits.join());
+            }
+            else
+                return self.customError('Invalid pattern type.');
+            s = canvas.ctx.createPattern(image, repeat);
+        }
+        else {
+            s = (exports.hexRegex.test(style) ? style
+                : (exports.rgbaRegex.test(style) ? (() => {
+                    const match = style.match(exports.rgbaRegex);
+                    return CanvasUtil.rgbaToHex(parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3], 10), match[5] ? parseFloat(match[5]) : undefined);
+                })() : exports.Colors[style])) ?? '#000000';
+        }
+        ;
+        return s;
+    };
     static parseFilters = (filters) => {
         const result = [];
-        const regex = /(\w+)\(([^)]+)\)/g;
+        const regex = /([a-zA-Z-]+)\(([^)]+)\)/g;
         let match;
         while ((match = regex.exec(filters)) !== null) {
             const [raw, filter, value] = match;
