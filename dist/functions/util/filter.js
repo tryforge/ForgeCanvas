@@ -35,7 +35,7 @@ exports.default = new forgescript_1.NativeFunction({
         {
             name: 'value',
             description: 'Filter\'s value.',
-            type: forgescript_1.ArgType.Number,
+            type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         }

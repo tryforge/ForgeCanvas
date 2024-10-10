@@ -34,7 +34,7 @@ export default new NativeFunction({
         {
             name: 'value',
             description: 'Filter\'s value.',
-            type: ArgType.Number,
+            type: ArgType.String,
             required: false,
             rest: false
         }
