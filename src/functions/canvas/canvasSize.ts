@@ -33,9 +33,12 @@ export default new NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
 
-        return this.success(property // @ts-ignore
+        console.log(property, typeof property, WidthOrHeight[
+            (typeof property === 'string' ? WidthOrHeight[property] : property) as any
+        ]);
+        return this.success(property !== null // @ts-ignore
             ? canvas[WidthOrHeight[
-                (typeof property === 'number' ? WidthOrHeight[property] : property) as any
+                (typeof property === 'string' ? WidthOrHeight[property] : property) as any
             ]]
             : JSON.stringify({ width: canvas.width, height: canvas.height })
         );

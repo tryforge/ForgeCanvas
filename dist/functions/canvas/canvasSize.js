@@ -32,8 +32,9 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
         if (!canvas)
             return this.customError('No canvas');
-        return this.success(property // @ts-ignore
-            ? canvas[__1.WidthOrHeight[(typeof property === 'number' ? __1.WidthOrHeight[property] : property)]]
+        console.log(property, typeof property, __1.WidthOrHeight[(typeof property === 'string' ? __1.WidthOrHeight[property] : property)]);
+        return this.success(property !== null // @ts-ignore
+            ? canvas[__1.WidthOrHeight[(typeof property === 'string' ? __1.WidthOrHeight[property] : property)]]
             : JSON.stringify({ width: canvas.width, height: canvas.height }));
     }
 });
