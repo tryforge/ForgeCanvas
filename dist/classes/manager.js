@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GradientManager = exports.CanvasManager = void 0;
+exports.ImageManager = exports.GradientManager = exports.CanvasManager = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const builder_1 = require("./builder");
 const typings_1 = require("../typings");
@@ -55,5 +55,11 @@ class GradientManager extends Manager {
     ;
 }
 exports.GradientManager = GradientManager;
+;
+class ImageManager extends Manager {
+    set(name, image) { this.map.set(name, image); }
+    ;
+}
+exports.ImageManager = ImageManager;
 ;
 //# sourceMappingURL=manager.js.map
