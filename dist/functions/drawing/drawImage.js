@@ -65,7 +65,14 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
         if (!canvas)
             return this.customError('No canvas');
-        await canvas.drawImage(path, x, y, w, h, r.length === 1 ? r[0] : r);
+        let img = path;
+        if (path.startsWith('images://') && ctx.imageManager)
+            img = ctx.imageManager.get(path.slice(9));
+        else if (path.startsWith('canvas://'))
+            img = ctx.canvasManager?.get(path.slice(9))?.buffer;
+        if (!img)
+            return this.customError('Failed to load image.');
+        await canvas.drawImage(img, x, y, w, h, r.length === 1 ? r[0] : r);
         return this.success();
     }
 });
