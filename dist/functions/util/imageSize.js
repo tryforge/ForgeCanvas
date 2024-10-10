@@ -26,10 +26,16 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(_, [path, property]) {
-        const image = await (0, canvas_1.loadImage)(path, { maxRedirects: 30 });
-        return this.success(property //@ts-ignore
-            ? image[__1.WidthOrHeight[(typeof property === 'number' ? __1.WidthOrHeight[property] : property)]]
+    async execute(ctx, [path, property]) {
+        let image;
+        if (path.startsWith('images://') && ctx.imageManager)
+            image = ctx.imageManager.get(path.slice(9));
+        else
+            image = await (0, canvas_1.loadImage)(path);
+        if (!image)
+            return this.customError('Failed to load image.');
+        return this.success(property !== null // @ts-ignore
+            ? image[__1.WidthOrHeight[(typeof property === 'string' ? __1.WidthOrHeight[property] : property)]]
             : JSON.stringify({ width: image.width, height: image.height }));
     }
 });
