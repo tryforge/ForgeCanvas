@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
+exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
 class Context extends forgescript_1.Context {
     canvasManager;
     gradientManager;
+    imageManager;
 }
 exports.Context = Context;
 ;
@@ -56,6 +57,7 @@ var Filters;
     Filters[Filters["contrast"] = 5] = "contrast";
     Filters[Filters["invert"] = 6] = "invert";
     Filters[Filters["saturate"] = 7] = "saturate";
+    Filters[Filters["drop-shadow"] = 8] = "drop-shadow";
 })(Filters || (exports.Filters = Filters = {}));
 ;
 var TextBaseline;
@@ -140,5 +142,16 @@ var CompositingOperation;
     CompositingOperation[CompositingOperation["color"] = 24] = "color";
     CompositingOperation[CompositingOperation["luminosity"] = 25] = "luminosity";
 })(CompositingOperation || (exports.CompositingOperation = CompositingOperation = {}));
+;
+var FontVariantCaps;
+(function (FontVariantCaps) {
+    FontVariantCaps[FontVariantCaps["normal"] = 0] = "normal";
+    FontVariantCaps[FontVariantCaps["small-caps"] = 1] = "small-caps";
+    FontVariantCaps[FontVariantCaps["all-small-caps"] = 2] = "all-small-caps";
+    FontVariantCaps[FontVariantCaps["petite-caps"] = 3] = "petite-caps";
+    FontVariantCaps[FontVariantCaps["all-petite-caps"] = 4] = "all-petite-caps";
+    FontVariantCaps[FontVariantCaps["unicase"] = 5] = "unicase";
+    FontVariantCaps[FontVariantCaps["titling-caps"] = 6] = "titling-caps";
+})(FontVariantCaps || (exports.FontVariantCaps = FontVariantCaps = {}));
 ;
 //# sourceMappingURL=typings.js.map

@@ -7,7 +7,7 @@ import { Logger } from './classes';
 export const registerFonts = async (fonts: { src: string, name?: string | null }[]) => 
     fonts.forEach(font => {
         if (!existsSync(font.src))
-            throw Error(`Invalid font source. (${font.src})`);
+            throw Logger.log('ERROR', `Invalid font source. (${font.src})`);
     
         if (statSync(font.src).isFile()) {
             let filename = basename(font.src);
@@ -17,7 +17,7 @@ export const registerFonts = async (fonts: { src: string, name?: string | null }
             filename = font.name ?? filename.split('.').slice(0, -1).join('.');
             if (GlobalFonts.has(filename)) Logger.log('WARN', `Font with name '${filename}' already exists.`);
             GlobalFonts.registerFromPath(font.src, filename);
-            Logger.log('WARN', `Successfully registered '${filename}'.`);
+            Logger.log('INFO', `Successfully registered '${filename}'.`);
         } else return registerFonts(readdirSync(font.src).map(x => ({ src: join(font.src, x) })));
     });
 

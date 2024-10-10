@@ -1,5 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { Context } from '../..';
+import { Image } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$drawImage',
@@ -67,7 +68,15 @@ export default new NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
 
-        await canvas.drawImage(path, x, y, w, h, r.length === 1 ? r[0] : r);
+        let img: string | Image | undefined | Buffer = path;
+        if (path.startsWith('images://') && ctx.imageManager)
+            img = ctx.imageManager.get(path.slice(9));
+        else if (path.startsWith('canvas://'))
+            img = ctx.canvasManager?.get(path.slice(9))?.buffer;
+
+        if (!img) return this.customError('Failed to load image.');
+
+        await canvas.drawImage(img, x, y, w, h, r.length === 1 ? r[0] : r);
         return this.success();
     }
 });

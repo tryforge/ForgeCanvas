@@ -1,4 +1,4 @@
-import { createCanvas, SKRSContext2D } from '@napi-rs/canvas';
+import { createCanvas, Image, loadImage, SKRSContext2D } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../typings';
 
@@ -54,4 +54,8 @@ export class GradientManager extends Manager<CanvasGradient> {
                     : this.ctx.createLinearGradient(...options as [number, number, number, number]));
         else this.map.set(name, a as CanvasGradient);
     };
+};
+
+export class ImageManager extends Manager<Image> {
+    public set (name: string, image: Image) { this.map.set(name, image) };
 };

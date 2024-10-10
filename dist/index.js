@@ -22,7 +22,7 @@ const node_path_1 = require("node:path");
 const classes_1 = require("./classes");
 const registerFonts = async (fonts) => fonts.forEach(font => {
     if (!(0, node_fs_1.existsSync)(font.src))
-        throw Error(`Invalid font source. (${font.src})`);
+        throw classes_1.Logger.log('ERROR', `Invalid font source. (${font.src})`);
     if ((0, node_fs_1.statSync)(font.src).isFile()) {
         let filename = (0, node_path_1.basename)(font.src);
         if (!['ttf', 'otf', 'woff', 'woff2'].find(x => filename.endsWith(`.${x}`)))
@@ -31,7 +31,7 @@ const registerFonts = async (fonts) => fonts.forEach(font => {
         if (canvas_1.GlobalFonts.has(filename))
             classes_1.Logger.log('WARN', `Font with name '${filename}' already exists.`);
         canvas_1.GlobalFonts.registerFromPath(font.src, filename);
-        classes_1.Logger.log('WARN', `Successfully registered '${filename}'.`);
+        classes_1.Logger.log('INFO', `Successfully registered '${filename}'.`);
     }
     else
         return (0, exports.registerFonts)((0, node_fs_1.readdirSync)(font.src).map(x => ({ src: (0, node_path_1.join)(font.src, x) })));

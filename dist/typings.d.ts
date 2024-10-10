@@ -1,8 +1,9 @@
-import { Context as ctx } from "@tryforge/forgescript";
-import { CanvasManager, GradientManager } from "./classes";
+import { Context as ctx } from '@tryforge/forgescript';
+import { CanvasManager, GradientManager, ImageManager } from './classes';
 export declare class Context extends ctx {
     canvasManager?: CanvasManager;
     gradientManager?: GradientManager;
+    imageManager?: ImageManager;
 }
 export declare enum FillOrStroke {
     fill = 0,
@@ -39,7 +40,8 @@ export declare enum Filters {
     brightness = 4,
     contrast = 5,
     invert = 6,
-    saturate = 7
+    saturate = 7,
+    'drop-shadow' = 8
 }
 export declare enum TextBaseline {
     top = 0,
@@ -83,31 +85,40 @@ export declare enum MeasureTextProperty {
     width = 9
 }
 export declare enum CompositingOperation {
-    "source-over" = 0,
-    "source-in" = 1,
-    "source-out" = 2,
-    "source-atop" = 3,
-    "destination-over" = 4,
-    "destination-in" = 5,
-    "destination-out" = 6,
-    "destination-atop" = 7,
-    "lighter" = 8,
-    "copy" = 9,
-    "xor" = 10,
-    "multiply" = 11,
-    "screen" = 12,
-    "overlay" = 13,
-    "darken" = 14,
-    "lighten" = 15,
-    "color-dodge" = 16,
-    "color-burn" = 17,
-    "hard-light" = 18,
-    "soft-light" = 19,
-    "difference" = 20,
-    "exclusion" = 21,
-    "hue" = 22,
-    "saturation" = 23,
-    "color" = 24,
-    "luminosity" = 25
+    'source-over' = 0,
+    'source-in' = 1,
+    'source-out' = 2,
+    'source-atop' = 3,
+    'destination-over' = 4,
+    'destination-in' = 5,
+    'destination-out' = 6,
+    'destination-atop' = 7,
+    'lighter' = 8,
+    'copy' = 9,
+    'xor' = 10,
+    'multiply' = 11,
+    'screen' = 12,
+    'overlay' = 13,
+    'darken' = 14,
+    'lighten' = 15,
+    'color-dodge' = 16,
+    'color-burn' = 17,
+    'hard-light' = 18,
+    'soft-light' = 19,
+    'difference' = 20,
+    'exclusion' = 21,
+    'hue' = 22,
+    'saturation' = 23,
+    'color' = 24,
+    'luminosity' = 25
+}
+export declare enum FontVariantCaps {
+    'normal' = 0,
+    'small-caps' = 1,
+    'all-small-caps' = 2,
+    'petite-caps' = 3,
+    'all-petite-caps' = 4,
+    'unicase' = 5,
+    'titling-caps' = 6
 }
 //# sourceMappingURL=typings.d.ts.map

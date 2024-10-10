@@ -4,7 +4,7 @@ import { CanvasUtil } from '..';
 
 export class CanvasBuilder {
     public ctx: SKRSContext2D;
-    public utl = CanvasUtil;
+    public util = CanvasUtil;
     
     public get width() { return this.ctx.canvas.width };
     public get height() { return this.ctx.canvas.height };
@@ -133,7 +133,7 @@ export class CanvasBuilder {
     public filter(
         method: FilterMethod,
         filter?: Filters | null,
-        value?: number | null
+        value?: string | null
     ) {
         const ctx = this.ctx;
     
@@ -141,12 +141,15 @@ export class CanvasBuilder {
             filter = Filters[filter] as unknown as Filters;
 
         const PxOrPerc =
-                filter === Filters.grayscale || filter === Filters.sepia ? '%' : 
-                    (filter === Filters.blur ? 'px' : '');
+            filter === Filters.grayscale || filter === Filters.sepia ? '%' : 
+                (filter === Filters.blur ? 'px' : '');
 
         if (method === FilterMethod.add) {
             if (!filter || !value) return;
-            ctx.filter = CanvasUtil.parseFilters((ctx.filter === 'none' ? '' : ctx.filter) + `${Filters[filter]}(${value + PxOrPerc})`)?.map(x => x?.raw)?.join(' ')?.trim();
+            ctx.filter = CanvasUtil.parseFilters(
+                (ctx.filter === 'none' ? '' : ctx.filter)
+                 + `${Filters[filter]}(${value + PxOrPerc})`
+            )?.map(x => x?.raw)?.join(' ')?.trim();
         }
         else if (method === FilterMethod.set) {
             if (!filter || !value) return;
@@ -279,5 +282,5 @@ export class CanvasBuilder {
         ctx.putImageData(data, 0, 0);
     };
 
-    public get buffer () { return this.ctx.canvas.toBuffer('image/png') };
+    public get buffer() { return this.ctx.canvas.toBuffer('image/png') };
 };

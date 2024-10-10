@@ -1,10 +1,13 @@
 import chalk from 'chalk';
+import { Context } from '../typings';
+import { CanvasBuilder } from './builder';
 export declare const fontRegex: RegExp;
 export declare const rgbaRegex: RegExp;
 export declare const hexRegex: RegExp;
 export declare const Colors: Record<string, string>;
 export declare class CanvasUtil {
     static isValidFont: (font: string) => boolean;
+    static parseStyle: (self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<any>;
     static parseFilters: (filters: string) => {
         filter: string;
         value: string;

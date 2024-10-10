@@ -25,8 +25,7 @@ export default new NativeFunction({
         }
     ],
     async execute (_: Context, [src, name]) {
-        return await registerFonts([{ src: src, name }])
-        .then(_ => this.success())
-        .catch(r => this.customError(r));
+        await registerFonts([{ src: src, name }])
+        return this.success();
     }
 });
