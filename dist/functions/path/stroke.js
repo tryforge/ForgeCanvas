@@ -5,7 +5,7 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$stroke',
     description: 'Strokes (outlines) the current path.',
-    version: '1.0.0',
+    version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
