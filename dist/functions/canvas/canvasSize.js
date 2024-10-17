@@ -5,7 +5,7 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$canvasSize',
     description: 'Returns canvas size.',
-    version: '1.0.0',
+    version: '1.1.0',
     brackets: false,
     unwrap: true,
     args: [

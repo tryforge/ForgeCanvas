@@ -5,7 +5,7 @@ import { writeFileSync } from 'node:fs';
 export default new NativeFunction({
     name: '$downloadCanvas',
     description: 'Downloads a canvas.',
-    version: '1.0.0',
+    version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [

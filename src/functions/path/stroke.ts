@@ -4,7 +4,7 @@ import { CanvasUtil, Context } from '../..';
 export default new NativeFunction({
     name: '$stroke',
     description: 'Strokes (outlines) the current path.',
-    version: '1.0.0',
+    version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
