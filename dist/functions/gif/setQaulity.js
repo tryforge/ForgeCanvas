@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
-    name: '$setDelay',
-    description: 'Sets the GIF display frame delay.',
+    name: '$setQuality',
+    description: 'Sets the GIF color quality.',
     version: '1.2.0',
-    brackets: true,
+    brackets: false,
     unwrap: true,
     args: [
         {
@@ -16,20 +16,23 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         },
         {
-            name: 'delay',
-            description: 'Number of milliseconds to display the frame.',
+            name: 'quality',
+            description: 'The quality. (0-30)',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         }
     ],
-    async execute(ctx, [gifName, delay]) {
-        const gif = ctx.gifManager?.get(gifName);
+    async execute(ctx, [name, quality]) {
+        const gif = ctx.gifManager?.get(name);
         if (!gif) {
-            return this.customError('No GIF with the provided name found.');
+            return this.customError('No GIF with provided name found.');
         }
-        await gif.setDelay(delay);
+        if (quality < 0 || quality > 30) {
+            return this.customError('Quality must be between 0 and 30.');
+        }
+        await gif.setQuality(quality);
         return this.success();
     }
 });
-//# sourceMappingURL=setDelay.js.map
+//# sourceMappingURL=setQaulity.js.map

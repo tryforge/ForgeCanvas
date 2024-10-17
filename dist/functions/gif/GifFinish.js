@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
-    name: '$setDelay',
-    description: 'Sets the GIF display frame delay.',
-    version: '1.2.0',
+    name: '$gifFinish',
+    description: 'Finishes the GIF.',
+    version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
@@ -14,22 +14,15 @@ exports.default = new forgescript_1.NativeFunction({
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
-        },
-        {
-            name: 'delay',
-            description: 'Number of milliseconds to display the frame.',
-            type: forgescript_1.ArgType.Number,
-            required: true,
-            rest: false
         }
     ],
-    async execute(ctx, [gifName, delay]) {
+    async execute(ctx, [gifName]) {
         const gif = ctx.gifManager?.get(gifName);
         if (!gif) {
             return this.customError('No GIF with the provided name found.');
         }
-        await gif.setDelay(delay);
+        gif.finish();
         return this.success();
     }
 });
-//# sourceMappingURL=setDelay.js.map
+//# sourceMappingURL=GifFinish.js.map

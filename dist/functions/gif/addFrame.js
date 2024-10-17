@@ -36,13 +36,7 @@ exports.default = new forgescript_1.NativeFunction({
         }
         else {
             const frameExists = await (0, node_fs_1.existsSync)(frame);
-            if (!frameExists && (() => { try {
-                new URL(frame);
-                return false;
-            }
-            catch {
-                return true;
-            } })()) {
+            if (!frameExists && !ctx.checkType({ type: forgescript_1.ArgType.String }, frame)) {
                 return this.customError('Invalid frame source provided.');
             }
             const img = await (0, canvas_1.loadImage)(frame);

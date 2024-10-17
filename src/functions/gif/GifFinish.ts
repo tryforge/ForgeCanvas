@@ -1,10 +1,10 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
+import { Context } from '../../';
 
 export default new NativeFunction({
-    name: '$setDelay',
-    description: 'Sets the GIF display frame delay.',
-    version: '1.2.0',
+    name: '$gifFinish',
+    description: 'Finishes the GIF.',
+    version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
@@ -14,23 +14,16 @@ export default new NativeFunction({
             type: ArgType.String,
             required: true,
             rest: false
-        },
-        {
-            name: 'delay',
-            description: 'Number of milliseconds to display the frame.',
-            type: ArgType.Number,
-            required: true,
-            rest: false
         }
     ],
-    async execute(ctx: Context, [gifName, delay]) {
+    async execute(ctx: Context, [gifName]) {
         const gif = ctx.gifManager?.get(gifName);
 
         if (!gif) {
             return this.customError('No GIF with the provided name found.');
         }
 
-        await gif.setDelay(delay);
+        gif.finish();
 
         return this.success();
     }

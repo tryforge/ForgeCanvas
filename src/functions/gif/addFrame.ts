@@ -2,6 +2,7 @@ import { createCanvas, loadImage } from '@napi-rs/canvas';
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { CanvasBuilder, CanvasManager, GIFManager, Context } from '../../';
 import { existsSync } from 'node:fs';
+import { createGzip } from 'node:zlib';
 
 export default new NativeFunction({
     name: '$addFrame',
@@ -37,7 +38,7 @@ export default new NativeFunction({
             frameData = ctx.canvasManager?.get(frame.split('canvas://').slice(1).join('://'))?.ctx;
         } else {
             const frameExists = await existsSync(frame);
-            if (!frameExists && (() => { try { new URL(frame); return false } catch { return true } })()) {
+            if (!frameExists && !ctx.checkType({ type: ArgType.String}, frame)) {
                 return this.customError('Invalid frame source provided.');
             }
 
