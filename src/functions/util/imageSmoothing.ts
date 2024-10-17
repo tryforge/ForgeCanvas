@@ -5,6 +5,7 @@ export default new NativeFunction({
     name: '$imageSmoothing',
     description: 'Sets or returns the image smoothing in a canvas.',
     version: '1.0.0',
+    aliases: ["$imageSmooth"],
     brackets: false,
     unwrap: true,
     args: [

@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImageManager = exports.GradientManager = exports.CanvasManager = void 0;
+exports.GIFManager = exports.ImageManager = exports.GradientManager = exports.CanvasManager = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const builder_1 = require("./builder");
 const typings_1 = require("../typings");
+const gifencoder = require("gif-encoder-2");
 class Manager {
     map;
     constructor() {
@@ -61,5 +62,22 @@ class ImageManager extends Manager {
     ;
 }
 exports.ImageManager = ImageManager;
+;
+class GIFManager extends Manager {
+    current;
+    constructor() {
+        super();
+        this.current = [];
+    }
+    ;
+    set(name, a, b) {
+        if (typeof a !== 'number')
+            this.map.set(name, a);
+        else
+            this.map.set(name, new gifencoder(a, b ?? a));
+    }
+    ;
+}
+exports.GIFManager = GIFManager;
 ;
 //# sourceMappingURL=manager.js.map

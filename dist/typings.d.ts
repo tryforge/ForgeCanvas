@@ -1,9 +1,10 @@
 import { Context as ctx } from '@tryforge/forgescript';
-import { CanvasManager, GradientManager, ImageManager } from './classes';
+import { CanvasManager, GradientManager, ImageManager, GIFManager } from './classes';
 export declare class Context extends ctx {
     canvasManager?: CanvasManager;
     gradientManager?: GradientManager;
     imageManager?: ImageManager;
+    gifManager?: GIFManager;
 }
 export declare enum FillOrStroke {
     fill = 0,

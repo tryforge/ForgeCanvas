@@ -28,11 +28,13 @@
   "devDependencies": {
     "@tryforge/forgescript": "^1.4.0",
     "@types/node": "^22.5.0",
+    "discord.js": "^14.16.1",
     "typedoc": "^0.26.6",
-    "typescript": "^5.5.4",
-    "discord.js": "^14.16.1"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.49"
+    "@napi-rs/canvas": "^0.1.49",
+    "gif-encoder-2": "^1.0.5",
+    "gif-frames": "^1.0.1"
   }
 }

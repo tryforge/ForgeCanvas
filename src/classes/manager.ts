@@ -1,6 +1,7 @@
 import { createCanvas, Image, loadImage, SKRSContext2D } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../typings';
+const gifencoder = require("gif-encoder-2");
 
 class Manager<T> {
     public map: Map<string, T>;
@@ -59,3 +60,23 @@ export class GradientManager extends Manager<CanvasGradient> {
 export class ImageManager extends Manager<Image> {
     public set (name: string, image: Image) { this.map.set(name, image) };
 };
+
+
+  export class GIFManager extends Manager<typeof gifencoder> {
+    public current: typeof gifencoder[];
+
+    constructor () {
+        super();
+        this.current = [];
+    };
+
+    set (name: string, canvas: typeof gifencoder): void;
+    set (name: string, width: number, height: number, algorithm?: "neuquant" | "octree"): void;
+    public set (name: string, a: typeof gifencoder | number, b?: number) {
+        if (typeof a !== 'number')
+            this.map.set(name, a);
+        else
+            this.map.set(name, new gifencoder(a, b ?? a));
+    };
+
+  };

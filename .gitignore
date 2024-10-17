@@ -1,3 +1,5 @@
 node_modules
 src/__tests__
 dist/__tests__
+src/functions/gif
+dist/functions/gif
