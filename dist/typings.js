@@ -6,6 +6,7 @@ class Context extends forgescript_1.Context {
     canvasManager;
     gradientManager;
     imageManager;
+    gifManager;
 }
 exports.Context = Context;
 ;

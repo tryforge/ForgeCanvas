@@ -5,6 +5,7 @@ export default new NativeFunction({
     name: '$newLinearGradient',
     description: 'Creates a linear gradient.',
     version: '1.0.0',
+    aliases: ["$newLinear"],
     brackets: true,
     unwrap: true,
     args: [

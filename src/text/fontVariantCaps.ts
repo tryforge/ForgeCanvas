@@ -5,6 +5,7 @@ export default new NativeFunction({
     name: '$fontVariantCaps',
     description: 'Sets or returns the capitalization of the text.',
     version: '1.0.0',
+    aliases: ["$fontVarCaps"],
     brackets: false,
     unwrap: true,
     args: [

@@ -5,6 +5,7 @@ exports.default = new forgescript_1.NativeFunction({
     name: '$quadraticCurveTo',
     description: 'Draws a quadratic Bézier curve in the current path.',
     version: '1.0.0',
+    aliases: ["$quadCurve"],
     brackets: true,
     unwrap: true,
     args: [

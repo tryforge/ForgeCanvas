@@ -6,6 +6,7 @@ exports.default = new forgescript_1.NativeFunction({
     name: '$newConicGradient',
     description: 'Creates a conic gradient.',
     version: '1.0.0',
+    aliases: ["$newConic"],
     brackets: true,
     unwrap: true,
     args: [

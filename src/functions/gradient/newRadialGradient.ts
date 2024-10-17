@@ -5,6 +5,7 @@ export default new NativeFunction({
     name: '$newRadialGradient',
     description: 'Creates a radial gradient.',
     version: '1.0.0',
+    aliases: ["$newRadial"],
     brackets: true,
     unwrap: true,
     args: [
