@@ -7,7 +7,7 @@ import { existsSync } from 'node:fs';
 export default new NativeFunction({
     name: '$addFrame',
     description: 'Adds a frame to the GIF.',
-    version: '1.0.0',
+    version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
@@ -38,7 +38,7 @@ export default new NativeFunction({
             frameData = ctx.canvasManager?.get(frame.split('canvas://').slice(1).join('://'))?.ctx;
         } else {
             const frameExists = await existsSync(frame);
-            if (!frameExists && !ctx.checkType({ type: ArgType.String}, frame)) {
+            if (!frameExists && (() => { try {new URL(frame); return false} catch {return true}})()) {
                 return this.customError('Invalid frame source provided.');
             }
 

@@ -4,7 +4,7 @@ import { Context } from '../../';
 export default new NativeFunction({
     name: '$gifFinish',
     description: 'Finishes the GIF.',
-    version: '1.0.0',
+    version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [

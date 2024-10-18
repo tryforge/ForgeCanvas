@@ -6,7 +6,7 @@ const node_fs_1 = require("node:fs");
 exports.default = new forgescript_1.NativeFunction({
     name: '$addFrame',
     description: 'Adds a frame to the GIF.',
-    version: '1.0.0',
+    version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
@@ -36,7 +36,13 @@ exports.default = new forgescript_1.NativeFunction({
         }
         else {
             const frameExists = await (0, node_fs_1.existsSync)(frame);
-            if (!frameExists && !ctx.checkType({ type: forgescript_1.ArgType.String }, frame)) {
+            if (!frameExists && (() => { try {
+                new URL(frame);
+                return false;
+            }
+            catch {
+                return true;
+            } })()) {
                 return this.customError('Invalid frame source provided.');
             }
             const img = await (0, canvas_1.loadImage)(frame);
