@@ -5,8 +5,8 @@ const package_json_1 = require("../../../package.json");
 exports.default = new forgescript_1.NativeFunction({
     name: '$canvasVersion',
     description: 'Returns the aoi.canvas version.',
-    version: '1.0.0',
-    brackets: true,
+    version: '1.2.0',
+    brackets: false,
     unwrap: true,
     args: [],
     async execute(ctx) {
