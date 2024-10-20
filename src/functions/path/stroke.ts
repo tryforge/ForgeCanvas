@@ -5,7 +5,7 @@ export default new NativeFunction({
     name: '$stroke',
     aliases: ['$strokePath', '$pathStroke'],
     description: 'Strokes (outlines) the current path.',
-    version: '1.0.0',
+    version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
