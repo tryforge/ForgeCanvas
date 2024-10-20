@@ -1,29 +1,30 @@
 import { createCanvas, Image, loadImage, SKRSContext2D } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
-import { GradientType } from '../typings';
+import { GradientType } from '../';
+import GIFEncoder from 'gif-encoder-2';
 
 class Manager<T> {
     public map: Map<string, T>;
 
-    constructor () {
+    constructor() {
         this.map = new Map();
     };
 
-    public get (name: string) { return this.map.get(name) };
-    public remove (name: string) { this.map.delete(name) };
+    public get(name: string) { return this.map.get(name) };
+    public remove(name: string) { this.map.delete(name) };
 };
 
 export class CanvasManager extends Manager<CanvasBuilder> {
     public current: CanvasBuilder[];
 
-    constructor () {
+    constructor() {
         super();
         this.current = [];
     };
 
-    set (name: string, canvas: CanvasBuilder): void;
-    set (name: string, width: number, height: number): void;
-    public set (name: string, a: CanvasBuilder | number, b?: number) {
+    set(name: string, canvas: CanvasBuilder): void;
+    set(name: string, width: number, height: number): void;
+    public set(name: string, a: CanvasBuilder | number, b?: number) {
         if (typeof a !== 'number')
             this.map.set(name, a);
         else
@@ -35,17 +36,17 @@ export class GradientManager extends Manager<CanvasGradient> {
     private ctx: SKRSContext2D;
     public stops: [number, string][];
 
-    constructor () {
+    constructor() {
         super();
         this.ctx = createCanvas(1, 1).getContext('2d');
         this.stops = [];
     };
 
-    set (name: string, gradient: CanvasGradient): void;
-    set (name: string, type: GradientType.radial, x1: number, y1: number, r1: number, x2: number, y2: number, r2: number): void;
-    set (name: string, type: GradientType.conic, startAngle: number, x: number, y: number): void;
-    set (name: string, type: GradientType.linear, x1: number, y1: number, x2: number, y2: number): void;
-    public set (name: string, a: CanvasGradient | GradientType, ...options: number[]) {
+    set(name: string, gradient: CanvasGradient): void;
+    set(name: string, type: GradientType.radial, x1: number, y1: number, r1: number, x2: number, y2: number, r2: number): void;
+    set(name: string, type: GradientType.conic, startAngle: number, x: number, y: number): void;
+    set(name: string, type: GradientType.linear, x1: number, y1: number, x2: number, y2: number): void;
+    public set(name: string, a: CanvasGradient | GradientType, ...options: number[]) {
         if (GradientType?.[a as any])
             this.map.set(name, a === GradientType.radial
                 ? this.ctx.createRadialGradient(...options as [number, number, number, number, number, number])
@@ -57,5 +58,18 @@ export class GradientManager extends Manager<CanvasGradient> {
 };
 
 export class ImageManager extends Manager<Image> {
-    public set (name: string, image: Image) { this.map.set(name, image) };
+    public set(name: string, image: Image) { this.map.set(name, image) };
+};
+
+export class GIFManager extends Manager<GIFEncoder> {
+    public current: GIFEncoder[];
+
+    constructor() {
+        super();
+        this.current = [];
+    };
+
+    public set(name: string, gif: GIFEncoder) {
+        this.map.set(name, gif);
+    };
 };
