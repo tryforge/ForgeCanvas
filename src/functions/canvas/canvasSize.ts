@@ -3,6 +3,7 @@ import { Context, WidthOrHeight } from '../..';
 
 export default new NativeFunction({
     name: '$canvasSize',
+    aliases: ['$canvasDimensions'],
     description: 'Returns canvas size.',
     version: '1.1.0',
     brackets: false,

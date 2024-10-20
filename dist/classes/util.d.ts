@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { Context } from '../typings';
+import { Context } from '../';
 import { CanvasBuilder } from './builder';
 export declare const fontRegex: RegExp;
 export declare const rgbaRegex: RegExp;
@@ -20,6 +20,14 @@ export declare class CanvasUtil {
         blue: number;
         alpha: number | undefined;
     };
+}
+export declare class ByteArray {
+    data: number[];
+    constructor();
+    getData: () => Buffer;
+    writeByte(val: number): void;
+    writeUTFBytes(str: string): void;
+    writeBytes(array: number[], offset: number, length: number): void;
 }
 export declare const Logger: {
     DateColor: chalk.Chalk;

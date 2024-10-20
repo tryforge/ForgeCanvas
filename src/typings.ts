@@ -1,5 +1,5 @@
 import { Context as ctx } from '@tryforge/forgescript';
-import { CanvasManager, GradientManager, ImageManager, GIFManager } from './classes';
+import { CanvasManager, GIFManager, GradientManager, ImageManager } from './classes';
 
 export class Context extends ctx {
     canvasManager?: CanvasManager;
@@ -8,7 +8,16 @@ export class Context extends ctx {
     gifManager?: GIFManager;
 };
 
-// Enums
+type rawr<num extends number, meow extends number[] = []> = 
+  meow['length'] extends num
+    ? meow[number]
+    : rawr<num, [...meow, meow['length']]>;
+
+export type Range<Min extends number, Max extends number> = 
+  Min extends Max 
+    ? never 
+    : Exclude<rawr<Max>, rawr<Min>> | Min | Max;
+
 export enum FillOrStroke { fill, stroke };
 export enum FillOrStrokeOrClear { none, fill, stroke, clear };
 export enum WidthOrHeight { width, height };
@@ -68,4 +77,8 @@ export enum FontVariantCaps {
     'all-petite-caps',
     'unicase',
     'titling-caps'
+};
+export enum ColorQuantizationAlgorithm {
+    neuquant,
+    octree  
 };

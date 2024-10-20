@@ -3,6 +3,7 @@ import { Context } from '../../';
 
 export default new NativeFunction({
     name: '$deleteCanvas',
+    aliases: ['$removeCanvas'],
     description: 'Deletes the canvas.',
     version: '1.0.0',
     brackets: true,

@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$trimCanvas',
+    aliases: ['$canvasTrim'],
     description: 'Trims a canvas.',
     version: '1.0.0',
     brackets: false,

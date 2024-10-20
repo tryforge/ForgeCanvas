@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Logger = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.fontRegex = void 0;
+exports.Logger = exports.ByteArray = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.fontRegex = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const chalk_1 = __importDefault(require("chalk"));
 exports.fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i;
@@ -127,6 +127,34 @@ class CanvasUtil {
     });
 }
 exports.CanvasUtil = CanvasUtil;
+;
+class ByteArray {
+    data;
+    constructor() {
+        this.data = [];
+    }
+    ;
+    getData = () => Buffer.from(this.data);
+    writeByte(val) {
+        this.data.push(val);
+    }
+    ;
+    writeUTFBytes(str) {
+        for (var len = str.length, i = 0; i < len; i++) {
+            this.writeByte(str.charCodeAt(i));
+        }
+        ;
+    }
+    ;
+    writeBytes(array, offset, length) {
+        for (var len = length || array.length, i = offset || 0; i < len; i++) {
+            this.writeByte(array[i]);
+        }
+        ;
+    }
+    ;
+}
+exports.ByteArray = ByteArray;
 ;
 exports.Logger = {
     DateColor: chalk_1.default.green.bold,

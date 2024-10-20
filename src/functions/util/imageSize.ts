@@ -4,6 +4,7 @@ import { Image, loadImage } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$imageSize',
+    aliases: ['$imgSize', '$imageDimensions'],
     description: 'Returns image\'s size.',
     version: '1.1.0',
     brackets: true,

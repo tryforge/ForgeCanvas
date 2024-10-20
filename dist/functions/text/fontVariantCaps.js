@@ -4,9 +4,9 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$fontVariantCaps',
+    aliases: ['$fontCaps'],
     description: 'Sets or returns the capitalization of the text.',
     version: '1.1.0',
-    aliases: ["$fontVarCaps"],
     brackets: false,
     unwrap: true,
     args: [

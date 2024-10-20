@@ -3,6 +3,7 @@ import { CanvasBuilder, CanvasManager, Context } from '../..';
 
 export default new NativeFunction({
     name: '$setCanvasSize',
+    aliases: ['$setCanvasDimensions'],
     description: 'Sets size of the new canvas.',
     version: '1.0.0',
     brackets: true,

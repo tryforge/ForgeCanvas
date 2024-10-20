@@ -1,11 +1,13 @@
 import { Context as ctx } from '@tryforge/forgescript';
-import { CanvasManager, GradientManager, ImageManager, GIFManager } from './classes';
+import { CanvasManager, GIFManager, GradientManager, ImageManager } from './classes';
 export declare class Context extends ctx {
     canvasManager?: CanvasManager;
     gradientManager?: GradientManager;
     imageManager?: ImageManager;
     gifManager?: GIFManager;
 }
+type rawr<num extends number, meow extends number[] = []> = meow['length'] extends num ? meow[number] : rawr<num, [...meow, meow['length']]>;
+export type Range<Min extends number, Max extends number> = Min extends Max ? never : Exclude<rawr<Max>, rawr<Min>> | Min | Max;
 export declare enum FillOrStroke {
     fill = 0,
     stroke = 1
@@ -122,4 +124,9 @@ export declare enum FontVariantCaps {
     'unicase' = 5,
     'titling-caps' = 6
 }
+export declare enum ColorQuantizationAlgorithm {
+    neuquant = 0,
+    octree = 1
+}
+export {};
 //# sourceMappingURL=typings.d.ts.map

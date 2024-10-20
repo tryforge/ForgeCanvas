@@ -3,9 +3,9 @@ import { Context, GradientManager, GradientType } from '../..';
 
 export default new NativeFunction({
     name: '$newConicGradient',
+    aliases: ['$createConicGradient', '$conicGradient'],
     description: 'Creates a conic gradient.',
     version: '1.0.0',
-    aliases: ["$newConic"],
     brackets: true,
     unwrap: true,
     args: [

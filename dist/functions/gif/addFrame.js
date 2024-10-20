@@ -6,7 +6,7 @@ const node_fs_1 = require("node:fs");
 exports.default = new forgescript_1.NativeFunction({
     name: '$addFrame',
     description: 'Adds a frame to the GIF.',
-    version: '1.2.0',
+    version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
@@ -14,7 +14,7 @@ exports.default = new forgescript_1.NativeFunction({
             name: 'gif',
             description: 'Name of the GIF.',
             type: forgescript_1.ArgType.String,
-            required: true,
+            required: false,
             rest: false
         },
         {
@@ -26,13 +26,24 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [gifName, frame]) {
-        const gif = ctx.gifManager?.get(gifName);
+        const gif = gifName
+            ? ctx.gifManager?.get(gifName)
+            : !gifName && ctx.gifManager?.current?.length !== 0
+                ? ctx.gifManager?.current?.[ctx.gifManager?.current?.length - 1] : null;
         if (!gif) {
             return this.customError('No GIF with the provided name found.');
         }
         let frameData;
-        if (frame.startsWith('canvas://')) {
-            frameData = ctx.canvasManager?.get(frame.split('canvas://').slice(1).join('://'))?.ctx;
+        if (frame.startsWith('canvas://'))
+            frameData = ctx.canvasManager?.get(frame.slice(9))?.ctx;
+        else if (frame.startsWith('images://')) {
+            const img = ctx?.imageManager?.get(frame.slice(9));
+            if (!img)
+                return this.customError('Invalid frame source provided.');
+            const { width, height } = img;
+            const canvasCtx = (0, canvas_1.createCanvas)(width, height).getContext('2d');
+            canvasCtx.drawImage(img, 0, 0, width, height);
+            frameData = canvasCtx;
         }
         else {
             const frameExists = await (0, node_fs_1.existsSync)(frame);
@@ -46,10 +57,14 @@ exports.default = new forgescript_1.NativeFunction({
                 return this.customError('Invalid frame source provided.');
             }
             const img = await (0, canvas_1.loadImage)(frame);
-            const canvasCtx = (0, canvas_1.createCanvas)(img.width, img.height).getContext('2d');
-            canvasCtx.drawImage(img, 0, 0, img.width, img.height);
+            const { width, height } = img;
+            const canvasCtx = (0, canvas_1.createCanvas)(width, height).getContext('2d');
+            canvasCtx.drawImage(img, 0, 0, width, height);
             frameData = canvasCtx;
         }
+        ;
+        if (!frameData)
+            return this.customError('No data.');
         await gif.addFrame(frameData);
         return this.success();
     }

@@ -3,9 +3,9 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$bezierCurveTo',
+    aliases: ['$bezierCurve', '$bezierLineTo'],
     description: 'Draws a cubic Bézier curve in the current path.',
     version: '1.0.0',
-    aliases: ["$bezCurve"],
     brackets: true,
     unwrap: true,
     args: [

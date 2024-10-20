@@ -3,6 +3,7 @@ import { Context, FillRule } from '../..';
 
 export default new NativeFunction({
     name: '$clip',
+    aliases: ['$clipCanvas', '$canvasClip'],
     description: 'Turns the current path into the current clipping region.',
     version: '1.0.0',
     brackets: false,

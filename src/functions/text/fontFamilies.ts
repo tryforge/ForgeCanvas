@@ -3,9 +3,9 @@ import { GlobalFonts } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$fontFamilies',
+    aliases: ['$fontFam', '$fonts'],
     description: 'Returns a list of the available fonts.',
     version: '1.0.0',
-    aliases: ["$fontFam"],
     brackets: false,
     unwrap: true,
     args: [{

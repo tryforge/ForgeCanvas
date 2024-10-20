@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
     name: '$createCanvas',
+    aliases: ['$newCanvas', '$canvas'],
     description: 'Creates a new canvas.',
     version: '1.0.0',
     brackets: true,

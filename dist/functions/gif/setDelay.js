@@ -4,7 +4,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
     name: '$setDelay',
     description: 'Sets the GIF display frame delay.',
-    version: '1.2.0',
+    version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
@@ -12,7 +12,7 @@ exports.default = new forgescript_1.NativeFunction({
             name: 'gif',
             description: 'Name of the GIF.',
             type: forgescript_1.ArgType.String,
-            required: true,
+            required: false,
             rest: false
         },
         {
@@ -24,9 +24,12 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [gifName, delay]) {
-        const gif = ctx.gifManager?.get(gifName);
+        const gif = gifName
+            ? ctx.gifManager?.get(gifName)
+            : !gifName && ctx.gifManager?.current?.length !== 0
+                ? ctx.gifManager?.current?.[ctx.gifManager?.current?.length - 1] : null;
         if (!gif) {
-            return this.customError('No GIF with the provided name found.');
+            return this.customError('No GIF.');
         }
         await gif.setDelay(delay);
         return this.success();

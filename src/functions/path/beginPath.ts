@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$beginPath',
+    aliases: ['$startPath', '$pathStart'],
     description: 'Begins a new path.',
     version: '1.0.0',
     unwrap: true,

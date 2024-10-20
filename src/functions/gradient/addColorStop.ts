@@ -3,9 +3,9 @@ import { Context, GradientManager } from '../..';
 
 export default new NativeFunction({
     name: '$addColorStop',
+    aliases: ['$colorStop'],
     description: 'Adds a color stop to the gradient.',
     version: '1.0.0',
-    aliases: ["$colorStop"],
     brackets: true,
     unwrap: true,
     args: [

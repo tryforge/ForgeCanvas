@@ -3,6 +3,7 @@ import { CanvasUtil, Context, FillRule } from '../..';
 
 export default new NativeFunction({
     name: '$fill',
+    aliases: ['$pathFill', '$fillPath'],
     description: 'Fills the current path.',
     version: '1.0.0',
     brackets: true,

@@ -5,6 +5,7 @@ const __1 = require("../..");
 const canvas_1 = require("@napi-rs/canvas");
 exports.default = new forgescript_1.NativeFunction({
     name: '$loadImage',
+    aliases: ['$createImage', '$newImage'],
     description: 'Loads an image.',
     version: '1.1.0',
     brackets: true,

@@ -1,6 +1,6 @@
 import { GlobalFonts, loadImage, Image } from '@napi-rs/canvas';
 import chalk from 'chalk';
-import { Context } from '../typings';
+import { Context } from '../';
 import { CanvasBuilder } from './builder';
 
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i
@@ -138,6 +138,32 @@ export class CanvasUtil {
             blue: parseInt(hex.slice(5, 7), 16),
             alpha: hex.length === 9 ? parseInt(hex.slice(7, 9), 16) : undefined
         });
+};
+
+export class ByteArray {
+    public data: number[];
+
+    constructor() {
+        this.data = [];
+    };
+
+    public getData = () => Buffer.from(this.data);
+
+    public writeByte(val: number) {
+        this.data.push(val);
+    };
+ 
+    public writeUTFBytes(str: string) {
+        for (var len = str.length, i = 0; i < len; i++) {
+            this.writeByte(str.charCodeAt(i));
+        };
+    };
+
+    public writeBytes(array: number[], offset: number, length: number) {
+        for (var len = length || array.length, i = offset || 0; i < len; i++) {
+            this.writeByte(array[i]);
+        };
+    };
 };
 
 export const Logger = {

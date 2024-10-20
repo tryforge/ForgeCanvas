@@ -4,6 +4,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$fill',
+    aliases: ['$pathFill', '$fillPath'],
     description: 'Fills the current path.',
     version: '1.0.0',
     brackets: true,

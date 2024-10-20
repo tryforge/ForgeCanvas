@@ -3,9 +3,9 @@ import { Context, CompositingOperation } from '../..';
 
 export default new NativeFunction({
     name: '$compositeOperation',
+    aliases: ['$compositingOperation'],
     description: 'Sets or returns the compositing operation in a canvas.',
-    version: '1.0.0',
-    aliases: ["$compOp","$compiteOp"],
+    version: '1.1.0',
     brackets: false,
     unwrap: true,
     args: [

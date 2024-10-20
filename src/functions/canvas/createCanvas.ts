@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$createCanvas',
+    aliases: ['$newCanvas', '$canvas'],
     description: 'Creates a new canvas.',
     version: '1.0.0',
     brackets: true,

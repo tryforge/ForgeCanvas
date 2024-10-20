@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$getPixels',
+    aliases: ['$getImageData'],
     description: 'Returns an array of pixels. (their colors)',
     version: '1.0.0',
     brackets: true,

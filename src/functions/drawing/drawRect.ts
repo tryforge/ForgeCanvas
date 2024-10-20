@@ -3,6 +3,7 @@ import { CanvasUtil, Context, FillOrStrokeOrClear } from '../..';
 
 export default new NativeFunction({
     name: '$drawRect',
+    aliases: ['$placeRect', '$rectangle', '$rect'],
     description: 'Draws a rectangle on a canvas.',
     version: '1.0.0',
     brackets: true,

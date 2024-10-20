@@ -1,7 +1,7 @@
 import { Image } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
-import { GradientType } from '../typings';
-declare const gifencoder: any;
+import { GradientType } from '../';
+import GIFEncoder from 'gif-encoder-2';
 declare class Manager<T> {
     map: Map<string, T>;
     constructor();
@@ -26,11 +26,10 @@ export declare class GradientManager extends Manager<CanvasGradient> {
 export declare class ImageManager extends Manager<Image> {
     set(name: string, image: Image): void;
 }
-export declare class GIFManager extends Manager<typeof gifencoder> {
-    current: typeof gifencoder[];
+export declare class GIFManager extends Manager<GIFEncoder> {
+    current: GIFEncoder[];
     constructor();
-    set(name: string, canvas: typeof gifencoder): void;
-    set(name: string, width: number, height: number, algorithm?: "neuquant" | "octree"): void;
+    set(name: string, gif: GIFEncoder): void;
 }
 export {};
 //# sourceMappingURL=manager.d.ts.map

@@ -4,13 +4,14 @@ import { Context } from '../../';
 
 export default new NativeFunction({
     name: '$attachCanvas',
+    aliases: ['$sendCanvas', '$renderCanvas', '$canvasRender'],
     description: 'Attaches the canvas.',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
         {
-            name: 'name',
+            name: 'canvas',
             description: 'Name of the canvas.',
             type: ArgType.String,
             required: true,
