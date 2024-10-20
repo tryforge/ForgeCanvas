@@ -4,13 +4,14 @@ const forgescript_1 = require("@tryforge/forgescript");
 const discord_js_1 = require("discord.js");
 exports.default = new forgescript_1.NativeFunction({
     name: '$attachCanvas',
+    aliases: ['$sendCanvas', '$renderCanvas', '$canvasRender'],
     description: 'Attaches the canvas.',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
         {
-            name: 'name',
+            name: 'canvas',
             description: 'Name of the canvas.',
             type: forgescript_1.ArgType.String,
             required: true,

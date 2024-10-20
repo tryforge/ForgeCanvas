@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$quadraticCurveTo',
+    aliases: ['$quadraticCurve', '$quadraticLineTo'],
     description: 'Draws a quadratic Bézier curve in the current path.',
     version: '1.0.0',
     brackets: true,

@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$lineWidth',
+    aliases: ['$strokeWidth'],
     description: 'Sets or returns the line width in a canvas.',
     version: '1.0.0',
     brackets: false,

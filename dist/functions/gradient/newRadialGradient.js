@@ -4,6 +4,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$newRadialGradient',
+    aliases: ['$createRadialGradient', '$radialGradient'],
     description: 'Creates a radial gradient.',
     version: '1.0.0',
     brackets: true,

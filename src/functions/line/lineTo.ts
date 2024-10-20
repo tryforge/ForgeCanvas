@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$lineTo',
+    aliases: ['$drawLine'],
     description: 'Draws a straight line in the current path.',
     version: '1.0.0',
     brackets: true,

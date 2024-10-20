@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
-    name: '$arc',
-    description: 'Draws a circular arc in the current path.',
+    name: '$ellipse',
+    aliases: ['$elArc'],
+    description: 'Draws a eliiptical arc in the current path.',
     version: '1.0.0',
     brackets: true,
     unwrap: true,

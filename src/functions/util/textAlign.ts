@@ -3,6 +3,7 @@ import { Context, TextAlign } from '../..';
 
 export default new NativeFunction({
     name: '$textAlign',
+    aliases: ['$alignText'],
     description: 'Sets or returns the text align.',
     version: '1.0.0',
     brackets: false,

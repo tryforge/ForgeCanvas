@@ -3,7 +3,8 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$closePath',
-    description: 'Begins a new path.',
+    aliases: ['$endPath'],
+    description: 'Adds a straight line from the current point to the start of the current path.',
     version: '1.0.0',
     unwrap: true,
     args: [

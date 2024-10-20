@@ -3,6 +3,7 @@ import { Context, GradientManager, GradientType } from '../..';
 
 export default new NativeFunction({
     name: '$newRadialGradient',
+    aliases: ['$createRadialGradient', '$radialGradient'],
     description: 'Creates a radial gradient.',
     version: '1.0.0',
     brackets: true,

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
     name: '$beginPath',
+    aliases: ['$startPath', '$pathStart'],
     description: 'Begins a new path.',
     version: '1.0.0',
     unwrap: true,

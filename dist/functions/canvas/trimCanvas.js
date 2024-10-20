@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
     name: '$trimCanvas',
+    aliases: ['$canvasTrim'],
     description: 'Trims a canvas.',
     version: '1.0.0',
     brackets: false,

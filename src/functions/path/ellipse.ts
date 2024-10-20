@@ -2,8 +2,9 @@ import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { Context } from '../..';
 
 export default new NativeFunction({
-    name: '$arc',
-    description: 'Draws a circular arc in the current path.',
+    name: '$ellipse',
+    aliases: ['$elArc'],
+    description: 'Draws a eliiptical arc in the current path.',
     version: '1.0.0',
     brackets: true,
     unwrap: true,

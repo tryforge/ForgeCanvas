@@ -4,6 +4,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$stroke',
+    aliases: ['$strokePath', '$pathStroke'],
     description: 'Strokes (outlines) the current path.',
     version: '1.0.0',
     brackets: true,

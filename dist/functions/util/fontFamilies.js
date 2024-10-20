@@ -4,6 +4,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const canvas_1 = require("@napi-rs/canvas");
 exports.default = new forgescript_1.NativeFunction({
     name: '$fontFamilies',
+    aliases: ['$fontFam', '$fonts'],
     description: 'Returns a list of the available fonts.',
     version: '1.0.0',
     brackets: false,

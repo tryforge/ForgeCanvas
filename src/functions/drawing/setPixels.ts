@@ -3,6 +3,7 @@ import { Context } from '../../';
 
 export default new NativeFunction({
     name: '$setPixels',
+    aliases: ['$putImageData'],
     description: 'Places pixels in the canvas.',
     version: '1.0.0',
     brackets: true,

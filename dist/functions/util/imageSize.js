@@ -5,6 +5,7 @@ const __1 = require("../..");
 const canvas_1 = require("@napi-rs/canvas");
 exports.default = new forgescript_1.NativeFunction({
     name: '$imageSize',
+    aliases: ['$imgSize', '$imageDimensions'],
     description: 'Returns image\'s size.',
     version: '1.1.0',
     brackets: true,

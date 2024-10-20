@@ -4,6 +4,7 @@ import { Image } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$drawImage',
+    aliases: ['$placeImage'],
     description: 'Draws an image on a canvas.',
     version: '1.0.0',
     brackets: true,

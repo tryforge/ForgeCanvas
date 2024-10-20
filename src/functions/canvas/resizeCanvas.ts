@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$resizeCanvas',
+    aliases: ['$canvasResize'],
     description: 'Resizes a canvas.',
     version: '1.0.0',
     brackets: true,

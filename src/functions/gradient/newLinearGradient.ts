@@ -3,6 +3,7 @@ import { Context, GradientManager, GradientType } from '../..';
 
 export default new NativeFunction({
     name: '$newLinearGradient',
+    aliases: ['$createLinearGradient', '$linearGradient'],
     description: 'Creates a linear gradient.',
     version: '1.0.0',
     brackets: true,

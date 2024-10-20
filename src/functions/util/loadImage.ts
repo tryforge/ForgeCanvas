@@ -4,6 +4,7 @@ import { loadImage } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$loadImage',
+    aliases: ['$createImage', '$newImage'],
     description: 'Loads an image.',
     version: '1.1.0',
     brackets: true,

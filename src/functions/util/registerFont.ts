@@ -1,6 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { Context, registerFonts } from '../..';
-import { join } from 'node:path';
 
 export default new NativeFunction({
     name: '$registerFont',
