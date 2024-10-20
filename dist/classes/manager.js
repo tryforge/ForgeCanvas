@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImageManager = exports.GradientManager = exports.CanvasManager = void 0;
+exports.GIFManager = exports.ImageManager = exports.GradientManager = exports.CanvasManager = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const builder_1 = require("./builder");
-const typings_1 = require("../typings");
+const __1 = require("../");
 class Manager {
     map;
     constructor() {
@@ -43,10 +43,10 @@ class GradientManager extends Manager {
     }
     ;
     set(name, a, ...options) {
-        if (typings_1.GradientType?.[a])
-            this.map.set(name, a === typings_1.GradientType.radial
+        if (__1.GradientType?.[a])
+            this.map.set(name, a === __1.GradientType.radial
                 ? this.ctx.createRadialGradient(...options)
-                : a === typings_1.GradientType.conic
+                : a === __1.GradientType.conic
                     ? this.ctx.createConicGradient(...options)
                     : this.ctx.createLinearGradient(...options));
         else
@@ -61,5 +61,19 @@ class ImageManager extends Manager {
     ;
 }
 exports.ImageManager = ImageManager;
+;
+class GIFManager extends Manager {
+    current;
+    constructor() {
+        super();
+        this.current = [];
+    }
+    ;
+    set(name, gif) {
+        this.map.set(name, gif);
+    }
+    ;
+}
+exports.GIFManager = GIFManager;
 ;
 //# sourceMappingURL=manager.js.map
