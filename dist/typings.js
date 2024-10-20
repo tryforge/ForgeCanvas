@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
+exports.ColorQuantizationAlgorithm = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
 class Context extends forgescript_1.Context {
     canvasManager;
     gradientManager;
     imageManager;
+    gifManager;
 }
 exports.Context = Context;
 ;
-// Enums
 var FillOrStroke;
 (function (FillOrStroke) {
     FillOrStroke[FillOrStroke["fill"] = 0] = "fill";
@@ -153,5 +153,11 @@ var FontVariantCaps;
     FontVariantCaps[FontVariantCaps["unicase"] = 5] = "unicase";
     FontVariantCaps[FontVariantCaps["titling-caps"] = 6] = "titling-caps";
 })(FontVariantCaps || (exports.FontVariantCaps = FontVariantCaps = {}));
+;
+var ColorQuantizationAlgorithm;
+(function (ColorQuantizationAlgorithm) {
+    ColorQuantizationAlgorithm[ColorQuantizationAlgorithm["neuquant"] = 0] = "neuquant";
+    ColorQuantizationAlgorithm[ColorQuantizationAlgorithm["octree"] = 1] = "octree";
+})(ColorQuantizationAlgorithm || (exports.ColorQuantizationAlgorithm = ColorQuantizationAlgorithm = {}));
 ;
 //# sourceMappingURL=typings.js.map
