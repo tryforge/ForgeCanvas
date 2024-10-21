@@ -29,12 +29,10 @@ export default new NativeFunction({
                 : !gifName && ctx.gifManager?.current?.length !== 0 
                     ? ctx.gifManager?.current?.[ctx.gifManager?.current?.length - 1] : null;
 
-        if (!gif) {
+        if (!gif)
             return this.customError('No GIF.');
-        }
 
         await gif.setDelay(delay);
-
         return this.success();
     }
 });

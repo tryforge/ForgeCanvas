@@ -24,19 +24,14 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [gifName, percentage]) {
-        // Ensure the GIFManager is properly initialized and the specified GIF exists
         const gif = gifName
             ? ctx.gifManager?.get(gifName)
             : !gifName && ctx.gifManager?.current?.length !== 0
                 ? ctx.gifManager?.current?.[ctx.gifManager?.current?.length - 1] : null;
-        if (!gif) {
+        if (!gif)
             return this.customError('No GIF with the provided name found.');
-        }
-        // Validate the percentage value
-        if (percentage < 0 || percentage > 100) {
+        if (percentage < 0 || percentage > 100)
             return this.customError('Threshold percentage must be between 0 and 100.');
-        }
-        // Set the threshold for the GIF
         await gif.setThreshold(percentage);
         return this.success();
     }

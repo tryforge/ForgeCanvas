@@ -31,9 +31,8 @@ export default new NativeFunction({
                 : !gifName && ctx.gifManager?.current?.length !== 0 
                     ? ctx.gifManager?.current?.[ctx.gifManager?.current?.length - 1] : null;
 
-        if (!gif) {
-            return this.customError('No GIF with the provided name found.');
-        }
+        if (!gif)
+            return this.customError('No GIF.');
 
         let frameData;
         if (frame.startsWith('canvas://')) 
@@ -50,9 +49,8 @@ export default new NativeFunction({
             frameData = canvasCtx;
         } else {
             const frameExists = await existsSync(frame);
-            if (!frameExists && (() => { try {new URL(frame); return false} catch {return true}})()) {
+            if (!frameExists && (() => { try {new URL(frame); return false} catch {return true}})())
                 return this.customError('Invalid frame source provided.');
-            }
 
             const img = await loadImage(frame);
             const { width, height } = img;
@@ -64,7 +62,6 @@ export default new NativeFunction({
 
         if (!frameData) return this.customError('No data.');
         await gif.addFrame(frameData);
-
         return this.success();
     }
 });

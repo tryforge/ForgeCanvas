@@ -29,13 +29,11 @@ export default new NativeFunction({
                 : !name && ctx.gifManager?.current?.length !== 0 
                     ? ctx.gifManager?.current?.[ctx.gifManager?.current?.length - 1] : null;
 
-        if (!gif) {
+        if (!gif)
             return this.customError('No GIF with provided name found.');
-        }
 
-        if (quality < 0 || quality > 30) {
+        if (quality < 0 || quality > 30)
             return this.customError('Quality must be between 0 and 30.');
-        }
 
         await gif.setQuality(quality);
 
