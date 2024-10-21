@@ -25,15 +25,12 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [gifName, fps]) {
-        // Ensure the GIFManager is properly initialized and the specified GIF exists
         const gif = gifName
             ? ctx.gifManager?.get(gifName)
             : !gifName && ctx.gifManager?.current?.length !== 0
                 ? ctx.gifManager?.current?.[ctx.gifManager?.current?.length - 1] : null;
-        if (!gif) {
+        if (!gif)
             return this.customError('No GIF.');
-        }
-        // Set the FPS of the GIF
         gif.setFrameRate(fps);
         return this.success();
     }

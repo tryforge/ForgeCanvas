@@ -30,9 +30,8 @@ exports.default = new forgescript_1.NativeFunction({
             ? ctx.gifManager?.get(gifName)
             : !gifName && ctx.gifManager?.current?.length !== 0
                 ? ctx.gifManager?.current?.[ctx.gifManager?.current?.length - 1] : null;
-        if (!gif) {
-            return this.customError('No GIF with the provided name found.');
-        }
+        if (!gif)
+            return this.customError('No GIF.');
         let frameData;
         if (frame.startsWith('canvas://'))
             frameData = ctx.canvasManager?.get(frame.slice(9))?.ctx;
@@ -53,9 +52,8 @@ exports.default = new forgescript_1.NativeFunction({
             }
             catch {
                 return true;
-            } })()) {
+            } })())
                 return this.customError('Invalid frame source provided.');
-            }
             const img = await (0, canvas_1.loadImage)(frame);
             const { width, height } = img;
             const canvasCtx = (0, canvas_1.createCanvas)(width, height).getContext('2d');
