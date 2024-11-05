@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$shadowOptions',
+    aliases: ['$shadowConfig'],
     description: 'Sets or returns the shadow options in a canvas.',
     version: '1.1.0',
     brackets: true,

@@ -4,7 +4,7 @@ import { Context, GIFManager } from '../..';
 export default new NativeFunction({
     name: '$createGIF',
     description: 'Creates a new GIF.',
-    version: '1.2.0',
+    version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [

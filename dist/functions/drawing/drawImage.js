@@ -72,7 +72,7 @@ exports.default = new forgescript_1.NativeFunction({
         else if (path.startsWith('canvas://'))
             img = ctx.canvasManager?.get(path.slice(9))?.buffer;
         if (!img)
-            return this.customError('Failed to load image.');
+            return this.customError('Failed to load an image.');
         await canvas.drawImage(img, x, y, w, h, r.length === 1 ? r[0] : r);
         return this.success();
     }

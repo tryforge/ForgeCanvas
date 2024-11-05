@@ -1,9 +1,9 @@
 import { SKRSContext2D, Image } from '@napi-rs/canvas';
-import { FillOrStroke, FillOrStrokeOrClear, FilterMethod, Filters } from '..';
-import { CanvasUtil } from '..';
+import { CustomCanvasProperties, FillOrStroke, FillOrStrokeOrClear, FilterMethod, Filters, CanvasUtil } from '..';
 export declare class CanvasBuilder {
     ctx: SKRSContext2D;
     util: typeof CanvasUtil;
+    customProperties: CustomCanvasProperties;
     get width(): number;
     get height(): number;
     constructor(width: number, height: number);

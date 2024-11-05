@@ -34,9 +34,10 @@ export default new NativeFunction({
             return this.customError('No canvas');
  
         return this.success(baseline
-            ? (canvas.textBaseline = (
-                typeof baseline === 'number' ? TextBaseline[baseline] : baseline) as CanvasTextBaseline,
-                undefined
+            ? (
+                canvas.textBaseline = (
+                    typeof baseline === 'number' ? TextBaseline[baseline] : baseline
+                ) as CanvasTextBaseline, undefined
             ) : canvas.textBaseline
         );
     }

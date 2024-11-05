@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Logger = exports.ByteArray = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.fontRegex = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const chalk_1 = __importDefault(require("chalk"));
+const __1 = require("..");
 exports.fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i;
 exports.rgbaRegex = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
 exports.hexRegex = /^#?([0-9A-Fa-f]{3,4}){1,2}$/;
@@ -42,7 +43,7 @@ exports.Colors = {
     NotQuiteBlack: '#23272a'
 };
 class CanvasUtil {
-    static isValidFont = (font) => {
+    static isValidFont(font) {
         if (!font)
             return false;
         if (exports.fontRegex.test(font)) {
@@ -64,8 +65,9 @@ class CanvasUtil {
         }
         ;
         return false;
-    };
-    static parseStyle = async (self, ctx, canvas, style) => {
+    }
+    ;
+    static async parseStyle(self, ctx, canvas, style) {
         if (!style)
             return '#000000';
         let s = style.split('://');
@@ -107,8 +109,17 @@ class CanvasUtil {
         }
         ;
         return s;
-    };
-    static parseFilters = (filters) => {
+    }
+    ;
+    static calculateRectAlignOrBaseline(XorY, WorH, AorB) {
+        return AorB === __1.RectAlign.center
+            ? XorY - WorH / 2
+            : AorB === __1.RectAlign.right || AorB === __1.RectBaseline.top
+                ? XorY - WorH
+                : XorY;
+    }
+    ;
+    static parseFilters(filters) {
         const result = [];
         const regex = /([a-zA-Z-]+)\(([^)]+)\)/g;
         let match;
@@ -117,7 +128,8 @@ class CanvasUtil {
             result.push({ filter, value, raw });
         }
         return result;
-    };
+    }
+    ;
     static rgbaToHex = (r, g, b, a) => '#' + r.toString(16).padStart(2, '0') + g.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0') + (a && a !== undefined ? Math.round(a * 255).toString(16).padStart(2, '0') : '');
     static hexToRgba = (hex) => ({
         red: parseInt(hex.slice(1, 3), 16),
