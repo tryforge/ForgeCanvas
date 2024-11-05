@@ -5,7 +5,7 @@ const discord_js_1 = require("discord.js");
 exports.default = new forgescript_1.NativeFunction({
     name: '$attachGIF',
     description: 'Attaches the GIF.',
-    version: '1.2.0',
+    version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [

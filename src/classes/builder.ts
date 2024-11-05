@@ -1,10 +1,20 @@
 import { createCanvas, loadImage, SKRSContext2D, Image } from '@napi-rs/canvas';
-import { FillOrStroke, FillOrStrokeOrClear, FilterMethod, Filters, fontRegex } from '..';
-import { CanvasUtil } from '..';
+import {
+    CustomCanvasProperties,
+    FillOrStroke,
+    FillOrStrokeOrClear,
+    FilterMethod,
+    Filters,
+    fontRegex,
+    CanvasUtil,
+    AlignOrBaseline
+} from '..';
 
 export class CanvasBuilder {
     public ctx: SKRSContext2D;
     public util = CanvasUtil;
+
+    public customProperties: CustomCanvasProperties = {};
     
     public get width() { return this.ctx.canvas.width };
     public get height() { return this.ctx.canvas.height };
@@ -25,6 +35,11 @@ export class CanvasBuilder {
         width??= ctx.canvas.width - x;
         height??= ctx.canvas.height - y;
         radius??= 0;
+
+        if (this.customProperties.rectAlign)
+            x = CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
         
         if (type === FillOrStrokeOrClear.none)
             return ctx.roundRect(x, y, width, height, radius);
@@ -101,6 +116,11 @@ export class CanvasBuilder {
         image = await loadImage(image);
         width??= image.width;
         height??= image.height;
+
+        if (this.customProperties.rectAlign)
+            x = CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
 
         if (!radius)
           return ctx.drawImage(image, x, y, width, height);

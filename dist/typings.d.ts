@@ -6,8 +6,22 @@ export declare class Context extends ctx {
     imageManager?: ImageManager;
     gifManager?: GIFManager;
 }
+export interface CustomCanvasProperties {
+    rectAlign?: RectAlign;
+    rectBaseline?: RectBaseline;
+}
 type rawr<num extends number, meow extends number[] = []> = meow['length'] extends num ? meow[number] : rawr<num, [...meow, meow['length']]>;
 export type Range<Min extends number, Max extends number> = Min extends Max ? never : Exclude<rawr<Max>, rawr<Min>> | Min | Max;
+export declare enum RectAlign {
+    left = 0,
+    center = 1,
+    right = 2
+}
+export declare enum RectBaseline {
+    top = 0,
+    center = 1,
+    bottom = 2
+}
 export declare enum FillOrStroke {
     fill = 0,
     stroke = 1
@@ -21,6 +35,10 @@ export declare enum FillOrStrokeOrClear {
 export declare enum WidthOrHeight {
     width = 0,
     height = 1
+}
+export declare enum AlignOrBaseline {
+    align = 0,
+    baseline = 1
 }
 export declare enum StyleType {
     color = 0,

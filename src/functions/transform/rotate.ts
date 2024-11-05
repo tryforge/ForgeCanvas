@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$rotate',
+    aliases: ['$rotateCanvas', '$rotation'],
     description: 'Rotates a canvas.',
     version: '1.0.0',
     brackets: true,
