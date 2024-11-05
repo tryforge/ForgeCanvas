@@ -118,7 +118,7 @@ export class CanvasUtil {
         XorY: number,
         WorH: number,
         AorB: RectAlign | RectBaseline 
-    ) {
+    ) { 
         return AorB === RectAlign.center
                 ? XorY - WorH / 2
             : AorB === RectAlign.right || AorB === RectBaseline.top
