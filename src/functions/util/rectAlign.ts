@@ -1,12 +1,12 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
+import { Context, RectAlign } from '../..';
 
 export default new NativeFunction({
-    name: '$rotate',
-    aliases: ['$rotateCanvas', '$rotation'],
-    description: 'Rotates a canvas.',
-    version: '1.0.0',
-    brackets: true,
+    name: '$rectAlign',
+    aliases: ['$alignRect', '$alignImage', '$imageAlign'],
+    description: 'Sets or returns the rect/image align.',
+    version: '1.2.0',
+    brackets: false,
     unwrap: true,
     args: [
         {
@@ -17,14 +17,15 @@ export default new NativeFunction({
             rest: false
         },
         {
-            name: 'angle',
-            description: 'The rotation angle.',
-            type: ArgType.Number,
-            required: true,
+            name: 'align',
+            description: 'The new align.',
+            type: ArgType.Enum,
+            enum: RectAlign,
+            required: false,
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, angle]) {
+    async execute (ctx: Context, [name, align]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
                 : !name && ctx.canvasManager?.current?.length !== 0 
@@ -32,8 +33,12 @@ export default new NativeFunction({
         
         if (!canvas)
             return this.customError('No canvas');
-
-        canvas.rotate(angle);
-        return this.success();
+ 
+        return this.success(align
+            ? (
+                canvas.customProperties.rectAlign = align,
+                undefined
+            ) : RectAlign[canvas.customProperties?.rectAlign ?? 'left']
+        );
     }
 });

@@ -1,6 +1,6 @@
 import { GlobalFonts, loadImage, Image } from '@napi-rs/canvas';
 import chalk from 'chalk';
-import { Context } from '../';
+import { AlignOrBaseline, Context, RectAlign, RectBaseline } from '..';
 import { CanvasBuilder } from './builder';
 
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i
@@ -40,7 +40,7 @@ export const Colors: Record<string, string> = {
 };
 
 export class CanvasUtil {
-    public static isValidFont = (font: string) => {
+    public static isValidFont(font: string) {
         if (!font)
             return false;
       
@@ -64,7 +64,7 @@ export class CanvasUtil {
         return false;
     };
 
-    public static parseStyle = async (self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => {
+    public static async parseStyle(self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) {
         if (!style) return '#000000';
         let s: string[] | string | CanvasGradient | CanvasPattern = style.split('://');
 
@@ -114,7 +114,19 @@ export class CanvasUtil {
         return s;
     };
 
-    public static parseFilters = (filters: string) => {
+    public static calculateRectAlignOrBaseline(
+        XorY: number,
+        WorH: number,
+        AorB: RectAlign | RectBaseline 
+    ) {
+        return AorB === RectAlign.center
+                ? XorY - WorH / 2
+            : AorB === RectAlign.right || AorB === RectBaseline.top
+                ? XorY - WorH
+            : XorY;
+    };
+
+    public static parseFilters(filters: string) {
         const result = [];
       
         const regex = /([a-zA-Z-]+)\(([^)]+)\)/g;

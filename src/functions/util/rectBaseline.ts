@@ -1,12 +1,12 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
+import { Context, RectBaseline } from '../..';
 
 export default new NativeFunction({
-    name: '$rotate',
-    aliases: ['$rotateCanvas', '$rotation'],
-    description: 'Rotates a canvas.',
+    name: '$rectBaseline',
+    aliases: ['$imageBaseline'],
+    description: 'Sets or returns the rect/image baseline.',
     version: '1.0.0',
-    brackets: true,
+    brackets: false,
     unwrap: true,
     args: [
         {
@@ -17,14 +17,15 @@ export default new NativeFunction({
             rest: false
         },
         {
-            name: 'angle',
-            description: 'The rotation angle.',
-            type: ArgType.Number,
-            required: true,
+            name: 'baseline',
+            description: 'The new baseline.',
+            type: ArgType.Enum,
+            enum: RectBaseline,
+            required: false,
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, angle]) {
+    async execute (ctx: Context, [name, baseline]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
                 : !name && ctx.canvasManager?.current?.length !== 0 
@@ -32,8 +33,12 @@ export default new NativeFunction({
         
         if (!canvas)
             return this.customError('No canvas');
-
-        canvas.rotate(angle);
-        return this.success();
+ 
+        return this.success(baseline
+            ? (
+                canvas.customProperties.rectBaseline = baseline,
+                undefined
+            ) : RectBaseline[canvas.customProperties?.rectBaseline ?? 'bottom']
+        );
     }
 });
