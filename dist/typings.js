@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ColorQuantizationAlgorithm = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
+exports.ColorQuantizationAlgorithm = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.AlignOrBaseline = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.Context = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
 class Context extends forgescript_1.Context {
     canvasManager;
@@ -9,6 +9,20 @@ class Context extends forgescript_1.Context {
     gifManager;
 }
 exports.Context = Context;
+;
+var RectAlign;
+(function (RectAlign) {
+    RectAlign[RectAlign["left"] = 0] = "left";
+    RectAlign[RectAlign["center"] = 1] = "center";
+    RectAlign[RectAlign["right"] = 2] = "right";
+})(RectAlign || (exports.RectAlign = RectAlign = {}));
+;
+var RectBaseline;
+(function (RectBaseline) {
+    RectBaseline[RectBaseline["top"] = 0] = "top";
+    RectBaseline[RectBaseline["center"] = 1] = "center";
+    RectBaseline[RectBaseline["bottom"] = 2] = "bottom";
+})(RectBaseline || (exports.RectBaseline = RectBaseline = {}));
 ;
 var FillOrStroke;
 (function (FillOrStroke) {
@@ -29,6 +43,12 @@ var WidthOrHeight;
     WidthOrHeight[WidthOrHeight["width"] = 0] = "width";
     WidthOrHeight[WidthOrHeight["height"] = 1] = "height";
 })(WidthOrHeight || (exports.WidthOrHeight = WidthOrHeight = {}));
+;
+var AlignOrBaseline;
+(function (AlignOrBaseline) {
+    AlignOrBaseline[AlignOrBaseline["align"] = 0] = "align";
+    AlignOrBaseline[AlignOrBaseline["baseline"] = 1] = "baseline";
+})(AlignOrBaseline || (exports.AlignOrBaseline = AlignOrBaseline = {}));
 ;
 var StyleType;
 (function (StyleType) {

@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CanvasBuilder = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const __1 = require("..");
-const __2 = require("..");
 class CanvasBuilder {
     ctx;
-    util = __2.CanvasUtil;
+    util = __1.CanvasUtil;
+    customProperties = {};
     get width() { return this.ctx.canvas.width; }
     ;
     get height() { return this.ctx.canvas.height; }
@@ -20,6 +20,10 @@ class CanvasBuilder {
         width ??= ctx.canvas.width - x;
         height ??= ctx.canvas.height - y;
         radius ??= 0;
+        if (this.customProperties.rectAlign)
+            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
         if (type === __1.FillOrStrokeOrClear.none)
             return ctx.roundRect(x, y, width, height, radius);
         ctx.save();
@@ -73,6 +77,10 @@ class CanvasBuilder {
         image = await (0, canvas_1.loadImage)(image);
         width ??= image.width;
         height ??= image.height;
+        if (this.customProperties.rectAlign)
+            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
         if (!radius)
             return ctx.drawImage(image, x, y, width, height);
         ctx.save();
@@ -103,7 +111,7 @@ class CanvasBuilder {
         if (method === __1.FilterMethod.add) {
             if (!filter || !value)
                 return;
-            ctx.filter = __2.CanvasUtil.parseFilters((ctx.filter === 'none' ? '' : ctx.filter)
+            ctx.filter = __1.CanvasUtil.parseFilters((ctx.filter === 'none' ? '' : ctx.filter)
                 + `${__1.Filters[filter]}(${value + PxOrPerc})`)?.map(x => x?.raw)?.join(' ')?.trim();
         }
         else if (method === __1.FilterMethod.set) {
@@ -114,7 +122,7 @@ class CanvasBuilder {
         else if (method === __1.FilterMethod.remove) {
             if (!filter)
                 return;
-            let filters = __2.CanvasUtil.parseFilters(ctx.filter);
+            let filters = __1.CanvasUtil.parseFilters(ctx.filter);
             const index = filters.findIndex((obj) => obj?.filter === __1.Filters[filter]);
             if (index !== -1)
                 filters.splice(index, 1);
@@ -125,7 +133,7 @@ class CanvasBuilder {
         else if (method === __1.FilterMethod.get)
             return ctx.filter;
         else if (method === __1.FilterMethod.json)
-            return __2.CanvasUtil.parseFilters(ctx.filter);
+            return __1.CanvasUtil.parseFilters(ctx.filter);
     }
     ;
     rotate(angle) {
@@ -174,7 +182,7 @@ class CanvasBuilder {
         const data = ctx.getImageData(x, y, width, height).data;
         const colors = [];
         for (let i = 0; i < data.length; i += 4) {
-            colors.push(__2.CanvasUtil.rgbaToHex(data[i], data[i + 1], data[i + 2], data[i + 3] / 255));
+            colors.push(__1.CanvasUtil.rgbaToHex(data[i], data[i + 1], data[i + 2], data[i + 3] / 255));
         }
         ;
         return colors;
@@ -186,7 +194,7 @@ class CanvasBuilder {
         height ??= ctx.canvas.height;
         const data = ctx.createImageData(width, height);
         colors?.forEach((hex, i) => {
-            const colors = __2.CanvasUtil.hexToRgba(hex);
+            const colors = __1.CanvasUtil.hexToRgba(hex);
             i = i * 4;
             data.data[i] = colors.red;
             data.data[i + 1] = colors.green;

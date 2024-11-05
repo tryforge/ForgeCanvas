@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
-    name: '$textAlign',
-    aliases: ['$alignText'],
-    description: 'Sets or returns the text align.',
-    version: '1.0.0',
+    name: '$rectAlign',
+    aliases: ['$alignRect', '$alignImage', '$imageAlign'],
+    description: 'Sets or returns the rect/image align.',
+    version: '1.2.0',
     brackets: false,
     unwrap: true,
     args: [
@@ -21,20 +21,21 @@ exports.default = new forgescript_1.NativeFunction({
             name: 'align',
             description: 'The new align.',
             type: forgescript_1.ArgType.Enum,
-            enum: __1.TextAlign,
+            enum: __1.RectAlign,
             required: false,
             rest: false
         }
     ],
     async execute(ctx, [name, align]) {
         const canvas = name
-            ? ctx.canvasManager?.get(name)?.ctx
+            ? ctx.canvasManager?.get(name)
             : !name && ctx.canvasManager?.current?.length !== 0
-                ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1]?.ctx : null;
+                ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
         if (!canvas)
             return this.customError('No canvas');
         return this.success(align
-            ? (canvas.textAlign = (typeof align === 'number' ? __1.TextAlign[align] : align), undefined) : __1.TextAlign[canvas.textAlign]);
+            ? (canvas.customProperties.rectAlign = align,
+                undefined) : __1.RectAlign[canvas.customProperties?.rectAlign ?? 'left']);
     }
 });
-//# sourceMappingURL=textAlign.js.map
+//# sourceMappingURL=rectAlign.js.map
