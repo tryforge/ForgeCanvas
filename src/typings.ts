@@ -8,6 +8,11 @@ export class Context extends ctx {
     gifManager?: GIFManager;
 };
 
+export interface CustomCanvasProperties {
+    rectAlign?: RectAlign;
+    rectBaseline?: RectBaseline;
+}
+
 type rawr<num extends number, meow extends number[] = []> = 
   meow['length'] extends num
     ? meow[number]
@@ -18,9 +23,12 @@ export type Range<Min extends number, Max extends number> =
     ? never 
     : Exclude<rawr<Max>, rawr<Min>> | Min | Max;
 
+export enum RectAlign { left, center, right };
+export enum RectBaseline { top, center, bottom };
 export enum FillOrStroke { fill, stroke };
 export enum FillOrStrokeOrClear { none, fill, stroke, clear };
 export enum WidthOrHeight { width, height };
+export enum AlignOrBaseline { align, baseline };
 export enum StyleType { color, gradient, pattern };
 export enum FilterMethod { add, set, remove, clear, get, json };
 export enum Filters { none, blur, sepia, grayscale, brightness, contrast, invert, saturate, 'drop-shadow' };
