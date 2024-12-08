@@ -10,6 +10,25 @@ export interface CustomCanvasProperties {
     rectAlign?: RectAlign;
     rectBaseline?: RectBaseline;
 }
+export interface ProgressBarOptions {
+    angle?: number;
+    style?: string | CanvasGradient | CanvasPattern;
+    background?: {
+        enabled: boolean;
+        style?: string | CanvasGradient | CanvasPattern;
+        radius?: number | number[];
+        type?: 'fill' | 'stroke' | 'clear';
+        padding?: number;
+    };
+    type?: 'fill' | 'stroke' | 'clear';
+    radius?: number | number[];
+    direction?: 'horizontal' | 'vertical';
+    clip?: {
+        enabled: boolean;
+        radius?: number | number[];
+    };
+    left?: string | CanvasGradient | CanvasPattern;
+}
 type rawr<num extends number, meow extends number[] = []> = meow['length'] extends num ? meow[number] : rawr<num, [...meow, meow['length']]>;
 export type Range<Min extends number, Max extends number> = Min extends Max ? never : Exclude<rawr<Max>, rawr<Min>> | Min | Max;
 export declare enum RectAlign {

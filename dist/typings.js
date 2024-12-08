@@ -10,6 +10,8 @@ class Context extends forgescript_1.Context {
 }
 exports.Context = Context;
 ;
+;
+;
 var RectAlign;
 (function (RectAlign) {
     RectAlign[RectAlign["left"] = 0] = "left";
