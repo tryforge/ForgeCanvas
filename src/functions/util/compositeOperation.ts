@@ -34,7 +34,7 @@ export default new NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
 
-        return this.success(operation
+        return this.success(operation !== null
             ? (canvas.globalCompositeOperation = (typeof operation === 'number' 
                 ? CompositingOperation[operation]
                 : operation

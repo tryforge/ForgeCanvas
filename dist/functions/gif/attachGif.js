@@ -26,11 +26,10 @@ exports.default = new forgescript_1.NativeFunction({
     ],
     async execute(ctx, [gifName, filename]) {
         const gif = ctx.gifManager?.get(gifName);
-        if (!gif) {
+        if (!gif)
             return this.customError('No GIF with the provided name found.');
-        }
-        ctx.container.files.push(new discord_js_1.AttachmentBuilder(gif.out.getData(), {
-            name: filename ? filename.replace(/\{gif\}/g, gifName) : `${gifName}.gif`
+        ctx.container.files.push(new discord_js_1.AttachmentBuilder(Buffer.from([...gif.out.getData(), 0x3b]), {
+            name: `${filename ?? gifName}.gif`
         }));
         return this.success();
     }

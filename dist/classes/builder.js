@@ -89,7 +89,77 @@ class CanvasBuilder {
         ctx.clip();
         ctx.drawImage(image, x, y, width, height);
         ctx.restore();
-        return;
+    }
+    ;
+    drawProgressBar(x, y, width, height, progress, config = {}) {
+        const ctx = this.ctx;
+        progress = Math.min(progress || 0, 100) / 100;
+        const options = {
+            angle: config?.angle ?? 0,
+            style: config?.style ?? '#FFFFFF',
+            background: {
+                enabled: config?.background?.enabled ?? true,
+                style: config?.background?.style ?? '#000000',
+                radius: config?.background?.radius ?? undefined,
+                type: config?.background?.type ?? 'fill',
+                padding: config?.background?.padding ?? 0
+            },
+            type: config?.type ?? 'fill',
+            radius: config?.radius ?? undefined,
+            direction: config?.direction ?? 'horizontal',
+            clip: {
+                enabled: config?.clip?.enabled ?? false,
+                radius: config?.clip?.radius ?? undefined
+            },
+            left: config?.left ?? undefined
+        };
+        if (this.customProperties.rectAlign)
+            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
+        if (options.background.enabled) {
+            if (options.background.type !== 'clear') {
+                ctx.save();
+                ctx[`${options.background.type}Style`] = options.background.style;
+                ctx.beginPath();
+                ctx.roundRect(x, y, width, height, options.background.radius);
+                ctx[options.background.type]();
+                ctx.restore();
+            }
+            else
+                this.rect(__1.FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
+        }
+        ;
+        width = width - options.background.padding * 2;
+        height = height - options.background.padding * 2;
+        x = x + options.background.padding;
+        y = y + +options.background.padding;
+        const pwidth = Math.min(['horizontal', 'both'].includes(options.direction)
+            ? width * progress : width, width);
+        const pheight = Math.min(['vertical', 'both'].includes(options.direction)
+            ? height * progress : height, height);
+        if (options.type === 'clear')
+            return (this.rect(__1.FillOrStrokeOrClear.clear, x, y, pwidth, pheight, options.radius), [x, y, width, height, pwidth, pheight]);
+        ctx.save();
+        if (options.clip.enabled) {
+            ctx.beginPath();
+            ctx.roundRect(x, y, width, height, options.clip.radius);
+            ctx.clip();
+        }
+        ;
+        if (options.left) {
+            ctx.fillStyle = options.left;
+            ctx.beginPath();
+            ctx.roundRect(x, y, width, height, options.radius);
+            ctx.fill();
+        }
+        ;
+        ctx[`${options.type}Style`] = options.style;
+        ctx.beginPath();
+        ctx.roundRect(x, y, pwidth, pheight, options.radius);
+        ctx[options.type]();
+        ctx.restore();
+        return [x, y, width, height, pwidth, pheight];
     }
     ;
     measureText(text, font) {
@@ -195,7 +265,7 @@ class CanvasBuilder {
         const data = ctx.createImageData(width, height);
         colors?.forEach((hex, i) => {
             const colors = __1.CanvasUtil.hexToRgba(hex);
-            i = i * 4;
+            i *= 4;
             data.data[i] = colors.red;
             data.data[i + 1] = colors.green;
             data.data[i + 2] = colors.blue;

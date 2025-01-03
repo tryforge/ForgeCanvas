@@ -33,7 +33,7 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null)?.ctx;
         if (!canvas)
             return this.customError('No canvas');
-        return this.success(t
+        return this.success(t !== null
             ? (canvas.fontVariantCaps = (typeof t === 'number'
                 ? __1.FontVariantCaps[t]
                 : t), undefined) : canvas.fontVariantCaps);

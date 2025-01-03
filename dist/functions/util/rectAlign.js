@@ -33,9 +33,10 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
         if (!canvas)
             return this.customError('No canvas');
-        return this.success(align
-            ? (canvas.customProperties.rectAlign = align,
-                undefined) : __1.RectAlign[canvas.customProperties?.rectAlign ?? 'left']);
+        return this.success(align !== null
+            ? (canvas.customProperties.rectAlign = (typeof align === 'number' ? __1.RectAlign[align] : align), undefined) : typeof canvas.customProperties?.rectAlign === 'number'
+            ? __1.RectAlign[canvas.customProperties.rectAlign]
+            : canvas.customProperties?.rectAlign ?? 'left');
     }
 });
 //# sourceMappingURL=rectAlign.js.map

@@ -33,8 +33,10 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1]?.ctx : null;
         if (!canvas)
             return this.customError('No canvas');
-        return this.success(align
-            ? (canvas.textAlign = (typeof align === 'number' ? __1.TextAlign[align] : align), undefined) : __1.TextAlign[canvas.textAlign]);
+        return this.success(align !== null
+            ? (canvas.textAlign = (typeof align === 'number' ? __1.TextAlign[align] : align), undefined) : typeof canvas.textAlign === 'number'
+            ? __1.TextAlign[canvas.textAlign]
+            : canvas.textAlign ?? 'start');
     }
 });
 //# sourceMappingURL=textAlign.js.map

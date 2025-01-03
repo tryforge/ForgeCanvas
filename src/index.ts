@@ -27,7 +27,7 @@ export class ForgeCanvas extends ForgeExtension {
     description = 'A forgescript extension that allows you to create and edit images with ease.';
     version = version;
 
-    public init () {
+    public init() {
         this.load(__dirname + '/functions');
     };
 };

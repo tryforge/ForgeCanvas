@@ -1,6 +1,6 @@
 {
   "name": "@tryforge/forge.canvas",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A forgescript extension that allows you to create and edit images with ease.",
   "main": "dist/index.js",
   "scripts": {
@@ -17,7 +17,9 @@
     "canvas",
     "image",
     "png",
-    "jpeg"
+    "jpeg",
+    "botforge",
+    "gif"
   ],
   "author": "lordex",
   "license": "MIT",
@@ -26,14 +28,14 @@
   },
   "homepage": "https://github.com/tryforge/ForgeCanvas#readme",
   "devDependencies": {
-    "@tryforge/forgescript": "^1.4.0",
+    "@tryforge/forgescript": "^2.0.0",
     "@types/node": "^22.5.0",
-    "discord.js": "^14.16.1",
+    "discord.js": "^14.17.2",
     "typedoc": "^0.26.6",
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.58",
+    "@napi-rs/canvas": "^0.1.65",
     "gif-encoder-2": "^1.0.5"
   }
 }
