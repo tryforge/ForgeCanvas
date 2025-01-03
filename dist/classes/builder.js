@@ -265,7 +265,7 @@ class CanvasBuilder {
         const data = ctx.createImageData(width, height);
         colors?.forEach((hex, i) => {
             const colors = __1.CanvasUtil.hexToRgba(hex);
-            i = i * 4;
+            i *= 4;
             data.data[i] = colors.red;
             data.data[i + 1] = colors.green;
             data.data[i + 2] = colors.blue;
