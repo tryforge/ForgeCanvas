@@ -1,9 +1,10 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { AttachmentBuilder } from 'discord.js';
-import { GIFManager, Context } from '../..';
+import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$attachGIF',
+    aliases: ['$renderGIF', '$sendGIF'],
     description: 'Attaches the GIF.',
     version: '1.1.0',
     brackets: true,
@@ -27,12 +28,11 @@ export default new NativeFunction({
     async execute(ctx: Context, [gifName, filename]) {
         const gif = ctx.gifManager?.get(gifName);
 
-        if (!gif) {
+        if (!gif)
             return this.customError('No GIF with the provided name found.');
-        }
 
-        ctx.container.files.push(new AttachmentBuilder(gif.out.getData(), {
-            name: filename ? filename.replace(/\{gif\}/g, gifName) : `${gifName}.gif`
+        ctx.container.files.push(new AttachmentBuilder(Buffer.from([...gif.out.getData(), 0x3b]), {
+            name: `${filename ?? gifName}.gif`
         }));
 
         return this.success();

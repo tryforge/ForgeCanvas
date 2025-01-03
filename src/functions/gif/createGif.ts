@@ -1,8 +1,9 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, GIFManager } from '../..';
+import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$createGIF',
+    aliases: ['$newGIF'],
     description: 'Creates a new GIF.',
     version: '1.1.0',
     brackets: true,

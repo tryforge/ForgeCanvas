@@ -3,6 +3,7 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$deleteGIF',
+    alises: ['$removeGIF'],
     description: 'Deletes the GIF.',
     version: '1.1.0',
     brackets: true,
