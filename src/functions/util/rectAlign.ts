@@ -34,11 +34,14 @@ export default new NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
  
-        return this.success(align
+        return this.success(align !== null
             ? (
-                canvas.customProperties.rectAlign = align,
-                undefined
-            ) : RectAlign[canvas.customProperties?.rectAlign ?? 'left']
+                canvas.customProperties.rectAlign = (
+                    typeof align === 'number' ? RectAlign[align] : align
+                ) as unknown as RectAlign, undefined
+            ) : typeof canvas.customProperties?.rectAlign === 'number'
+                ? RectAlign[canvas.customProperties.rectAlign]
+                : canvas.customProperties?.rectAlign ?? 'left'
         );
     }
 });

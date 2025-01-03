@@ -34,7 +34,7 @@ export default new NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
 
-        return this.success(t
+        return this.success(t !== null
             ? (canvas.fontVariantCaps = (typeof t === 'number' 
                 ? FontVariantCaps[t]
                 : t

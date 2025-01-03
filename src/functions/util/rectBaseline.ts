@@ -34,11 +34,14 @@ export default new NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
  
-        return this.success(baseline
+        return this.success(baseline !== null
             ? (
-                canvas.customProperties.rectBaseline = baseline,
-                undefined
-            ) : RectBaseline[canvas.customProperties?.rectBaseline ?? 'bottom']
+                canvas.customProperties.rectBaseline = (
+                    typeof baseline === 'number' ? RectBaseline[baseline] : baseline
+                ) as unknown as RectBaseline, undefined
+            ) : typeof canvas.customProperties?.rectBaseline === 'number'
+                ? RectBaseline[canvas.customProperties.rectBaseline]
+                : canvas.customProperties?.rectBaseline ?? 'bottom'
         );
     }
 });
