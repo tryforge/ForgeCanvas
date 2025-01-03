@@ -1,4 +1,9 @@
-import { createCanvas, loadImage, SKRSContext2D, Image } from '@napi-rs/canvas';
+import {
+    createCanvas,
+    loadImage,
+    SKRSContext2D,
+    Image
+} from '@napi-rs/canvas';
 import {
     CustomCanvasProperties,
     FillOrStroke,
@@ -7,10 +12,7 @@ import {
     Filters,
     fontRegex,
     CanvasUtil,
-    AlignOrBaseline,
-    ProgressBarOptions,
-    TextAlign,
-    TextBaseline
+    ProgressBarOptions
 } from '..';
 
 export class CanvasBuilder {
@@ -377,7 +379,7 @@ export class CanvasBuilder {
     
         colors?.forEach((hex, i) => {
             const colors = CanvasUtil.hexToRgba(hex);
-            i = i * 4;
+            i *= 4;
         
             data.data[i] = colors.red;
             data.data[i + 1] = colors.green;
