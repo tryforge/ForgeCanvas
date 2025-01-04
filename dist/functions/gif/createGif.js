@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
     name: '$createGIF',
+    aliases: ['$newGIF'],
     description: 'Creates a new GIF.',
     version: '1.1.0',
     brackets: true,
