@@ -39,8 +39,8 @@ const registerFonts = async (fonts) => fonts.forEach(font => {
 });
 exports.registerFonts = registerFonts;
 class ForgeCanvas extends forgescript_1.ForgeExtension {
-    name = 'forge.canvas';
-    description = 'A forgescript extension that allows you to create and edit images with ease.';
+    name = 'ForgeCanvas';
+    description = 'A ForgeScript extension that allows you to create and edit images with ease.';
     version = package_json_1.version;
     init() {
         this.load(__dirname + '/functions');

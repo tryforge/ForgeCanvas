@@ -4,6 +4,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const discord_js_1 = require("discord.js");
 exports.default = new forgescript_1.NativeFunction({
     name: '$attachGIF',
+    aliases: ['$renderGIF', '$sendGIF'],
     description: 'Attaches the GIF.',
     version: '1.1.0',
     brackets: true,

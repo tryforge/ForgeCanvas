@@ -23,8 +23,8 @@ export const registerFonts = async (fonts: { src: string, name?: string | null }
     });
 
 export class ForgeCanvas extends ForgeExtension {
-    name = 'forge.canvas';
-    description = 'A forgescript extension that allows you to create and edit images with ease.';
+    name = 'ForgeCanvas';
+    description = 'A ForgeScript extension that allows you to create and edit images with ease.';
     version = version;
 
     public init() {
