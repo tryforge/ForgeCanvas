@@ -4,9 +4,9 @@ const forgescript_1 = require("@tryforge/forgescript");
 const discord_js_1 = require("discord.js");
 exports.default = new forgescript_1.NativeFunction({
     name: '$attachGIF',
-    aliases: ['$renderGIF', '$sendGIF'],
+    aliases: ['$sendGIF', '$renderGIF', '$gifRender'],
     description: 'Attaches the GIF.',
-    version: '1.1.0',
+    version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
@@ -19,20 +19,21 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'filename',
-            description: 'The GIF attachment file name.',
+            description: 'The name of the GIF to be attached as.',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         }
     ],
-    async execute(ctx, [gifName, filename]) {
-        const gif = ctx.gifManager?.get(gifName);
+    async execute(ctx, [name, filename]) {
+        const gif = ctx.gifManager?.getEncoder(name);
+        filename = `${filename ?? name}.gif`;
         if (!gif)
-            return this.customError('No GIF with the provided name found.');
-        ctx.container.files.push(new discord_js_1.AttachmentBuilder(Buffer.from([...gif.out.getData(), 0x3b]), {
-            name: `${filename ?? gifName}.gif`
+            return this.customError('No GIF');
+        ctx.container.files.push(new discord_js_1.AttachmentBuilder(Buffer.from(gif.getBuffer()), {
+            name: filename
         }));
         return this.success();
     }
 });
-//# sourceMappingURL=attachGif.js.map
+//# sourceMappingURL=attachGIF.js.map

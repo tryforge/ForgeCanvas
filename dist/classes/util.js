@@ -112,6 +112,7 @@ class CanvasUtil {
     }
     ;
     static calculateRectAlignOrBaseline(XorY, WorH, AorB) {
+        AorB = typeof AorB === 'string' ? __1.RectAlign[AorB] : AorB;
         return AorB === __1.RectAlign.center
             ? XorY - WorH / 2
             : AorB === __1.RectAlign.right || AorB === __1.RectBaseline.top

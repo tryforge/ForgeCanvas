@@ -1,7 +1,7 @@
-import { createCanvas, Image, loadImage, SKRSContext2D } from '@napi-rs/canvas';
+import { createCanvas, Image, SKRSContext2D } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
-import GIFEncoder from 'gif-encoder-2';
+import { DecodeOptions, Decoder, Encoder } from '@gifsx/gifsx';
 
 class Manager<T> {
     public map: Map<string, T>;
@@ -25,10 +25,9 @@ export class CanvasManager extends Manager<CanvasBuilder> {
     set(name: string, canvas: CanvasBuilder): void;
     set(name: string, width: number, height: number): void;
     public set(name: string, a: CanvasBuilder | number, b?: number) {
-        if (typeof a !== 'number')
-            this.map.set(name, a);
-        else
+        if (typeof a === 'number')
             this.map.set(name, new CanvasBuilder(a, b ?? a));
+        else this.map.set(name, a);
     };
 };
 
@@ -61,15 +60,30 @@ export class ImageManager extends Manager<Image> {
     public set(name: string, image: Image) { this.map.set(name, image) };
 };
 
-export class GIFManager extends Manager<GIFEncoder> {
-    public current: GIFEncoder[];
+export class GIFManager {
+    public encoders: Map<string, Encoder>;
+    public decoders: Map<string, Decoder>;
+    public decodeOptions: Map<string, DecodeOptions>;
+    public currentOptions: DecodeOptions[];
+    public currentEncoder: Encoder[];
 
     constructor() {
-        super();
-        this.current = [];
+        this.encoders = new Map();
+        this.decoders = new Map();
+        this.decodeOptions = new Map();
+        this.currentOptions = [];
+        this.currentEncoder = [];
     };
 
-    public set(name: string, gif: GIFEncoder) {
-        this.map.set(name, gif);
-    };
+    public setEncoder(name: string, encoder: Encoder) { this.encoders.set(name, encoder) };
+    public setDecoder(name: string, decoder: Decoder) { this.decoders.set(name, decoder) };
+    public setDecodeOptions(name: string, options: DecodeOptions) { this.decodeOptions.set(name, options) };
+
+    public getEncoder(name: string) { return this.encoders.get(name) };
+    public getDecoder(name: string) { return this.decoders.get(name) };
+    public getDecodeOptions(name: string) { return this.decodeOptions.get(name) };
+
+    public removeEncoder(name: string) { this.encoders.delete(name) };
+    public removeDecoder(name: string) { this.decoders.delete(name) };
+    public removeDecodeOptions(name: string) { this.decodeOptions.delete(name) };
 };

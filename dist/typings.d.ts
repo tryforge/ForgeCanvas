@@ -29,8 +29,6 @@ export interface ProgressBarOptions {
     };
     left?: string | CanvasGradient | CanvasPattern;
 }
-type rawr<num extends number, meow extends number[] = []> = meow['length'] extends num ? meow[number] : rawr<num, [...meow, meow['length']]>;
-export type Range<Min extends number, Max extends number> = Min extends Max ? never : Exclude<rawr<Max>, rawr<Min>> | Min | Max;
 export declare enum RectAlign {
     left = 0,
     center = 1,
@@ -165,5 +163,4 @@ export declare enum ColorQuantizationAlgorithm {
     neuquant = 0,
     octree = 1
 }
-export {};
 //# sourceMappingURL=typings.d.ts.map

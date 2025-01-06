@@ -33,16 +33,6 @@ export interface ProgressBarOptions {
     left?: string | CanvasGradient | CanvasPattern;
 };
 
-type rawr<num extends number, meow extends number[] = []> = 
-  meow['length'] extends num
-    ? meow[number]
-    : rawr<num, [...meow, meow['length']]>;
-
-export type Range<Min extends number, Max extends number> = 
-  Min extends Max 
-    ? never 
-    : Exclude<rawr<Max>, rawr<Min>> | Min | Max;
-
 export enum RectAlign { left, center, right };
 export enum RectBaseline { top, center, bottom };
 export enum FillOrStroke { fill, stroke };

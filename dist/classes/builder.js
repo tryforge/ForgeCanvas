@@ -11,6 +11,10 @@ class CanvasBuilder {
     ;
     get height() { return this.ctx.canvas.height; }
     ;
+    set width(val) { this.ctx.canvas.width = val; }
+    ;
+    set height(val) { this.ctx.canvas.height = val; }
+    ;
     constructor(width, height) {
         this.ctx = (0, canvas_1.createCanvas)(width, height).getContext('2d');
     }
@@ -280,6 +284,8 @@ class CanvasBuilder {
         ctx.canvas.height = height;
         ctx.putImageData(data, 0, 0);
     }
+    ;
+    get dataUrl() { return this.ctx.canvas.toDataURL('image/png'); }
     ;
     get buffer() { return this.ctx.canvas.toBuffer('image/png'); }
     ;

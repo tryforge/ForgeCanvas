@@ -35,7 +35,7 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.65",
-    "gif-encoder-2": "^1.0.5"
+    "@gifsx/gifsx": "^1.0.7",
+    "@napi-rs/canvas": "^0.1.65"
   }
 }

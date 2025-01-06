@@ -118,7 +118,8 @@ export class CanvasUtil {
         XorY: number,
         WorH: number,
         AorB: RectAlign | RectBaseline 
-    ) { 
+    ) {
+        AorB = typeof AorB === 'string' ? RectAlign[AorB as keyof typeof RectAlign] : AorB;
         return AorB === RectAlign.center
                 ? XorY - WorH / 2
             : AorB === RectAlign.right || AorB === RectBaseline.top

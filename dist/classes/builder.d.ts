@@ -6,6 +6,8 @@ export declare class CanvasBuilder {
     customProperties: CustomCanvasProperties;
     get width(): number;
     get height(): number;
+    set width(val: number);
+    set height(val: number);
     constructor(width: number, height: number);
     rect(type: FillOrStrokeOrClear, x: number, y: number, width?: number | null, height?: number | null, radius?: number | number[] | null): void;
     text(type: FillOrStroke, text: string, x: number, y: number, font: string, maxWidth?: number | null, multiline?: boolean | null, wrap?: boolean | null, lineOffset?: number | null): void;
@@ -22,6 +24,7 @@ export declare class CanvasBuilder {
     getPixels(x: number, y: number, width: number, height: number): string[];
     setPixels(x: number, y: number, width: number, height: number, colors: string[]): void;
     resize(width: number, height: number): void;
+    get dataUrl(): string;
     get buffer(): Buffer;
 }
 //# sourceMappingURL=builder.d.ts.map

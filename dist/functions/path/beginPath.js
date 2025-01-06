@@ -6,6 +6,7 @@ exports.default = new forgescript_1.NativeFunction({
     aliases: ['$startPath', '$pathStart'],
     description: 'Begins a new path.',
     version: '1.0.0',
+    brackets: false,
     unwrap: true,
     args: [
         {
@@ -17,13 +18,13 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [name]) {
-        const canvas = name
+        const canvas = (name
             ? ctx.canvasManager?.get(name)
             : !name && ctx.canvasManager?.current?.length !== 0
-                ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
+                ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null)?.ctx;
         if (!canvas)
             return this.customError('No canvas');
-        canvas.ctx.beginPath();
+        canvas.beginPath();
         return this.success();
     }
 });

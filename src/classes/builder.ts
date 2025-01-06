@@ -23,6 +23,8 @@ export class CanvasBuilder {
     
     public get width() { return this.ctx.canvas.width };
     public get height() { return this.ctx.canvas.height };
+    public set width(val: number) { this.ctx.canvas.width = val };
+    public set height(val: number) { this.ctx.canvas.height = val };
 
     constructor(width: number, height: number) {
         this.ctx = createCanvas(width, height).getContext('2d');
@@ -399,5 +401,6 @@ export class CanvasBuilder {
         ctx.putImageData(data, 0, 0);
     };
 
+    public get dataUrl() { return this.ctx.canvas.toDataURL('image/png') };
     public get buffer() { return this.ctx.canvas.toBuffer('image/png') };
 };
