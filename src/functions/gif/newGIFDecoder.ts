@@ -1,12 +1,12 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
 import { Context, GIFManager } from '../..';
-import { ColorOutput, DecodeOptions, Decoder } from '@gifsx/gifsx';
+import { Decoder } from '@gifsx/gifsx';
 import { fetch } from 'undici';
 import { readFile } from 'node:fs/promises';
 
 export default new NativeFunction({
-    name: '$createDecoder',
-    aliases: ['$newDecoder'],
+    name: '$newGIFDecoder',
+    aliases: ['$createGIFDecoder', '$createDecoder', '$GIFDecoder', '$newDecoder'],
     description: 'Creates a new GIF Decoder.',
     version: '1.2.0',
     brackets: true,
