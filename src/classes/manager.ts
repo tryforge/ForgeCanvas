@@ -64,14 +64,14 @@ export class GIFManager {
     public encoders: Map<string, Encoder>;
     public decoders: Map<string, Decoder>;
     public decodeOptions: Map<string, DecodeOptions>;
-    public currentOptions: DecodeOptions[];
+    public currentOptions: DecodeOptions | null;
     public currentEncoder: Encoder[];
 
     constructor() {
         this.encoders = new Map();
         this.decoders = new Map();
         this.decodeOptions = new Map();
-        this.currentOptions = [];
+        this.currentOptions = null;
         this.currentEncoder = [];
     };
 
