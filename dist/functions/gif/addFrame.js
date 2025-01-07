@@ -55,9 +55,6 @@ exports.default = new forgescript_1.NativeFunction({
             const [width, height] = size.split('x').map(Number);
             f = gifsx_1.Frame.fromIndexedPixels(width, height, data.split(',').map(Number));
         }
-        else if (['http', 'https'].some(x => frame.startsWith(`${x}://`))) {
-            f = await loadImage(frame);
-        }
         else if (frame.startsWith('images://')) {
             const img = ctx.imageManager?.get(frame.slice(9));
             if (!img)
