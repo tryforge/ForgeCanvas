@@ -3,15 +3,15 @@ import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$newGIFEncoder',
-    aliases: ['$createGIFEncoder', '$GIFEncoder'],
-    description: 'Creates a new GIF encoder.',
+    aliases: ['$createGIFEncoder', '$GIFEncoder', '$createEncoder', '$newEncoder'],
+    description: 'Creates a new GIF Encoder.',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the new gif.',
+            description: 'Name of the new GIF Encoder.',
             type: ArgType.String,
             required: true,
             rest: false
@@ -26,7 +26,7 @@ export default new NativeFunction({
     ],
     async execute (ctx: Context, [name]) {
         if (!ctx.gifManager || ctx.gifManager.currentEncoder.length === 0)
-            return this.customError('No size and  has been set');
+            return this.customError('No size and palette has been set');
 
         const i = ctx.gifManager.currentEncoder.length - 1;
 

@@ -2,8 +2,9 @@ import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { Context } from '../..';
 
 export default new NativeFunction({
-    name: '$globalPalette',
-    description: 'Sets the global palette for the GIF.',
+    name: '$GIFEncoderGlobalPalette',
+    aliases: ['$encoderGlobalPalette', '$globalPalette'],
+    description: 'Gets the global palette of the GIF Encoder.',
     version: '1.2.0',
     brackets: false,
     unwrap: true,

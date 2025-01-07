@@ -2,8 +2,9 @@ import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { Context } from '../..';
 
 export default new NativeFunction({
-    name: '$setLoops',
-    description: 'Sets the number of loops for the GIF.',
+    name: '$setEncoderLoops',
+    aliases: ['$setEncoderRepeat', '$setGIFEncoderRepeat', '$setGIFEncoderLoops', '$setLoops', '$setRepeat'],
+    description: 'Sets the number of loops for the GIF Encoder.',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
