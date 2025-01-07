@@ -72,7 +72,7 @@ class GIFManager {
         this.encoders = new Map();
         this.decoders = new Map();
         this.decodeOptions = new Map();
-        this.currentOptions = [];
+        this.currentOptions = null;
         this.currentEncoder = [];
     }
     ;

@@ -36,7 +36,7 @@ exports.default = new forgescript_1.NativeFunction({
     async execute(ctx, [w, h, palette]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof __1.GIFManager))
             ctx.gifManager = new __1.GIFManager();
-        if (!Array.isArray(palette))
+        if (palette !== null && !Array.isArray(palette))
             return this.customError('The global palette must be an array.');
         ctx.gifManager.currentEncoder.push(new gifsx_1.Encoder(w, h, palette));
         return this.success();

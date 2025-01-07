@@ -11,9 +11,9 @@ class CanvasBuilder {
     ;
     get height() { return this.ctx.canvas.height; }
     ;
-    set width(val) { this.ctx.canvas.width = val; }
+    set width(val) { this.resize(val, this.height); }
     ;
-    set height(val) { this.ctx.canvas.height = val; }
+    set height(val) { this.resize(this.width, val); }
     ;
     constructor(width, height) {
         this.ctx = (0, canvas_1.createCanvas)(width, height).getContext('2d');

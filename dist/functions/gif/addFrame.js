@@ -58,21 +58,20 @@ exports.default = new forgescript_1.NativeFunction({
         else if (['http', 'https'].some(x => frame.startsWith(`${x}://`))) {
             f = await loadImage(frame);
         }
-        else if (frame.startsWith('path://')) {
-            f = await loadImage(frame.slice(7));
-        }
         else if (frame.startsWith('images://')) {
             const img = ctx.imageManager?.get(frame.slice(9));
             if (!img)
                 return this.customError('No image');
             f = await loadImage(img);
         }
-        else {
-            const canvas = ctx.canvasManager?.get(frame);
+        else if (frame.startsWith('canvas://')) {
+            const canvas = ctx.canvasManager?.get(frame.slice(9));
             if (!canvas)
                 return this.customError('No canvas');
             f = gifsx_1.Frame.fromRgba(canvas.width, canvas.height, canvas.ctx.getImageData(0, 0, canvas.width, canvas.height).data);
         }
+        else
+            f = await loadImage(frame);
         if (!f)
             return this.customError('Invalid frame');
         if (options) {

@@ -30,7 +30,7 @@ export declare class GIFManager {
     encoders: Map<string, Encoder>;
     decoders: Map<string, Decoder>;
     decodeOptions: Map<string, DecodeOptions>;
-    currentOptions: DecodeOptions[];
+    currentOptions: DecodeOptions | null;
     currentEncoder: Encoder[];
     constructor();
     setEncoder(name: string, encoder: Encoder): void;

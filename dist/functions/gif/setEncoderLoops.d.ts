@@ -13,4 +13,4 @@ declare const _default: NativeFunction<[{
     rest: false;
 }], true>;
 export default _default;
-//# sourceMappingURL=setLoops.d.ts.map
+//# sourceMappingURL=setEncoderLoops.d.ts.map
