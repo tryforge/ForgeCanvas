@@ -10,7 +10,7 @@
 <h2 align="center">Contents</h2>
 
 1. [Why ForgeCanvas?](#why-forgecanvas)
-2. [Installation](#commands)
+2. [Commands](#commands)
 3. [Documentation](https://docs.botforge.org/p/ForgeCanvas/)
 4. [Need help!](#need-help)
 5. [Credits](#credits)
@@ -19,7 +19,7 @@
 <p align="center">ForgeCanvas simplifies image creation, integrates seamlessly with ForgeScript, and makes canvas-related tasks quicker and easier for bot development.</p>
 <br>
 <h3 align="center">Commands</h3><hr>
-<p align="center">a Few example commands you can test ForgeCanvas!</p>
+<p align="center">A few example commands you can test with ForgeCanvas!</p>
 
 ### Fake Dm Command - By Econome
 Fake Dm is meant to be a somewhat realistic dm command that display's a mobile like message ready for you to modify!
