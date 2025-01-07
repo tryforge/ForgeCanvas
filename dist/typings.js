@@ -1,7 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ColorQuantizationAlgorithm = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.AlignOrBaseline = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.Context = void 0;
+exports.ColorQuantizationAlgorithm = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.AlignOrBaseline = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.Context = exports.DisposalMethod = exports.ColorOutput = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
+var ColorOutput;
+(function (ColorOutput) {
+    ColorOutput[ColorOutput["Rgba"] = 0] = "Rgba";
+    ColorOutput[ColorOutput["IndexedPixels"] = 1] = "IndexedPixels";
+})(ColorOutput || (exports.ColorOutput = ColorOutput = {}));
+;
+var DisposalMethod;
+(function (DisposalMethod) {
+    DisposalMethod[DisposalMethod["Any"] = 0] = "Any";
+    DisposalMethod[DisposalMethod["Keep"] = 1] = "Keep";
+    DisposalMethod[DisposalMethod["Background"] = 2] = "Background";
+    DisposalMethod[DisposalMethod["Previous"] = 3] = "Previous";
+})(DisposalMethod || (exports.DisposalMethod = DisposalMethod = {}));
+;
 class Context extends forgescript_1.Context {
     canvasManager;
     gradientManager;
