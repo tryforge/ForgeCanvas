@@ -1,6 +1,18 @@
 import { Context as ctx } from '@tryforge/forgescript';
 import { CanvasManager, GIFManager, GradientManager, ImageManager } from './classes';
 
+export enum ColorOutput {
+    Rgba = 0,
+    IndexedPixels = 1 
+};
+
+export enum DisposalMethod {
+    Any = 0,
+    Keep = 1,
+    Background = 2,
+    Previous = 3
+};
+
 export class Context extends ctx {
     canvasManager?: CanvasManager;
     gradientManager?: GradientManager;
