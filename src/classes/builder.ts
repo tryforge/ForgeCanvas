@@ -14,6 +14,7 @@ import {
     CanvasUtil,
     ProgressBarOptions
 } from '..';
+import { Decoder } from '@gifsx/gifsx';
 
 export class CanvasBuilder {
     public ctx: SKRSContext2D;
@@ -23,8 +24,8 @@ export class CanvasBuilder {
     
     public get width() { return this.ctx.canvas.width };
     public get height() { return this.ctx.canvas.height };
-    public set width(val: number) { this.ctx.canvas.width = val };
-    public set height(val: number) { this.ctx.canvas.height = val };
+    public set width(val: number) { this.resize(val, this.height) };
+    public set height(val: number) { this.resize(this.width, val) };
 
     constructor(width: number, height: number) {
         this.ctx = createCanvas(width, height).getContext('2d');
