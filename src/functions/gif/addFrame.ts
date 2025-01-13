@@ -1,7 +1,7 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
+import { CanvasUtil, Context } from '../..';
 import { DisposalMethod, Frame } from '@gifsx/gifsx';
-import { loadImage as ldImage, Image, createCanvas } from '@napi-rs/canvas';
+import { loadImage, Image, createCanvas } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$addFrame',
@@ -19,35 +19,50 @@ export default new NativeFunction({
         },
         {
             name: 'frame',
-            description: 'Frame.',
+            description: 'Frame source.',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'options',
-            description: 'Options.',
+            description: 'Frame options.',
             type: ArgType.Json,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'speed',
+            description: 'Frame rgb quantization speed.',
+            type: ArgType.Number,
+            check: (x: number) => x >= 1 && x <= 30,
             required: false,
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, frame, options]) {
+    async execute (ctx: Context, [name, frame, options, speed]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
                 : !name && ctx.gifManager?.currentEncoder?.length !== 0 
                     ? ctx.gifManager?.currentEncoder?.[ctx.gifManager?.currentEncoder?.length - 1] : null;
         if (!gif) return this.customError('No gif');
 
-        let f: Frame | null = null;
+        let f: Frame | undefined;
         if (frame.startsWith('rgba://')) {
             const [size, data] = parseArgs(frame, 'rgba://', 2);
             const [width, height] = size.split('x').map(Number);
-            f = Frame.fromRgba(width, height, data.split(',').map(Number));
+            f = Frame.fromRgba(width, height, data.split(',').map(Number), speed);
+        } else if (frame.startsWith('hex://')) {
+            const [size, data] = parseArgs(frame, 'hex://', 2);
+            const [width, height] = size.split('x').map(Number);
+            f = Frame.fromRgba(width, height, data.split(',').flatMap(hex => {
+                const rgba = CanvasUtil.hexToRgba(hex.trim());
+                return [rgba.red, rgba.green, rgba.blue, rgba.alpha ?? 255];
+            }), speed);
         } else if (frame.startsWith('rgb://')) {
             const [size, data] = parseArgs(frame, 'rgb://', 2);
             const [width, height] = size.split('x').map(Number);
-            f = Frame.fromRgb(width, height, data.split(',').map(Number));
+            f = Frame.fromRgb(width, height, data.split(',').map(Number), speed);
         } else if (frame.startsWith('indexed://')) {
             const [size, data] = parseArgs(frame, 'indexed://', 2);
             const [width, height] = size.split('x').map(Number);
@@ -55,15 +70,20 @@ export default new NativeFunction({
         } else if (frame.startsWith('images://')) {
             const img = ctx.imageManager?.get(frame.slice(9));
             if (!img) return this.customError('No image');
-            f = await loadImage(img);
+            f = await loadFrame(img, speed);
+        } else if (frame.startsWith('frame://')) {
+            const fr = ctx.gifManager?.getFrame(frame.slice(8));
+            if (!fr) return this.customError('No frame');
+            f = fr;
         } else if (frame.startsWith('canvas://')) {
             const canvas = ctx.canvasManager?.get(frame.slice(9));
             if (!canvas) return this.customError('No canvas');
             f = Frame.fromRgba(
                 canvas.width, canvas.height,
-                canvas.ctx.getImageData(0, 0, canvas.width, canvas.height).data
+                canvas.ctx.getImageData(0, 0, canvas.width, canvas.height).data,
+                speed
             );
-        } else f = await loadImage(frame);
+        } else f = await loadFrame(frame);
 
         if (!f) return this.customError('Invalid frame');
         if (options) {
@@ -92,10 +112,11 @@ export default new NativeFunction({
     }
 });
 
-async function loadImage(
-    src: string | URL | Buffer | ArrayBufferLike | Uint8Array | Image | import("stream").Readable
+async function loadFrame(
+    src: string | URL | Buffer | ArrayBufferLike | Uint8Array | Image | import("stream").Readable,
+    speed?: number | null
 ) {
-    const img = await ldImage(src);
+    const img = await loadImage(src);
     const canvas = createCanvas(img.width, img.height);
     const ctx = canvas.getContext('2d');
 
@@ -106,9 +127,10 @@ async function loadImage(
             0, 0,
             canvas.width,
             canvas.height
-        ).data
+        ).data,
+        speed
     );
-}
+};
 
 function parseArgs(str: string, prefix: string, length: number) {
     const args = str.slice(prefix.length).split(':');
@@ -116,4 +138,4 @@ function parseArgs(str: string, prefix: string, length: number) {
         throw new Error(`${prefix} frame expects ${length} arguments.`);
 
     return args;
-}
+};
