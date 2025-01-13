@@ -1,18 +1,6 @@
 import { Context as ctx } from '@tryforge/forgescript';
 import { CanvasManager, GIFManager, GradientManager, ImageManager } from './classes';
 
-export enum ColorOutput {
-    Rgba = 0,
-    IndexedPixels = 1 
-};
-
-export enum DisposalMethod {
-    Any = 0,
-    Keep = 1,
-    Background = 2,
-    Previous = 3
-};
-
 export class Context extends ctx {
     canvasManager?: CanvasManager;
     gradientManager?: GradientManager;
@@ -26,7 +14,6 @@ export interface CustomCanvasProperties {
 };
 
 export interface ProgressBarOptions {
-    angle?: number;
     style?: string | CanvasGradient | CanvasPattern;
     background?: {
         enabled: boolean;
@@ -38,11 +25,40 @@ export interface ProgressBarOptions {
     type?: 'fill' | 'stroke' | 'clear';
     radius?: number | number[];
     direction?: 'horizontal' | 'vertical';
-    clip?: {
-        enabled: boolean;
-        radius?: number | number[];
-    };
+    clip?: number | number[];
     left?: string | CanvasGradient | CanvasPattern;
+};
+
+export interface PieChartOptions {
+    type?: 'fill' | 'stroke';
+    background?: {
+        enabled: boolean;
+        style?: string | CanvasGradient | CanvasPattern;
+        radius?: number | number[];
+        type?: 'fill' | 'stroke' | 'clear';
+        padding?: number;
+    }
+    radius?: number;
+    left?: string | CanvasGradient | CanvasPattern;
+};
+
+export interface BarData {
+    value: number;
+    style: string | CanvasGradient | CanvasPattern;
+};
+export interface BarOptions {
+    'type'?: 'normal' | 'pie';
+    'draw-type'?: 'fill' | 'stroke' | 'clear';
+    'height'?: number;
+    'max-width'?: number;
+    'background-style'?: string;
+    'background-radius'?: number | number[];
+    'background-padding'?: number;
+    'background-type'?: 'fill' | 'stroke' | 'clear';
+    'radius'?: number | number[];
+    'direction'?: 'horizontal' | 'vertical';
+    'clip-radius'?: number | number[];
+    'left'?: string;
 };
 
 export enum RectAlign { left, center, right };
@@ -108,7 +124,37 @@ export enum FontVariantCaps {
     'unicase',
     'titling-caps'
 };
-export enum ColorQuantizationAlgorithm {
-    neuquant,
-    octree  
+export enum ColorDataType {
+    Rgba,
+    Hex
+};
+export enum ColorOutput {
+    Rgba,
+    IndexedPixels 
+};
+export enum DisposalMethod {
+    Any,
+    Keep,
+    Background,
+    Previous
+};
+export enum FrameOption {
+    delay,
+    dispose,
+    transparent,
+    needsUserInput,
+    top,
+    left,
+    width,
+    height,
+    interlaced,
+    palette,
+    buffer
+};
+export enum DecoderOption {
+    bgColor,
+    bufferSize,
+    globalPalette,
+    lineLength,
+    loops
 };
