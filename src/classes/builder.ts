@@ -12,9 +12,11 @@ import {
     Filters,
     fontRegex,
     CanvasUtil,
-    ProgressBarOptions
+    ProgressBarOptions,
+    ColorDataType,
+    PieChartOptions,
+    BarData
 } from '..';
-import { Decoder } from '@gifsx/gifsx';
 
 export class CanvasBuilder {
     public ctx: SKRSContext2D;
@@ -48,14 +50,21 @@ export class CanvasBuilder {
             x = CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
         if (this.customProperties.rectBaseline)
             y = CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
-        
+
         if (type === FillOrStrokeOrClear.none)
             return ctx.roundRect(x, y, width, height, radius);
+
+        if (!radius) {
+            if (type === FillOrStrokeOrClear.fill) ctx.fillRect(x, y, width, height);
+            if (type === FillOrStrokeOrClear.stroke) ctx.strokeRect(x, y, width, height);
+            if (type === FillOrStrokeOrClear.clear) ctx.clearRect(x, y, width, height);
+            return;
+        };
 
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
-        
+
         ({
             [FillOrStrokeOrClear.clear]: () => ctx.clearRect(x, y, width, height),
             [FillOrStrokeOrClear.fill]: () => ctx.fill(),
@@ -152,23 +161,19 @@ export class CanvasBuilder {
         const ctx = this.ctx;
         progress = Math.min(progress || 0, 100) / 100;
         const options = {
-            angle: config?.angle ?? 0,
             style: config?.style ?? '#FFFFFF',
             background: {
                 enabled: config?.background?.enabled ?? true,
                 style: config?.background?.style ?? '#000000',
-                radius: config?.background?.radius ?? undefined,
+                radius: config?.background?.radius,
                 type: config?.background?.type ?? 'fill',
                 padding: config?.background?.padding ?? 0
             },
             type: config?.type ?? 'fill',
-            radius: config?.radius ?? undefined,
+            radius: config?.radius,
             direction: config?.direction ?? 'horizontal',
-            clip: {
-                enabled: config?.clip?.enabled ?? false,
-                radius: config?.clip?.radius ?? undefined
-            },
-            left: config?.left ?? undefined
+            clip: config?.clip,
+            left: config?.left
         };
 
         if (this.customProperties.rectAlign)
@@ -189,10 +194,12 @@ export class CanvasBuilder {
             } else this.rect(FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
         };
 
-        width = width - options.background.padding * 2;
-        height = height - options.background.padding * 2;
-        x = x + options.background.padding;
-        y = y + + options.background.padding;
+        if (options.background.padding) {
+            width = width - options.background.padding * 2;
+            height = height - options.background.padding * 2;
+            x = x + options.background.padding;
+            y = y + + options.background.padding;
+        };
 
         const pwidth = Math.min(['horizontal', 'both'].includes(options.direction)
             ? width * progress : width, width);
@@ -204,14 +211,14 @@ export class CanvasBuilder {
 
         ctx.save();
 
-        if (options.clip.enabled) {
+        if (options.clip !== undefined) {
             ctx.beginPath();
             ctx.roundRect(
                 x,
                 y,
                 width,
                 height,
-                options.clip.radius
+                options.clip
             );
             ctx.clip();
         };
@@ -232,6 +239,84 @@ export class CanvasBuilder {
         ctx.restore();
 
         return [x, y, width, height, pwidth, pheight]
+    };
+
+    public drawPieChart(
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        data: BarData[],
+        config: PieChartOptions = {}
+    ) {
+        const ctx = this.ctx;
+        const options = {
+            type: config.type ?? 'fill',
+            background: {
+                enabled: config.background?.enabled ?? true,
+                style: config.background?.style ?? '#000000',
+                radius: config.background?.radius,
+                type: config.background?.type ?? 'fill',
+                padding: config.background?.padding ?? 0
+            },
+            radius: config.radius ?? Math.min(width, height) / 2,
+        };
+
+        if (this.customProperties.rectAlign)
+            x = CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
+
+        if (options.background.enabled) {
+            if (options.background.type !== 'clear') {
+                ctx.save();
+                ctx[`${options.background.type}Style` as 'fillStyle' | 'strokeStyle'] = options.background.style;
+
+                ctx.beginPath();
+                ctx.roundRect(x, y, width, height, options.background.radius);
+
+                ctx[options.background.type as 'fill' | 'stroke']();
+                ctx.restore();
+            } else this.rect(FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
+        };
+
+        if (options.background.padding) {
+            width = width - options.background.padding * 2;
+            height = height - options.background.padding * 2;
+            x = x + options.background.padding;
+            y = y + options.background.padding;
+        };
+
+        const total = data.reduce((acc, val) => acc + val.value, 0);
+        let angle = 0;
+
+        data.forEach((seg) => {
+            const angl = angle + (seg.value / total) * Math.PI * 2;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x + width / 2, y + height / 2);
+
+            ctx.arc(
+                x + width / 2, y + height / 2,
+                Math.min(width, height) / 2,
+                angle, angl
+            );
+            ctx.arc(
+                x + width / 2, y + height / 2,
+                options.radius ?? 0,
+                angl, angle, true
+            );
+
+            ctx.lineTo(x + width / 2, y + height / 2);
+            ctx.closePath();
+            
+            ctx.fillStyle = seg.style;
+            ctx.fill();
+
+            ctx.restore();
+            angle = angl;
+        });
     };
 
     public measureText(text: string, font: string) {
@@ -342,19 +427,23 @@ export class CanvasBuilder {
         ctx.putImageData(trimmed, 0, 0);
     };
     
-    public getPixels(
+    public getPixels<T extends ColorDataType>(
         x: number,
         y: number,
         width: number,
-        height: number
-    ) {
+        height: number,
+        t?: T | null
+    ): T extends ColorDataType.Rgba ? number[] : string[]
+    {
         const ctx = this.ctx;
         width??= ctx.canvas.width;
         height??= ctx.canvas.height;
     
         const data = ctx.getImageData(x, y, width, height).data;
+        if (t === ColorDataType.Rgba)
+            return Array.from(data) as T extends ColorDataType.Rgba ? number[] : string[];
+
         const colors = [];
-    
         for (let i = 0; i < data.length; i += 4) {
             colors.push(CanvasUtil.rgbaToHex(
                 data[i],
@@ -364,15 +453,17 @@ export class CanvasBuilder {
             ));
         };
     
-        return colors;
+        return colors as T extends ColorDataType.Rgba ? number[] : string[];
     };
     
-    public setPixels(
+    public setPixels<T extends ColorDataType>(
         x: number,
         y: number,
         width: number,
         height: number,
-        colors: string[]
+        colors: T extends ColorDataType.Rgba
+            ? number[] : string[],
+        t?: T | null
     ) {
         const ctx = this.ctx;
         width??= ctx.canvas.width;
@@ -380,15 +471,17 @@ export class CanvasBuilder {
     
         const data = ctx.createImageData(width, height);
     
-        colors?.forEach((hex, i) => {
-            const colors = CanvasUtil.hexToRgba(hex);
-            i *= 4;
-        
-            data.data[i] = colors.red;
-            data.data[i + 1] = colors.green;
-            data.data[i + 2] = colors.blue;
-            data.data[i + 3] = colors.alpha ?? 255;
-        });
+        if (t !== ColorDataType.Rgba)
+            colors?.forEach((hex, i) => {
+                const colors = CanvasUtil.hexToRgba(hex as string);
+                i *= 4;
+            
+                data.data[i] = colors.red;
+                data.data[i + 1] = colors.green;
+                data.data[i + 2] = colors.blue;
+                data.data[i + 3] = colors.alpha ?? 255;
+            });
+        else data.data.set(Uint8ClampedArray.from(colors as number[]));
         
         ctx.putImageData(data, x, y);
     };
