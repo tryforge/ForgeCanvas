@@ -1,9 +1,9 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../../';
+import { Context, ColorDataType } from '../..';
 
 export default new NativeFunction({
-    name: '$setPixels',
-    aliases: ['$putImageData'],
+    name: '$putPixels',
+    aliases: ['$putImageData', '$setPixels'],
     description: 'Places pixels in the canvas.',
     version: '1.0.0',
     brackets: true,
@@ -50,21 +50,26 @@ export default new NativeFunction({
             type: ArgType.Number,
             required: true,
             rest: false
+        },
+        {
+            name: 'type',
+            description: 'The pixels (image data) content type.',
+            type: ArgType.Enum,
+            enum: ColorDataType,
+            required: false,
+            rest: false
         }
     ],
-    async execute (ctx: Context, [name, pixels, x, y, w, h]) {
+    async execute (ctx: Context, [name, pixels, x, y, w, h, t]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
                 : !name && ctx.canvasManager?.current?.length !== 0 
                     ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
         
-        if (!canvas)
-            return this.customError('No canvas');
+        if (!canvas) return this.customError('No canvas');
+        if (!Array.isArray(pixels)) return this.customError('Invalid pixels');
 
-        if (!Array.isArray(pixels) || pixels.every(x => typeof x === 'number'))
-            return this.customError('Invalid pixels');
-
-        canvas.setPixels(x, y, w, h, pixels);
+        canvas.setPixels(x, y, w, h, pixels, t);
         return this.success();
     }
 });
