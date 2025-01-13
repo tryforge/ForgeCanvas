@@ -1,102 +1,120 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
-import { getBarOptions, getBarData } from './progressBarUtils';
+import { Context, BarData, BarOptions, CanvasUtil } from '../..';
 
 export default new NativeFunction({
     name: '$drawProgressBar',
-    aliases: ['$progressBar', '$bar'],
     description: 'Creates and draws progress bars on a canvas.',
-    version: '1.0.0',
+    version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas to draw on.',
+            description: 'Name of the canvas.',
             type: ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'x',
+            description: 'The X coordinate.',
+            type: ArgType.Number,
             required: true,
             rest: false
-        }
+        },
+        {
+            name: 'y',
+            description: 'The Y coordinate.',
+            type: ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'width',
+            description: 'The width.',
+            type: ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'height',
+            description: 'The height.',
+            type: ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'config',
+            description: 'The progress bar configuration.',
+            type: ArgType.Json,
+            required: true,
+            rest: false
+        },
     ],
-    async execute(ctx: Context, [canvasName]) {
-        const canvas = ctx.canvasManager?.get(canvasName);
+    async execute(ctx: Context, [name, x, y, width, height]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+                : !name && ctx.canvasManager?.current?.length !== 0 
+                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
 
-        if (!canvas) {
-            return this.customError('No canvas found.');
-        }
+        if (!canvas) return this.customError('No canvas');
 
-        const ctx2D = canvas.ctx;
+        const data: BarData[] = (ctx.getEnvironmentKey('progressBarData') ?? []) as BarData[]; 
+        const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {}) as BarOptions;
+        const type = options.type ?? 'normal';
 
-        // Retrieve options and data
-        const progressBarOptions = getBarOptions(ctx);
-        const progressBarData = getBarData(ctx);
-
-        if (!progressBarData.length) {
-            return this.customError('No bar data provided.');
-        }
-
-        const { type, height, maxWidth, background, radius } = progressBarOptions;
-        const totalValue = progressBarData.reduce((sum, data) => sum + data.value, 0);
-
+        let res;
         if (type === 'normal') {
-            // Background
-            ctx2D.fillStyle = background;
-            ctx2D.fillRect(0, 0, maxWidth, height);
-
-            // Segments
-            let currentX = 0;
-            for (const { value, color } of progressBarData) {
-                const segmentWidth = (value / 100) * maxWidth;
-                ctx2D.fillStyle = color;
-
-                if (radius > 0) {
-                    ctx2D.beginPath();
-                    ctx2D.moveTo(currentX + radius, 0);
-                    ctx2D.arcTo(currentX + segmentWidth, 0, currentX + segmentWidth, height, radius);
-                    ctx2D.arcTo(currentX + segmentWidth, height, currentX, height, radius);
-                    ctx2D.arcTo(currentX, height, currentX, 0, radius);
-                    ctx2D.arcTo(currentX, 0, currentX + radius, 0, radius);
-                    ctx2D.closePath();
-                    ctx2D.fill();
-                } else {
-                    ctx2D.fillRect(currentX, 0, segmentWidth, height);
+            const progress = data[0];
+            res = canvas.drawProgressBar(
+                x, y, width, height,
+                progress.value,
+                {
+                    style: await CanvasUtil.parseStyle(
+                        this, ctx, canvas,
+                        progress.style as any
+                    ) ?? '#000000',
+                    background: {
+                        enabled: Object.keys(options).find(x => x.startsWith('background')) !== undefined,
+                        style: await CanvasUtil.parseStyle(
+                            this, ctx, canvas,
+                            options['background-style'] as any
+                        ) ?? '#000000',
+                        radius: options['background-radius'],
+                        padding: options['background-padding'],
+                        type: options['background-type']
+                    },
+                    type: options['draw-type'],
+                    radius: options.radius,
+                    direction: options.direction,
+                    clip: options['clip-radius'],
+                    left: options.left
                 }
-
-                currentX += segmentWidth;
-            }
-        } else if (type === 'ratio') {
-            ctx2D.fillStyle = background;
-            ctx2D.fillRect(0, 0, maxWidth, height);
-
-            let currentX = 0;
-            for (const { value, color } of progressBarData) {
-                const segmentWidth = (value / totalValue) * maxWidth;
-                ctx2D.fillStyle = color;
-                ctx2D.fillRect(currentX, 0, segmentWidth, height);
-                currentX += segmentWidth;
-            }
-        } else if (type === 'pie') {
-            const centerX = maxWidth / 2;
-            const centerY = height / 2;
-            const pieRadius = Math.min(maxWidth, height) / 2;
-
-            let startAngle = 0;
-            for (const { value, color } of progressBarData) {
-                const sliceAngle = (value / totalValue) * (Math.PI * 2);
-                ctx2D.fillStyle = color;
-
-                ctx2D.beginPath();
-                ctx2D.moveTo(centerX, centerY);
-                ctx2D.arc(centerX, centerY, pieRadius, startAngle, startAngle + sliceAngle);
-                ctx2D.closePath();
-                ctx2D.fill();
-
-                startAngle += sliceAngle;
-            }
+            );
         } else {
-            return this.customError(`Unknown bar type: ${type}`);
-        }
+            res = canvas.drawPieChart(
+                x, y, width, height,
+                data,
+                {
+                    type: options['draw-type'] === 'clear' ? 'fill' : options['draw-type'],
+                    background: {
+                        enabled: Object.keys(options).find(x => x.startsWith('background')) !== undefined,
+                        style: await CanvasUtil.parseStyle(
+                            this, ctx, canvas,
+                            options['background-style'] as any
+                        ) ?? '#000000',
+                        radius: options['background-radius'],
+                        padding: options['background-padding'],
+                        type: options['background-type']
+                    },
+                    radius: Array.isArray(options.radius)
+                        ? options.radius[0] : options.radius ?? 0,
+                    left: options.left
+                }
+            );
+        };
 
-        return this.success('Progress bar drawn successfully.');
+        ctx.deleteEnvironmentKey('progressBarData');
+        return this.success(res ? JSON.stringify(res) : undefined);
     }
 });

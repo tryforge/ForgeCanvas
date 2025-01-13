@@ -1,74 +1,93 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
+import { Context, BarOptions, CanvasUtil, CanvasBuilder } from '../..';
 
-// Function to retrieve bar options from the environment (or default options if not set)
-export function getBarOptions(ctx: Context) {
-    const envOptions = ctx.setEnvironmentKey('progressBarOptions');
-    if (envOptions) {
-        return JSON.parse(envOptions); // Parse and return the saved options from the environment
-    }
-
-    // Default bar options if not set in the environment
-    return {
-        type: 'normal',
-        height: 20,
-        maxWidth: 200,
-        background: '#FFFFFF',
-        radius: 0
-    };
-}
-
-// Native function to set options for progress bars
 export default new NativeFunction({
     name: '$barOptions',
     description: 'Sets options for progress bars.',
-    version: '1.0.0',
+    version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
-            name: 'option',
-            description: 'Option name (type, height, maxWidth, background, radius).',
+            name: 'options',
+            description: 'Options (type:normal/ratio/pie, height:number, maxWidth:number, background:color/gradient/pattern, radius:...number).',
             type: ArgType.String,
             required: true,
-            rest: false
-        },
-        {
-            name: 'value',
-            description: 'Value for the option.',
-            type: ArgType.String,
-            required: true,
-            rest: false
+            rest: true
         }
     ],
-    execute(ctx: Context, [option, value]) {
-        // Retrieve the existing bar options from the environment
-        const barOptions = JSON.parse(ctx.setEnvironmentKey('progressBarOptions') || '{}');
+    async execute(ctx: Context, [options]) {
+        const opts = options.map(x => {
+            const args = x.trim().split(':');
+            return [args[0], args.slice(1)];
+        }) as [string, string[]];
+        const barOptions = (ctx.getEnvironmentKey('progressBarOptions') ?? {}) as BarOptions;
 
-        // Update the specified option
-        switch (option) {
-            case 'type':
-                barOptions.type = value;
-                break;
-            case 'height':
-                barOptions.height = parseFloat(value);
-                break;
-            case 'maxWidth':
-                barOptions.maxWidth = parseFloat(value);
-                break;
-            case 'background':
-                barOptions.background = value;
-                break;
-            case 'radius':
-                barOptions.radius = parseFloat(value);
-                break;
-            default:
-                return this.customError(`Unknown bar option: ${option}`);
-        }
+        for (let [option, val] of opts) {
+            const value = val as unknown as string[];
+            switch (option) {
+                case 'type':
+                    if (![ 'normal', 'pie', 'none' ].includes(value[0]))
+                        return this.customError('Invalid type');
 
-        // Save the updated options to the environment
-        ctx.setEnvironmentKey('progressBarOptions', JSON.stringify(barOptions));
+                    barOptions.type = value[0] !== 'none'
+                        ? value[0] as any : undefined;
+                    break;
+                case 'draw-type':
+                    if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
+                        return this.customError('Invalid draw type');
 
-        return this.success(`Bar option "${option}" set to "${value}".`);
+                    barOptions['draw-type'] = value[0] !== 'none'
+                        ? value[0] as any : undefined;
+                    break;
+                case 'background-style':
+                    barOptions['background-style'] = value[0] !== 'none'
+                        ? value.join(':') : undefined;
+                    break;
+                case 'background-radius':
+                    const rad = value.map(x => parseFloat(x));
+                    barOptions[option] = value[0] !== 'none'
+                        ? rad.length === 1 ? rad[0] : rad
+                        : undefined;
+                    break;
+                case 'background-padding':
+                    barOptions['background-padding'] = value[0] !== 'none'
+                        ? parseFloat(value[0]) : undefined;
+                    break;
+                case 'background-type':
+                    if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
+                        return this.customError('Invalid background type');
+
+                    barOptions['background-type'] = value[0] !== 'none'
+                        ? value[0] as any : undefined;
+                    break;
+                case 'radius':
+                    const r = value.map(x => parseFloat(x));
+                    barOptions.radius = value[0] !== 'none'
+                        ? r.length === 1 ? r[0] : r
+                        : undefined;
+                    break;
+                case 'direction':
+                    if (!['horizontal', 'vertical', 'none'].includes(value[0]))
+                        return this.customError('Invalid direction');
+
+                    barOptions.direction = value[0] !== 'none'
+                        ? value[0] as any : undefined;
+                case 'clip-radius':
+                    const clip = value.map(x => parseFloat(x));
+                    barOptions['clip-radius'] = value[0] !== 'none'
+                        ? clip.length === 1 ? clip[0] : clip
+                        : undefined;
+                    break;
+                case 'left':
+                    barOptions['left'] = value[0] !== 'none'
+                    ? value.join(':') : undefined;
+                    break;
+                default: return this.customError(`Unknown bar option: ${option}`);
+            };
+        };
+
+        ctx.setEnvironmentKey('progressBarOptions', barOptions);
+        return this.success();
     }
 });
