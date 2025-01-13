@@ -22,14 +22,6 @@ export declare class CanvasUtil {
         alpha: number | undefined;
     };
 }
-export declare class ByteArray {
-    data: number[];
-    constructor();
-    getData: () => Buffer;
-    writeByte(val: number): void;
-    writeUTFBytes(str: string): void;
-    writeBytes(array: number[], offset: number, length: number): void;
-}
 export declare const Logger: {
     DateColor: chalk.Chalk;
     Colors: {

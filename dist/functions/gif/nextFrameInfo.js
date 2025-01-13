@@ -16,18 +16,22 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         },
         {
-            name: 'env',
-            description: 'Name of the env to save the frame info.',
+            name: 'name',
+            description: 'The frame name to save the info as.',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         }
     ],
-    async execute(ctx, [name, env]) {
+    async execute(ctx, [name, f]) {
         const gif = ctx.gifManager?.getDecoder(name);
         if (!gif)
             return this.customError('No gif');
-        ctx.setEnvironmentKey(env, gif.nextFrameInfo());
+        const frame = gif.nextFrameInfo();
+        if (frame)
+            ctx.gifManager?.setFrame(f, frame);
+        else
+            ctx.gifManager?.removeFrame(f);
         return this.success();
     }
 });

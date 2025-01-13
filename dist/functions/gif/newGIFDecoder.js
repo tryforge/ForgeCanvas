@@ -6,8 +6,8 @@ const gifsx_1 = require("@gifsx/gifsx");
 const undici_1 = require("undici");
 const promises_1 = require("node:fs/promises");
 exports.default = new forgescript_1.NativeFunction({
-    name: '$createDecoder',
-    aliases: ['$newDecoder'],
+    name: '$newGIFDecoder',
+    aliases: ['$createGIFDecoder', '$createDecoder', '$GIFDecoder', '$newDecoder'],
     description: 'Creates a new GIF Decoder.',
     version: '1.2.0',
     brackets: true,

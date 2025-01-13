@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$getPixels',
     aliases: ['$getImageData'],
@@ -43,16 +44,24 @@ exports.default = new forgescript_1.NativeFunction({
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
+        },
+        {
+            name: 'type',
+            description: 'The pixels (image data) content type.',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.ColorDataType,
+            required: false,
+            rest: false
         }
     ],
-    async execute(ctx, [name, x, y, w, h]) {
+    async execute(ctx, [name, x, y, w, h, t]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : !name && ctx.canvasManager?.current?.length !== 0
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
         if (!canvas)
             return this.customError('No canvas');
-        return this.success(canvas.getPixels(x, y, w, h));
+        return this.success(canvas.getPixels(x, y, w, h, t));
     }
 });
 //# sourceMappingURL=getPixels.js.map

@@ -1,7 +1,7 @@
 import { Image } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
-import { DecodeOptions, Decoder, Encoder } from '@gifsx/gifsx';
+import { DecodeOptions, Decoder, Encoder, Frame } from '@gifsx/gifsx';
 declare class Manager<T> {
     map: Map<string, T>;
     constructor();
@@ -30,18 +30,22 @@ export declare class GIFManager {
     encoders: Map<string, Encoder>;
     decoders: Map<string, Decoder>;
     decodeOptions: Map<string, DecodeOptions>;
+    frames: Map<string, Frame>;
     currentOptions: DecodeOptions | null;
     currentEncoder: Encoder[];
     constructor();
     setEncoder(name: string, encoder: Encoder): void;
     setDecoder(name: string, decoder: Decoder): void;
     setDecodeOptions(name: string, options: DecodeOptions): void;
+    setFrame(name: string, frame: Frame): void;
     getEncoder(name: string): Encoder | undefined;
     getDecoder(name: string): Decoder | undefined;
     getDecodeOptions(name: string): DecodeOptions | undefined;
+    getFrame(name: string): Frame | undefined;
     removeEncoder(name: string): void;
     removeDecoder(name: string): void;
     removeDecodeOptions(name: string): void;
+    removeFrame(name: string): void;
 }
 export {};
 //# sourceMappingURL=manager.d.ts.map

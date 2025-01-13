@@ -66,12 +66,14 @@ class GIFManager {
     encoders;
     decoders;
     decodeOptions;
+    frames;
     currentOptions;
     currentEncoder;
     constructor() {
         this.encoders = new Map();
         this.decoders = new Map();
         this.decodeOptions = new Map();
+        this.frames = new Map();
         this.currentOptions = null;
         this.currentEncoder = [];
     }
@@ -82,17 +84,23 @@ class GIFManager {
     ;
     setDecodeOptions(name, options) { this.decodeOptions.set(name, options); }
     ;
+    setFrame(name, frame) { this.frames.set(name, frame); }
+    ;
     getEncoder(name) { return this.encoders.get(name); }
     ;
     getDecoder(name) { return this.decoders.get(name); }
     ;
     getDecodeOptions(name) { return this.decodeOptions.get(name); }
     ;
+    getFrame(name) { return this.frames.get(name); }
+    ;
     removeEncoder(name) { this.encoders.delete(name); }
     ;
     removeDecoder(name) { this.decoders.delete(name); }
     ;
     removeDecodeOptions(name) { this.decodeOptions.delete(name); }
+    ;
+    removeFrame(name) { this.frames.delete(name); }
     ;
 }
 exports.GIFManager = GIFManager;
