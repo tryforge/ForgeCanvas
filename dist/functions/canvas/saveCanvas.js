@@ -25,22 +25,33 @@ exports.default = new forgescript_1.NativeFunction({
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
+        },
+        {
+            name: 'format',
+            description: 'The image format.',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.ImageFormat,
+            required: false,
+            rest: false
         }
     ],
-    async execute(ctx, [name, path]) {
-        const canvas = name
+    async execute(ctx, [name, path, f]) {
+        const canvas = (name
             ? ctx.canvasManager?.get(name)
             : !name && ctx.canvasManager?.current?.length !== 0
-                ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
+                ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null)?.ctx?.canvas;
+        const format = (f !== null
+            ? 'image/' + (typeof f === 'number' ? __1.ImageFormat[f] : f)
+            : 'image/png');
         if (!canvas)
             return this.customError('No canvas');
         if (!path)
             return this.customError('No path provided.');
         if (!path.startsWith('images://'))
-            (0, node_fs_1.writeFileSync)(path, canvas.buffer);
+            (0, node_fs_1.writeFileSync)(path, canvas.toBuffer(format));
         if (!ctx.imageManager)
             ctx.imageManager = new __1.ImageManager();
-        ctx.imageManager.set(path.slice(9), await (0, canvas_1.loadImage)(canvas.buffer));
+        ctx.imageManager.set(path.slice(9), await (0, canvas_1.loadImage)(canvas.toBuffer(format)));
         return this.success();
     }
 });

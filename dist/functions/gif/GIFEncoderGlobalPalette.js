@@ -24,7 +24,8 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.gifManager?.currentEncoder?.[ctx.gifManager?.currentEncoder?.length - 1] : null;
         if (!gif)
             return this.customError('No gif');
-        return this.success(gif.palette?.values());
+        return this.success(gif.palette !== null
+            ? `[${Array.from(gif.palette).join(', ')}]` : null);
     }
 });
 //# sourceMappingURL=GIFEncoderGlobalPalette.js.map

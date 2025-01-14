@@ -55,6 +55,12 @@ export interface BarOptions {
     'clip-radius'?: number | number[];
     'left'?: string;
 }
+export declare enum ImageFormat {
+    png = 0,
+    jpeg = 1,
+    avif = 2,
+    webp = 3
+}
 export declare enum RectAlign {
     left = 0,
     center = 1,

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DecoderOption = exports.FrameOption = exports.DisposalMethod = exports.ColorOutput = exports.ColorDataType = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.AlignOrBaseline = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.Context = void 0;
+exports.DecoderOption = exports.FrameOption = exports.DisposalMethod = exports.ColorOutput = exports.ColorDataType = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.AlignOrBaseline = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.ImageFormat = exports.Context = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
 class Context extends forgescript_1.Context {
     canvasManager;
@@ -14,6 +14,14 @@ exports.Context = Context;
 ;
 ;
 ;
+;
+var ImageFormat;
+(function (ImageFormat) {
+    ImageFormat[ImageFormat["png"] = 0] = "png";
+    ImageFormat[ImageFormat["jpeg"] = 1] = "jpeg";
+    ImageFormat[ImageFormat["avif"] = 2] = "avif";
+    ImageFormat[ImageFormat["webp"] = 3] = "webp";
+})(ImageFormat || (exports.ImageFormat = ImageFormat = {}));
 ;
 var RectAlign;
 (function (RectAlign) {
