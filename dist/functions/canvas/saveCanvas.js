@@ -46,12 +46,14 @@ exports.default = new forgescript_1.NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
         if (!path)
-            return this.customError('No path provided.');
-        if (!path.startsWith('images://'))
+            return this.customError('No path provided');
+        if (path.startsWith('images://')) {
+            if (!ctx.imageManager)
+                ctx.imageManager = new __1.ImageManager();
+            ctx.imageManager.set(path.slice(9), await (0, canvas_1.loadImage)(canvas.toBuffer(format)));
+        }
+        else
             (0, node_fs_1.writeFileSync)(path, canvas.toBuffer(format));
-        if (!ctx.imageManager)
-            ctx.imageManager = new __1.ImageManager();
-        ctx.imageManager.set(path.slice(9), await (0, canvas_1.loadImage)(canvas.toBuffer(format)));
         return this.success();
     }
 });
