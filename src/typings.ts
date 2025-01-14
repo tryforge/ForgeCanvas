@@ -61,6 +61,7 @@ export interface BarOptions {
     'left'?: string;
 };
 
+export enum ImageFormat { png, jpeg, avif, webp };
 export enum RectAlign { left, center, right };
 export enum RectBaseline { top, center, bottom };
 export enum FillOrStroke { fill, stroke };

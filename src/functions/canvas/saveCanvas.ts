@@ -1,7 +1,7 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, ImageManager } from '../..';
+import { Context, ImageManager, ImageFormat } from '../..';
 import { writeFileSync } from 'node:fs';
-import { Image, loadImage } from '@napi-rs/canvas';
+import { loadImage } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$saveCanvas',
@@ -24,22 +24,33 @@ export default new NativeFunction({
             type: ArgType.String,
             required: true,
             rest: false
+        },
+        {
+            name: 'format',
+            description: 'The image format.',
+            type: ArgType.Enum,
+            enum: ImageFormat,
+            required: false,
+            rest: false
         }
     ],
-    async execute (ctx: Context, [name, path]) {
-        const canvas = name
+    async execute (ctx: Context, [name, path, f]) {
+        const canvas = (name
             ? ctx.canvasManager?.get(name)
                 : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-        
+                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null)?.ctx?.canvas;
+        const format = (f !== null 
+            ? 'image/' + (typeof f === 'number' ? ImageFormat[f] : f)
+        : 'image/png') as any;
+
         if (!canvas) return this.customError('No canvas');
         if (!path) return this.customError('No path provided.');
 
-        if (!path.startsWith('images://')) writeFileSync(path, canvas.buffer);
+        if (!path.startsWith('images://')) writeFileSync(path, canvas.toBuffer(format));
 
         if (!ctx.imageManager) ctx.imageManager = new ImageManager();
 
-        ctx.imageManager.set(path.slice(9), await loadImage(canvas.buffer));
+        ctx.imageManager.set(path.slice(9), await loadImage(canvas.toBuffer(format)));
         return this.success();
     }
 });
