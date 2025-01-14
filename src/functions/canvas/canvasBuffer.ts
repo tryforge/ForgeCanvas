@@ -3,7 +3,7 @@ import { Context, ImageFormat } from '../..';
 
 export default new NativeFunction({
     name: '$canvasBuffer',
-    description: 'Saves a canvas to a file.',
+    description: 'Returns buffer of a canvas.',
     version: '1.2.0',
     brackets: false,
     unwrap: true,
