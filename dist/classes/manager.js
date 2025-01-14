@@ -24,10 +24,10 @@ class CanvasManager extends Manager {
     }
     ;
     set(name, a, b) {
-        if (typeof a !== 'number')
-            this.map.set(name, a);
-        else
+        if (typeof a === 'number')
             this.map.set(name, new builder_1.CanvasBuilder(a, b ?? a));
+        else
+            this.map.set(name, a);
     }
     ;
 }
@@ -62,16 +62,45 @@ class ImageManager extends Manager {
 }
 exports.ImageManager = ImageManager;
 ;
-class GIFManager extends Manager {
-    current;
+class GIFManager {
+    encoders;
+    decoders;
+    decodeOptions;
+    frames;
+    currentOptions;
+    currentEncoder;
     constructor() {
-        super();
-        this.current = [];
+        this.encoders = new Map();
+        this.decoders = new Map();
+        this.decodeOptions = new Map();
+        this.frames = new Map();
+        this.currentOptions = null;
+        this.currentEncoder = [];
     }
     ;
-    set(name, gif) {
-        this.map.set(name, gif);
-    }
+    setEncoder(name, encoder) { this.encoders.set(name, encoder); }
+    ;
+    setDecoder(name, decoder) { this.decoders.set(name, decoder); }
+    ;
+    setDecodeOptions(name, options) { this.decodeOptions.set(name, options); }
+    ;
+    setFrame(name, frame) { this.frames.set(name, frame); }
+    ;
+    getEncoder(name) { return this.encoders.get(name); }
+    ;
+    getDecoder(name) { return this.decoders.get(name); }
+    ;
+    getDecodeOptions(name) { return this.decodeOptions.get(name); }
+    ;
+    getFrame(name) { return this.frames.get(name); }
+    ;
+    removeEncoder(name) { this.encoders.delete(name); }
+    ;
+    removeDecoder(name) { this.decoders.delete(name); }
+    ;
+    removeDecodeOptions(name) { this.decodeOptions.delete(name); }
+    ;
+    removeFrame(name) { this.frames.delete(name); }
     ;
 }
 exports.GIFManager = GIFManager;

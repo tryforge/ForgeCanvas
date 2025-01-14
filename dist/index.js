@@ -20,6 +20,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const node_fs_1 = require("node:fs");
 const node_path_1 = require("node:path");
 const classes_1 = require("./classes");
+const package_json_1 = require("../package.json");
 const registerFonts = async (fonts) => fonts.forEach(font => {
     if (!(0, node_fs_1.existsSync)(font.src))
         throw classes_1.Logger.log('ERROR', `Invalid font source. (${font.src})`);
@@ -40,7 +41,7 @@ exports.registerFonts = registerFonts;
 class ForgeCanvas extends forgescript_1.ForgeExtension {
     name = 'forge.canvas';
     description = 'A forgescript extension that allows you to create and edit images with ease.';
-    version = '1.0.0';
+    version = package_json_1.version;
     init() {
         this.load(__dirname + '/functions');
     }

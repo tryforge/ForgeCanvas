@@ -11,6 +11,19 @@ declare const _default: NativeFunction<[{
     type: ArgType.String;
     required: true;
     rest: false;
+}, {
+    name: string;
+    description: string;
+    type: ArgType.Json;
+    required: false;
+    rest: false;
+}, {
+    name: string;
+    description: string;
+    type: ArgType.Number;
+    check: (x: number) => boolean;
+    required: false;
+    rest: false;
 }], true>;
 export default _default;
 //# sourceMappingURL=addFrame.d.ts.map

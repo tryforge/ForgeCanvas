@@ -1,7 +1,8 @@
-import { GlobalFonts, loadImage, Image } from '@napi-rs/canvas';
+import { GlobalFonts, loadImage, Image, createCanvas } from '@napi-rs/canvas';
 import chalk from 'chalk';
-import { Context } from '../';
+import { Context, RectAlign, RectBaseline } from '..';
 import { CanvasBuilder } from './builder';
+import { Frame } from '@gifsx/gifsx';
 
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i
 export const rgbaRegex = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
@@ -40,7 +41,7 @@ export const Colors: Record<string, string> = {
 };
 
 export class CanvasUtil {
-    public static isValidFont = (font: string) => {
+    public static isValidFont(font: string) {
         if (!font)
             return false;
       
@@ -64,7 +65,7 @@ export class CanvasUtil {
         return false;
     };
 
-    public static parseStyle = async (self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => {
+    public static async parseStyle(self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) {
         if (!style) return '#000000';
         let s: string[] | string | CanvasGradient | CanvasPattern = style.split('://');
 
@@ -114,7 +115,20 @@ export class CanvasUtil {
         return s;
     };
 
-    public static parseFilters = (filters: string) => {
+    public static calculateRectAlignOrBaseline(
+        XorY: number,
+        WorH: number,
+        AorB: RectAlign | RectBaseline 
+    ) {
+        AorB = typeof AorB === 'string' ? RectAlign[AorB as keyof typeof RectAlign] : AorB;
+        return AorB === RectAlign.center
+                ? XorY - WorH / 2
+            : AorB === RectAlign.right || AorB === RectBaseline.top
+                ? XorY - WorH
+            : XorY;
+    };
+
+    public static parseFilters(filters: string) {
         const result = [];
       
         const regex = /([a-zA-Z-]+)\(([^)]+)\)/g;
@@ -140,32 +154,6 @@ export class CanvasUtil {
         });
 };
 
-export class ByteArray {
-    public data: number[];
-
-    constructor() {
-        this.data = [];
-    };
-
-    public getData = () => Buffer.from(this.data);
-
-    public writeByte(val: number) {
-        this.data.push(val);
-    };
- 
-    public writeUTFBytes(str: string) {
-        for (var len = str.length, i = 0; i < len; i++) {
-            this.writeByte(str.charCodeAt(i));
-        };
-    };
-
-    public writeBytes(array: number[], offset: number, length: number) {
-        for (var len = length || array.length, i = offset || 0; i < len; i++) {
-            this.writeByte(array[i]);
-        };
-    };
-};
-
 export const Logger = {
     DateColor: chalk.green.bold,
     Colors: {
@@ -181,4 +169,32 @@ export const Logger = {
             this.Colors.MESSAGE(message)
         );
     }
+};
+
+export async function loadFrame(
+    src: string | URL | Buffer | ArrayBufferLike | Uint8Array | Image | import("stream").Readable,
+    speed?: number | null
+) {
+    const img = await loadImage(src);
+    const canvas = createCanvas(img.width, img.height);
+    const ctx = canvas.getContext('2d');
+
+    ctx.drawImage(img, 0, 0);
+    return Frame.fromRgba(
+        canvas.width, canvas.height,
+        ctx.getImageData(
+            0, 0,
+            canvas.width,
+            canvas.height
+        ).data,
+        speed
+    );
+};
+
+export function parseArgs(str: string, prefix: string | number, length: number, rest?: boolean) {
+    const args = str.slice(typeof prefix === 'string' ? prefix.length : prefix).split(':');
+    if (!rest ? args.length !== length : args.length < length)
+        throw new Error(`${prefix} frame expects ${length} arguments.`);
+
+    return args;
 };

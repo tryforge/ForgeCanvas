@@ -8,19 +8,66 @@ export class Context extends ctx {
     gifManager?: GIFManager;
 };
 
-type rawr<num extends number, meow extends number[] = []> = 
-  meow['length'] extends num
-    ? meow[number]
-    : rawr<num, [...meow, meow['length']]>;
+export interface CustomCanvasProperties {
+    rectAlign?: RectAlign;
+    rectBaseline?: RectBaseline;
+};
 
-export type Range<Min extends number, Max extends number> = 
-  Min extends Max 
-    ? never 
-    : Exclude<rawr<Max>, rawr<Min>> | Min | Max;
+export interface ProgressBarOptions {
+    style?: string | CanvasGradient | CanvasPattern;
+    background?: {
+        enabled: boolean;
+        style?: string | CanvasGradient | CanvasPattern;
+        radius?: number | number[];
+        type?: 'fill' | 'stroke' | 'clear';
+        padding?: number;
+    };
+    type?: 'fill' | 'stroke' | 'clear';
+    radius?: number | number[];
+    direction?: 'horizontal' | 'vertical';
+    clip?: number | number[];
+    left?: string | CanvasGradient | CanvasPattern;
+};
 
+export interface PieChartOptions {
+    type?: 'fill' | 'stroke';
+    background?: {
+        enabled: boolean;
+        style?: string | CanvasGradient | CanvasPattern;
+        radius?: number | number[];
+        type?: 'fill' | 'stroke' | 'clear';
+        padding?: number;
+    }
+    radius?: number;
+    left?: string | CanvasGradient | CanvasPattern;
+};
+
+export interface BarData {
+    value: number;
+    style: string | CanvasGradient | CanvasPattern;
+};
+export interface BarOptions {
+    'type'?: 'normal' | 'pie';
+    'draw-type'?: 'fill' | 'stroke' | 'clear';
+    'height'?: number;
+    'max-width'?: number;
+    'background-style'?: string;
+    'background-radius'?: number | number[];
+    'background-padding'?: number;
+    'background-type'?: 'fill' | 'stroke' | 'clear';
+    'radius'?: number | number[];
+    'direction'?: 'horizontal' | 'vertical';
+    'clip-radius'?: number | number[];
+    'left'?: string;
+};
+
+export enum ImageFormat { png, jpeg, avif, webp };
+export enum RectAlign { left, center, right };
+export enum RectBaseline { top, center, bottom };
 export enum FillOrStroke { fill, stroke };
 export enum FillOrStrokeOrClear { none, fill, stroke, clear };
 export enum WidthOrHeight { width, height };
+export enum AlignOrBaseline { align, baseline };
 export enum StyleType { color, gradient, pattern };
 export enum FilterMethod { add, set, remove, clear, get, json };
 export enum Filters { none, blur, sepia, grayscale, brightness, contrast, invert, saturate, 'drop-shadow' };
@@ -78,7 +125,37 @@ export enum FontVariantCaps {
     'unicase',
     'titling-caps'
 };
-export enum ColorQuantizationAlgorithm {
-    neuquant,
-    octree  
+export enum ColorDataType {
+    Rgba,
+    Hex
+};
+export enum ColorOutput {
+    Rgba,
+    IndexedPixels 
+};
+export enum DisposalMethod {
+    Any,
+    Keep,
+    Background,
+    Previous
+};
+export enum FrameOption {
+    delay,
+    dispose,
+    transparent,
+    needsUserInput,
+    top,
+    left,
+    width,
+    height,
+    interlaced,
+    palette,
+    buffer
+};
+export enum DecoderOption {
+    bgColor,
+    bufferSize,
+    globalPalette,
+    lineLength,
+    loops
 };

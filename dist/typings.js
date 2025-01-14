@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ColorQuantizationAlgorithm = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.Context = void 0;
+exports.DecoderOption = exports.FrameOption = exports.DisposalMethod = exports.ColorOutput = exports.ColorDataType = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.StyleType = exports.AlignOrBaseline = exports.WidthOrHeight = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.ImageFormat = exports.Context = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
 class Context extends forgescript_1.Context {
     canvasManager;
@@ -9,6 +9,33 @@ class Context extends forgescript_1.Context {
     gifManager;
 }
 exports.Context = Context;
+;
+;
+;
+;
+;
+;
+var ImageFormat;
+(function (ImageFormat) {
+    ImageFormat[ImageFormat["png"] = 0] = "png";
+    ImageFormat[ImageFormat["jpeg"] = 1] = "jpeg";
+    ImageFormat[ImageFormat["avif"] = 2] = "avif";
+    ImageFormat[ImageFormat["webp"] = 3] = "webp";
+})(ImageFormat || (exports.ImageFormat = ImageFormat = {}));
+;
+var RectAlign;
+(function (RectAlign) {
+    RectAlign[RectAlign["left"] = 0] = "left";
+    RectAlign[RectAlign["center"] = 1] = "center";
+    RectAlign[RectAlign["right"] = 2] = "right";
+})(RectAlign || (exports.RectAlign = RectAlign = {}));
+;
+var RectBaseline;
+(function (RectBaseline) {
+    RectBaseline[RectBaseline["top"] = 0] = "top";
+    RectBaseline[RectBaseline["center"] = 1] = "center";
+    RectBaseline[RectBaseline["bottom"] = 2] = "bottom";
+})(RectBaseline || (exports.RectBaseline = RectBaseline = {}));
 ;
 var FillOrStroke;
 (function (FillOrStroke) {
@@ -29,6 +56,12 @@ var WidthOrHeight;
     WidthOrHeight[WidthOrHeight["width"] = 0] = "width";
     WidthOrHeight[WidthOrHeight["height"] = 1] = "height";
 })(WidthOrHeight || (exports.WidthOrHeight = WidthOrHeight = {}));
+;
+var AlignOrBaseline;
+(function (AlignOrBaseline) {
+    AlignOrBaseline[AlignOrBaseline["align"] = 0] = "align";
+    AlignOrBaseline[AlignOrBaseline["baseline"] = 1] = "baseline";
+})(AlignOrBaseline || (exports.AlignOrBaseline = AlignOrBaseline = {}));
 ;
 var StyleType;
 (function (StyleType) {
@@ -154,10 +187,48 @@ var FontVariantCaps;
     FontVariantCaps[FontVariantCaps["titling-caps"] = 6] = "titling-caps";
 })(FontVariantCaps || (exports.FontVariantCaps = FontVariantCaps = {}));
 ;
-var ColorQuantizationAlgorithm;
-(function (ColorQuantizationAlgorithm) {
-    ColorQuantizationAlgorithm[ColorQuantizationAlgorithm["neuquant"] = 0] = "neuquant";
-    ColorQuantizationAlgorithm[ColorQuantizationAlgorithm["octree"] = 1] = "octree";
-})(ColorQuantizationAlgorithm || (exports.ColorQuantizationAlgorithm = ColorQuantizationAlgorithm = {}));
+var ColorDataType;
+(function (ColorDataType) {
+    ColorDataType[ColorDataType["Rgba"] = 0] = "Rgba";
+    ColorDataType[ColorDataType["Hex"] = 1] = "Hex";
+})(ColorDataType || (exports.ColorDataType = ColorDataType = {}));
+;
+var ColorOutput;
+(function (ColorOutput) {
+    ColorOutput[ColorOutput["Rgba"] = 0] = "Rgba";
+    ColorOutput[ColorOutput["IndexedPixels"] = 1] = "IndexedPixels";
+})(ColorOutput || (exports.ColorOutput = ColorOutput = {}));
+;
+var DisposalMethod;
+(function (DisposalMethod) {
+    DisposalMethod[DisposalMethod["Any"] = 0] = "Any";
+    DisposalMethod[DisposalMethod["Keep"] = 1] = "Keep";
+    DisposalMethod[DisposalMethod["Background"] = 2] = "Background";
+    DisposalMethod[DisposalMethod["Previous"] = 3] = "Previous";
+})(DisposalMethod || (exports.DisposalMethod = DisposalMethod = {}));
+;
+var FrameOption;
+(function (FrameOption) {
+    FrameOption[FrameOption["delay"] = 0] = "delay";
+    FrameOption[FrameOption["dispose"] = 1] = "dispose";
+    FrameOption[FrameOption["transparent"] = 2] = "transparent";
+    FrameOption[FrameOption["needsUserInput"] = 3] = "needsUserInput";
+    FrameOption[FrameOption["top"] = 4] = "top";
+    FrameOption[FrameOption["left"] = 5] = "left";
+    FrameOption[FrameOption["width"] = 6] = "width";
+    FrameOption[FrameOption["height"] = 7] = "height";
+    FrameOption[FrameOption["interlaced"] = 8] = "interlaced";
+    FrameOption[FrameOption["palette"] = 9] = "palette";
+    FrameOption[FrameOption["buffer"] = 10] = "buffer";
+})(FrameOption || (exports.FrameOption = FrameOption = {}));
+;
+var DecoderOption;
+(function (DecoderOption) {
+    DecoderOption[DecoderOption["bgColor"] = 0] = "bgColor";
+    DecoderOption[DecoderOption["bufferSize"] = 1] = "bufferSize";
+    DecoderOption[DecoderOption["globalPalette"] = 2] = "globalPalette";
+    DecoderOption[DecoderOption["lineLength"] = 3] = "lineLength";
+    DecoderOption[DecoderOption["loops"] = 4] = "loops";
+})(DecoderOption || (exports.DecoderOption = DecoderOption = {}));
 ;
 //# sourceMappingURL=typings.js.map

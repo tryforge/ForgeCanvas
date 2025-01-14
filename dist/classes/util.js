@@ -3,9 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Logger = exports.ByteArray = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.fontRegex = void 0;
+exports.Logger = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.fontRegex = void 0;
+exports.loadFrame = loadFrame;
+exports.parseArgs = parseArgs;
 const canvas_1 = require("@napi-rs/canvas");
 const chalk_1 = __importDefault(require("chalk"));
+const __1 = require("..");
+const gifsx_1 = require("@gifsx/gifsx");
 exports.fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i;
 exports.rgbaRegex = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
 exports.hexRegex = /^#?([0-9A-Fa-f]{3,4}){1,2}$/;
@@ -42,7 +46,7 @@ exports.Colors = {
     NotQuiteBlack: '#23272a'
 };
 class CanvasUtil {
-    static isValidFont = (font) => {
+    static isValidFont(font) {
         if (!font)
             return false;
         if (exports.fontRegex.test(font)) {
@@ -64,8 +68,9 @@ class CanvasUtil {
         }
         ;
         return false;
-    };
-    static parseStyle = async (self, ctx, canvas, style) => {
+    }
+    ;
+    static async parseStyle(self, ctx, canvas, style) {
         if (!style)
             return '#000000';
         let s = style.split('://');
@@ -107,8 +112,18 @@ class CanvasUtil {
         }
         ;
         return s;
-    };
-    static parseFilters = (filters) => {
+    }
+    ;
+    static calculateRectAlignOrBaseline(XorY, WorH, AorB) {
+        AorB = typeof AorB === 'string' ? __1.RectAlign[AorB] : AorB;
+        return AorB === __1.RectAlign.center
+            ? XorY - WorH / 2
+            : AorB === __1.RectAlign.right || AorB === __1.RectBaseline.top
+                ? XorY - WorH
+                : XorY;
+    }
+    ;
+    static parseFilters(filters) {
         const result = [];
         const regex = /([a-zA-Z-]+)\(([^)]+)\)/g;
         let match;
@@ -117,7 +132,8 @@ class CanvasUtil {
             result.push({ filter, value, raw });
         }
         return result;
-    };
+    }
+    ;
     static rgbaToHex = (r, g, b, a) => '#' + r.toString(16).padStart(2, '0') + g.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0') + (a && a !== undefined ? Math.round(a * 255).toString(16).padStart(2, '0') : '');
     static hexToRgba = (hex) => ({
         red: parseInt(hex.slice(1, 3), 16),
@@ -127,34 +143,6 @@ class CanvasUtil {
     });
 }
 exports.CanvasUtil = CanvasUtil;
-;
-class ByteArray {
-    data;
-    constructor() {
-        this.data = [];
-    }
-    ;
-    getData = () => Buffer.from(this.data);
-    writeByte(val) {
-        this.data.push(val);
-    }
-    ;
-    writeUTFBytes(str) {
-        for (var len = str.length, i = 0; i < len; i++) {
-            this.writeByte(str.charCodeAt(i));
-        }
-        ;
-    }
-    ;
-    writeBytes(array, offset, length) {
-        for (var len = length || array.length, i = offset || 0; i < len; i++) {
-            this.writeByte(array[i]);
-        }
-        ;
-    }
-    ;
-}
-exports.ByteArray = ByteArray;
 ;
 exports.Logger = {
     DateColor: chalk_1.default.green.bold,
@@ -168,4 +156,19 @@ exports.Logger = {
         console.log(this.DateColor(`[${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}]`), this.Colors[type](`[${type}]`), this.Colors.MESSAGE(message));
     }
 };
+async function loadFrame(src, speed) {
+    const img = await (0, canvas_1.loadImage)(src);
+    const canvas = (0, canvas_1.createCanvas)(img.width, img.height);
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    return gifsx_1.Frame.fromRgba(canvas.width, canvas.height, ctx.getImageData(0, 0, canvas.width, canvas.height).data, speed);
+}
+;
+function parseArgs(str, prefix, length, rest) {
+    const args = str.slice(typeof prefix === 'string' ? prefix.length : prefix).split(':');
+    if (!rest ? args.length !== length : args.length < length)
+        throw new Error(`${prefix} frame expects ${length} arguments.`);
+    return args;
+}
+;
 //# sourceMappingURL=util.js.map

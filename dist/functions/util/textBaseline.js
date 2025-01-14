@@ -32,9 +32,10 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1]?.ctx : null;
         if (!canvas)
             return this.customError('No canvas');
-        return this.success(baseline
-            ? (canvas.textBaseline = (typeof baseline === 'number' ? __1.TextBaseline[baseline] : baseline),
-                undefined) : canvas.textBaseline);
+        return this.success(baseline !== null
+            ? (canvas.textBaseline = (typeof baseline === 'number' ? __1.TextBaseline[baseline] : baseline), undefined) : typeof canvas.textBaseline === 'number'
+            ? __1.TextBaseline[canvas.textBaseline]
+            : canvas.textBaseline ?? 'bottom');
     }
 });
 //# sourceMappingURL=textBaseline.js.map

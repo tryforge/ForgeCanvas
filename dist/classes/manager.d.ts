@@ -1,7 +1,7 @@
 import { Image } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
-import GIFEncoder from 'gif-encoder-2';
+import { DecodeOptions, Decoder, Encoder, Frame } from '@gifsx/gifsx';
 declare class Manager<T> {
     map: Map<string, T>;
     constructor();
@@ -26,10 +26,26 @@ export declare class GradientManager extends Manager<CanvasGradient> {
 export declare class ImageManager extends Manager<Image> {
     set(name: string, image: Image): void;
 }
-export declare class GIFManager extends Manager<GIFEncoder> {
-    current: GIFEncoder[];
+export declare class GIFManager {
+    encoders: Map<string, Encoder>;
+    decoders: Map<string, Decoder>;
+    decodeOptions: Map<string, DecodeOptions>;
+    frames: Map<string, Frame>;
+    currentOptions: DecodeOptions | null;
+    currentEncoder: Encoder[];
     constructor();
-    set(name: string, gif: GIFEncoder): void;
+    setEncoder(name: string, encoder: Encoder): void;
+    setDecoder(name: string, decoder: Decoder): void;
+    setDecodeOptions(name: string, options: DecodeOptions): void;
+    setFrame(name: string, frame: Frame): void;
+    getEncoder(name: string): Encoder | undefined;
+    getDecoder(name: string): Decoder | undefined;
+    getDecodeOptions(name: string): DecodeOptions | undefined;
+    getFrame(name: string): Frame | undefined;
+    removeEncoder(name: string): void;
+    removeDecoder(name: string): void;
+    removeDecodeOptions(name: string): void;
+    removeFrame(name: string): void;
 }
 export {};
 //# sourceMappingURL=manager.d.ts.map

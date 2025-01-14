@@ -33,11 +33,14 @@ export default new NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
  
-        return this.success(baseline
-            ? (canvas.textBaseline = (
-                typeof baseline === 'number' ? TextBaseline[baseline] : baseline) as CanvasTextBaseline,
-                undefined
-            ) : canvas.textBaseline
+        return this.success(baseline !== null
+            ? (
+                canvas.textBaseline = (
+                    typeof baseline === 'number' ? TextBaseline[baseline] : baseline
+                ) as CanvasTextBaseline, undefined
+            ) : typeof canvas.textBaseline === 'number'
+                ? TextBaseline[canvas.textBaseline]
+                : canvas.textBaseline ?? 'bottom'
         );
     }
 });

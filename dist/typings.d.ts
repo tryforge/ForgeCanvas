@@ -6,8 +6,71 @@ export declare class Context extends ctx {
     imageManager?: ImageManager;
     gifManager?: GIFManager;
 }
-type rawr<num extends number, meow extends number[] = []> = meow['length'] extends num ? meow[number] : rawr<num, [...meow, meow['length']]>;
-export type Range<Min extends number, Max extends number> = Min extends Max ? never : Exclude<rawr<Max>, rawr<Min>> | Min | Max;
+export interface CustomCanvasProperties {
+    rectAlign?: RectAlign;
+    rectBaseline?: RectBaseline;
+}
+export interface ProgressBarOptions {
+    style?: string | CanvasGradient | CanvasPattern;
+    background?: {
+        enabled: boolean;
+        style?: string | CanvasGradient | CanvasPattern;
+        radius?: number | number[];
+        type?: 'fill' | 'stroke' | 'clear';
+        padding?: number;
+    };
+    type?: 'fill' | 'stroke' | 'clear';
+    radius?: number | number[];
+    direction?: 'horizontal' | 'vertical';
+    clip?: number | number[];
+    left?: string | CanvasGradient | CanvasPattern;
+}
+export interface PieChartOptions {
+    type?: 'fill' | 'stroke';
+    background?: {
+        enabled: boolean;
+        style?: string | CanvasGradient | CanvasPattern;
+        radius?: number | number[];
+        type?: 'fill' | 'stroke' | 'clear';
+        padding?: number;
+    };
+    radius?: number;
+    left?: string | CanvasGradient | CanvasPattern;
+}
+export interface BarData {
+    value: number;
+    style: string | CanvasGradient | CanvasPattern;
+}
+export interface BarOptions {
+    'type'?: 'normal' | 'pie';
+    'draw-type'?: 'fill' | 'stroke' | 'clear';
+    'height'?: number;
+    'max-width'?: number;
+    'background-style'?: string;
+    'background-radius'?: number | number[];
+    'background-padding'?: number;
+    'background-type'?: 'fill' | 'stroke' | 'clear';
+    'radius'?: number | number[];
+    'direction'?: 'horizontal' | 'vertical';
+    'clip-radius'?: number | number[];
+    'left'?: string;
+}
+export declare enum ImageFormat {
+    png = 0,
+    jpeg = 1,
+    avif = 2,
+    webp = 3
+}
+export declare enum RectAlign {
+    left = 0,
+    center = 1,
+    right = 2
+}
+export declare enum RectBaseline {
+    top = 0,
+    center = 1,
+    bottom = 2
+}
 export declare enum FillOrStroke {
     fill = 0,
     stroke = 1
@@ -21,6 +84,10 @@ export declare enum FillOrStrokeOrClear {
 export declare enum WidthOrHeight {
     width = 0,
     height = 1
+}
+export declare enum AlignOrBaseline {
+    align = 0,
+    baseline = 1
 }
 export declare enum StyleType {
     color = 0,
@@ -124,9 +191,38 @@ export declare enum FontVariantCaps {
     'unicase' = 5,
     'titling-caps' = 6
 }
-export declare enum ColorQuantizationAlgorithm {
-    neuquant = 0,
-    octree = 1
+export declare enum ColorDataType {
+    Rgba = 0,
+    Hex = 1
 }
-export {};
+export declare enum ColorOutput {
+    Rgba = 0,
+    IndexedPixels = 1
+}
+export declare enum DisposalMethod {
+    Any = 0,
+    Keep = 1,
+    Background = 2,
+    Previous = 3
+}
+export declare enum FrameOption {
+    delay = 0,
+    dispose = 1,
+    transparent = 2,
+    needsUserInput = 3,
+    top = 4,
+    left = 5,
+    width = 6,
+    height = 7,
+    interlaced = 8,
+    palette = 9,
+    buffer = 10
+}
+export declare enum DecoderOption {
+    bgColor = 0,
+    bufferSize = 1,
+    globalPalette = 2,
+    lineLength = 3,
+    loops = 4
+}
 //# sourceMappingURL=typings.d.ts.map

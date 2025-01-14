@@ -34,11 +34,14 @@ export default new NativeFunction({
         if (!canvas)
             return this.customError('No canvas');
  
-        return this.success(align
-            ? (canvas.textAlign = (
-                typeof align === 'number' ? TextAlign[align] : align) as CanvasTextAlign,
-                undefined
-            ) : TextAlign[canvas.textAlign]
+        return this.success(align !== null
+            ? (
+                canvas.textAlign = (
+                    typeof align === 'number' ? TextAlign[align] : align
+                ) as CanvasTextAlign, undefined
+            ) : typeof canvas.textAlign === 'number'
+                ? TextAlign[canvas.textAlign]
+                : canvas.textAlign ?? 'start'
         );
     }
 });

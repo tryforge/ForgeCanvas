@@ -3,6 +3,7 @@ import { ForgeExtension } from '@tryforge/forgescript';
 import { existsSync, statSync, readdirSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { Logger } from './classes';
+import { version } from '../package.json';
 
 export const registerFonts = async (fonts: { src: string, name?: string | null }[]) => 
     fonts.forEach(font => {
@@ -24,9 +25,9 @@ export const registerFonts = async (fonts: { src: string, name?: string | null }
 export class ForgeCanvas extends ForgeExtension {
     name = 'forge.canvas';
     description = 'A forgescript extension that allows you to create and edit images with ease.';
-    version = '1.0.0';
+    version = version;
 
-    public init () {
+    public init() {
         this.load(__dirname + '/functions');
     };
 };
