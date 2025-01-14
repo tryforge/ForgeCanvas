@@ -1,6 +1,8 @@
+import { Image } from '@napi-rs/canvas';
 import chalk from 'chalk';
 import { Context, RectAlign, RectBaseline } from '..';
 import { CanvasBuilder } from './builder';
+import { Frame } from '@gifsx/gifsx';
 export declare const fontRegex: RegExp;
 export declare const rgbaRegex: RegExp;
 export declare const hexRegex: RegExp;
@@ -32,4 +34,6 @@ export declare const Logger: {
     };
     log(type: "INFO" | "WARN" | "ERROR" | "MESSAGE", message: string): void;
 };
+export declare function loadFrame(src: string | URL | Buffer | ArrayBufferLike | Uint8Array | Image | import("stream").Readable, speed?: number | null): Promise<Frame>;
+export declare function parseArgs(str: string, prefix: string | number, length: number, rest?: boolean): string[];
 //# sourceMappingURL=util.d.ts.map

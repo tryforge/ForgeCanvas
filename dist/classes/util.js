@@ -4,9 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Logger = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.fontRegex = void 0;
+exports.loadFrame = loadFrame;
+exports.parseArgs = parseArgs;
 const canvas_1 = require("@napi-rs/canvas");
 const chalk_1 = __importDefault(require("chalk"));
 const __1 = require("..");
+const gifsx_1 = require("@gifsx/gifsx");
 exports.fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i;
 exports.rgbaRegex = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
 exports.hexRegex = /^#?([0-9A-Fa-f]{3,4}){1,2}$/;
@@ -153,4 +156,19 @@ exports.Logger = {
         console.log(this.DateColor(`[${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}]`), this.Colors[type](`[${type}]`), this.Colors.MESSAGE(message));
     }
 };
+async function loadFrame(src, speed) {
+    const img = await (0, canvas_1.loadImage)(src);
+    const canvas = (0, canvas_1.createCanvas)(img.width, img.height);
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    return gifsx_1.Frame.fromRgba(canvas.width, canvas.height, ctx.getImageData(0, 0, canvas.width, canvas.height).data, speed);
+}
+;
+function parseArgs(str, prefix, length, rest) {
+    const args = str.slice(typeof prefix === 'string' ? prefix.length : prefix).split(':');
+    if (!rest ? args.length !== length : args.length < length)
+        throw new Error(`${prefix} frame expects ${length} arguments.`);
+    return args;
+}
+;
 //# sourceMappingURL=util.js.map

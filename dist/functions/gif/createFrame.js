@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 const gifsx_1 = require("@gifsx/gifsx");
-const canvas_1 = require("@napi-rs/canvas");
 exports.default = new forgescript_1.NativeFunction({
     name: '$createFrame',
     aliases: ['$createGIFFrame', '$newFrame', '$newGIFFrame'],
@@ -47,12 +46,12 @@ exports.default = new forgescript_1.NativeFunction({
             ctx.gifManager = new __1.GIFManager();
         let f = null;
         if (frame.startsWith('rgba://')) {
-            const [size, data] = parseArgs(frame, 'rgba://', 2);
+            const [size, data] = (0, __1.parseArgs)(frame, 'rgba://', 2);
             const [width, height] = size.split('x').map(Number);
             f = gifsx_1.Frame.fromRgba(width, height, data.split(',').map(Number), speed);
         }
         else if (frame.startsWith('hex://')) {
-            const [size, data] = parseArgs(frame, 'hex://', 2);
+            const [size, data] = (0, __1.parseArgs)(frame, 'hex://', 2);
             const [width, height] = size.split('x').map(Number);
             f = gifsx_1.Frame.fromRgba(width, height, data.split(',').flatMap(hex => {
                 const rgba = __1.CanvasUtil.hexToRgba(hex.trim());
@@ -60,12 +59,12 @@ exports.default = new forgescript_1.NativeFunction({
             }), speed);
         }
         else if (frame.startsWith('rgb://')) {
-            const [size, data] = parseArgs(frame, 'rgb://', 2);
+            const [size, data] = (0, __1.parseArgs)(frame, 'rgb://', 2);
             const [width, height] = size.split('x').map(Number);
             f = gifsx_1.Frame.fromRgb(width, height, data.split(',').map(Number), speed);
         }
         else if (frame.startsWith('indexed://')) {
-            const [size, data] = parseArgs(frame, 'indexed://', 2);
+            const [size, data] = (0, __1.parseArgs)(frame, 'indexed://', 2);
             const [width, height] = size.split('x').map(Number);
             f = gifsx_1.Frame.fromIndexedPixels(width, height, data.split(',').map(Number));
         }
@@ -73,7 +72,7 @@ exports.default = new forgescript_1.NativeFunction({
             const img = ctx.imageManager?.get(frame.slice(9));
             if (!img)
                 return this.customError('No image');
-            f = await loadFrame(img, speed);
+            f = await (0, __1.loadFrame)(img, speed);
         }
         else if (frame.startsWith('canvas://')) {
             const canvas = ctx.canvasManager?.get(frame.slice(9));
@@ -82,7 +81,7 @@ exports.default = new forgescript_1.NativeFunction({
             f = gifsx_1.Frame.fromRgba(canvas.width, canvas.height, canvas.ctx.getImageData(0, 0, canvas.width, canvas.height).data, speed);
         }
         else
-            f = await loadFrame(frame, speed);
+            f = await (0, __1.loadFrame)(frame, speed);
         if (!f)
             return this.customError('Invalid frame');
         if (options) {
@@ -109,17 +108,4 @@ exports.default = new forgescript_1.NativeFunction({
         return this.success();
     }
 });
-async function loadFrame(src, speed) {
-    const img = await (0, canvas_1.loadImage)(src);
-    const canvas = (0, canvas_1.createCanvas)(img.width, img.height);
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    return gifsx_1.Frame.fromRgba(canvas.width, canvas.height, ctx.getImageData(0, 0, canvas.width, canvas.height).data, speed);
-}
-function parseArgs(str, prefix, length) {
-    const args = str.slice(prefix.length).split(':');
-    if (args.length !== length)
-        throw new Error(`${prefix} frame expects ${length} arguments.`);
-    return args;
-}
 //# sourceMappingURL=createFrame.js.map

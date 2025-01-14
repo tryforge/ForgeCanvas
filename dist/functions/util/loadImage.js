@@ -31,8 +31,7 @@ exports.default = new forgescript_1.NativeFunction({
             ctx.imageManager = new __1.ImageManager();
         let source;
         if (['rgba://', 'rgb://', 'hex://'].find(x => src.startsWith(x))) {
-            const [size, data] = parseArgs(src, src.startsWith('hex://') || src.startsWith('rgb://')
-                ? 'hex://' : 'rgba://', 2);
+            const [size, data] = (0, __1.parseArgs)(src, src.split('//')[0].length + 2, 2);
             const [width, height] = size.split('x').map(Number);
             const canvas = (0, canvas_1.createCanvas)(width, height);
             const context = canvas.getContext('2d');
@@ -48,7 +47,7 @@ exports.default = new forgescript_1.NativeFunction({
                             return [v, 255];
                         return [v];
                     })
-                    : data.split(',').map(Number))); // :(
+                    : data.split(',').map(Number)));
             context.putImageData(imageData, 0, 0);
             source = canvas.toBuffer('image/png');
         }
@@ -78,11 +77,4 @@ exports.default = new forgescript_1.NativeFunction({
         return this.success();
     }
 });
-function parseArgs(str, prefix, length) {
-    const args = str.slice(prefix.length).split(':');
-    if (args.length !== length)
-        throw new Error(`${prefix} frame expects ${length} arguments.`);
-    return args;
-}
-;
 //# sourceMappingURL=loadImage.js.map
