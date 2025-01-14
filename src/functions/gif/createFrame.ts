@@ -1,7 +1,6 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { CanvasUtil, Context, GIFManager } from '../..';
+import { CanvasUtil, Context, GIFManager, parseArgs, loadFrame } from '../..';
 import { DisposalMethod, Frame } from '@gifsx/gifsx';
-import { createCanvas, loadImage, Image } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$createFrame',
@@ -105,31 +104,3 @@ export default new NativeFunction({
         return this.success();
     }
 });
-
-async function loadFrame(
-    src: string | URL | Buffer | ArrayBufferLike | Uint8Array | Image | import("stream").Readable,
-    speed: number | null
-) {
-    const img = await loadImage(src);
-    const canvas = createCanvas(img.width, img.height);
-    const ctx = canvas.getContext('2d');
-
-    ctx.drawImage(img, 0, 0);
-    return Frame.fromRgba(
-        canvas.width, canvas.height,
-        ctx.getImageData(
-            0, 0,
-            canvas.width,
-            canvas.height
-        ).data,
-        speed
-    );
-}
-
-function parseArgs(str: string, prefix: string, length: number) {
-    const args = str.slice(prefix.length).split(':');
-    if (args.length !== length)
-        throw new Error(`${prefix} frame expects ${length} arguments.`);
-
-    return args;
-}

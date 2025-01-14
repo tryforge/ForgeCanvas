@@ -1,6 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { ImageManager, Context, CanvasUtil } from '../..';
-import { createCanvas, Image, loadImage } from '@napi-rs/canvas';
+import { ImageManager, Context, CanvasUtil, parseArgs } from '../..';
+import { createCanvas, loadImage } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$loadImage',
@@ -31,10 +31,7 @@ export default new NativeFunction({
 
         let source;
         if (['rgba://', 'rgb://', 'hex://'].find(x => src.startsWith(x))) {
-            const [size, data] = parseArgs(
-                src, src.startsWith('hex://') || src.startsWith('rgb://')
-                    ? 'hex://' : 'rgba://', 2
-            );
+            const [size, data] = parseArgs(src, src.split('//')[0].length + 2, 2);
             const [width, height] = size.split('x').map(Number);
             
             const canvas = createCanvas(width, height);
@@ -54,7 +51,7 @@ export default new NativeFunction({
                         return [v];
                     })
                 : data.split(',').map(Number)
-            )); // :(
+            ));
 
             context.putImageData(imageData, 0, 0);
             source = canvas.toBuffer('image/png');
@@ -83,11 +80,3 @@ export default new NativeFunction({
         return this.success();
     }
 });
-
-function parseArgs(str: string, prefix: string, length: number) {
-    const args = str.slice(prefix.length).split(':');
-    if (args.length !== length)
-        throw new Error(`${prefix} frame expects ${length} arguments.`);
-
-    return args;
-};
