@@ -44,13 +44,12 @@ export default new NativeFunction({
         : 'image/png') as any;
 
         if (!canvas) return this.customError('No canvas');
-        if (!path) return this.customError('No path provided.');
+        if (!path) return this.customError('No path provided');
 
-        if (!path.startsWith('images://')) writeFileSync(path, canvas.toBuffer(format));
-
-        if (!ctx.imageManager) ctx.imageManager = new ImageManager();
-
-        ctx.imageManager.set(path.slice(9), await loadImage(canvas.toBuffer(format)));
+        if (path.startsWith('images://')) {
+            if (!ctx.imageManager) ctx.imageManager = new ImageManager();
+            ctx.imageManager.set(path.slice(9), await loadImage(canvas.toBuffer(format)));
+        } else writeFileSync(path, canvas.toBuffer(format));
         return this.success();
     }
 });
