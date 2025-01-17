@@ -34,7 +34,7 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'font',
-            description: 'The font text.',
+            description: 'The font text. ({size}px {font name})',
             type: forgescript_1.ArgType.String,
             check: (i) => __1.CanvasUtil.isValidFont(i),
             required: true,
