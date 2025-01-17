@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CanvasBuilder = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const __1 = require("..");
+const gifsx_1 = require("@gifsx/gifsx");
 class CanvasBuilder {
     ctx;
     util = __1.CanvasUtil;
@@ -320,12 +321,7 @@ class CanvasBuilder {
         const data = ctx.getImageData(x, y, width, height).data;
         if (t === __1.ColorDataType.Rgba)
             return Array.from(data);
-        const colors = [];
-        for (let i = 0; i < data.length; i += 4) {
-            colors.push(__1.CanvasUtil.rgbaToHex(data[i], data[i + 1], data[i + 2], data[i + 3] / 255));
-        }
-        ;
-        return colors;
+        return (0, gifsx_1.rgbaToHex)(data, false, true);
     }
     ;
     setPixels(x, y, width, height, colors, t) {
@@ -334,14 +330,7 @@ class CanvasBuilder {
         height ??= ctx.canvas.height;
         const data = ctx.createImageData(width, height);
         if (t !== __1.ColorDataType.Rgba)
-            colors?.forEach((hex, i) => {
-                const colors = __1.CanvasUtil.hexToRgba(hex);
-                i *= 4;
-                data.data[i] = colors.red;
-                data.data[i + 1] = colors.green;
-                data.data[i + 2] = colors.blue;
-                data.data[i + 3] = colors.alpha ?? 255;
-            });
+            data.data.set(Uint8ClampedArray.from((0, gifsx_1.hexToRgba)(colors)));
         else
             data.data.set(Uint8ClampedArray.from(colors));
         ctx.putImageData(data, x, y);

@@ -56,10 +56,7 @@ exports.default = new forgescript_1.NativeFunction({
         else if (frame.startsWith('hex://')) {
             const [size, data] = (0, __1.parseArgs)(frame, 'hex://', 2);
             const [width, height] = size.split('x').map(Number);
-            f = gifsx_1.Frame.fromRgba(width, height, data.split(',').flatMap(hex => {
-                const rgba = __1.CanvasUtil.hexToRgba(hex.trim());
-                return [rgba.red, rgba.green, rgba.blue, rgba.alpha ?? 255];
-            }), speed);
+            f = gifsx_1.Frame.fromHex(width, height, data.split(',').map(x => x.trim()), speed);
         }
         else if (frame.startsWith('rgb://')) {
             const [size, data] = (0, __1.parseArgs)(frame, 'rgb://', 2);

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const canvas_1 = require("@napi-rs/canvas");
+const gifsx_1 = require("@gifsx/gifsx");
 exports.default = new forgescript_1.NativeFunction({
     name: '$drawImage',
     aliases: ['$placeImage'],
@@ -76,7 +77,8 @@ exports.default = new forgescript_1.NativeFunction({
             const canvas = (0, canvas_1.createCanvas)(width, height);
             const context = canvas.getContext('2d');
             const imageData = context.createImageData(width, height);
-            imageData.data.set(buffer);
+            imageData.data.set(!(buffer instanceof Uint8ClampedArray)
+                ? (0, gifsx_1.hexToRgba)(buffer) : buffer);
             context.putImageData(imageData, 0, 0);
             img = canvas.toBuffer('image/png');
         }

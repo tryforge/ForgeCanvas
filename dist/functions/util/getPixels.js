@@ -61,7 +61,9 @@ exports.default = new forgescript_1.NativeFunction({
                 ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
         if (!canvas)
             return this.customError('No canvas');
-        return this.success(canvas.getPixels(x, y, w, h, t));
+        return this.success(`[${canvas.getPixels(x, y, w, h, t)
+            .map(x => typeof x === 'string' ? `"${x}"` : x)
+            .join(', ')}]`);
     }
 });
 //# sourceMappingURL=getPixels.js.map

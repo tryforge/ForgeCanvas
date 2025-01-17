@@ -197,6 +197,7 @@ var ColorOutput;
 (function (ColorOutput) {
     ColorOutput[ColorOutput["Rgba"] = 0] = "Rgba";
     ColorOutput[ColorOutput["IndexedPixels"] = 1] = "IndexedPixels";
+    ColorOutput[ColorOutput["Hex"] = 2] = "Hex";
 })(ColorOutput || (exports.ColorOutput = ColorOutput = {}));
 ;
 var DisposalMethod;

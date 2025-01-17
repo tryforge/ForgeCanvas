@@ -24,7 +24,7 @@ exports.default = new forgescript_1.NativeFunction({
         else
             image = await (0, canvas_1.loadImage)(path);
         if (!image)
-            return this.customError('Failed to load image.');
+            return this.customError('Invalid image');
         return this.success(typeof image.src !== 'string'
             ? `[${Array.from(image.src).join(', ')}]`
             : image.src);

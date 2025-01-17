@@ -35,8 +35,9 @@ exports.default = new forgescript_1.NativeFunction({
         let options = name
             ? ctx.gifManager.getDecodeOptions(name)
             : ctx.gifManager.currentOptions;
-        if (options)
-            options.setColorOutput(output);
+        if (!options)
+            return this.customError('No decode options');
+        options.setColorOutput(output);
         return this.success();
     }
 });

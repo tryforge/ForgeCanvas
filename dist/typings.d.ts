@@ -197,7 +197,8 @@ export declare enum ColorDataType {
 }
 export declare enum ColorOutput {
     Rgba = 0,
-    IndexedPixels = 1
+    IndexedPixels = 1,
+    Hex = 2
 }
 export declare enum DisposalMethod {
     Any = 0,

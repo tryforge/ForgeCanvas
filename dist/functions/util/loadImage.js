@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 const canvas_1 = require("@napi-rs/canvas");
+const gifsx_1 = require("@gifsx/gifsx");
 exports.default = new forgescript_1.NativeFunction({
     name: '$loadImage',
     aliases: ['$createImage', '$newImage'],
@@ -37,10 +38,7 @@ exports.default = new forgescript_1.NativeFunction({
             const context = canvas.getContext('2d');
             const imageData = context.createImageData(width, height);
             imageData.data.set(new Uint8ClampedArray(src.startsWith('hex://')
-                ? data.split(',').flatMap(hex => {
-                    const rgba = __1.CanvasUtil.hexToRgba(hex.trim());
-                    return [rgba.red, rgba.green, rgba.blue, rgba.alpha ?? 255];
-                })
+                ? (0, gifsx_1.hexToRgba)(data.split(',').map(x => x.trim()))
                 : src.startsWith('rgb://')
                     ? data.split(',').map(Number).flatMap((v, i) => {
                         if ((i + 1) % 3 === 0)
@@ -65,7 +63,7 @@ exports.default = new forgescript_1.NativeFunction({
             const canvas = (0, canvas_1.createCanvas)(width, height);
             const context = canvas.getContext('2d');
             const imageData = context.createImageData(width, height);
-            imageData.data.set(buffer);
+            imageData.data.set(Array.isArray(buffer) ? (0, gifsx_1.hexToRgba)(buffer) : buffer);
             context.putImageData(imageData, 0, 0);
             source = canvas.toBuffer('image/png');
         }

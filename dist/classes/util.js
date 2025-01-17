@@ -107,7 +107,12 @@ class CanvasUtil {
             s = (exports.hexRegex.test(style) ? style
                 : (exports.rgbaRegex.test(style) ? (() => {
                     const match = style.match(exports.rgbaRegex);
-                    return CanvasUtil.rgbaToHex(parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3], 10), match[5] ? parseFloat(match[5]) : undefined);
+                    return (0, gifsx_1.rgbaToHex)([
+                        parseInt(match[1], 10),
+                        parseInt(match[2], 10),
+                        parseInt(match[3], 10),
+                        match[5] ? parseFloat(match[5]) : 255
+                    ], false, true);
                 })() : exports.Colors[style])) ?? '#000000';
         }
         ;
@@ -134,13 +139,6 @@ class CanvasUtil {
         return result;
     }
     ;
-    static rgbaToHex = (r, g, b, a) => '#' + r.toString(16).padStart(2, '0') + g.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0') + (a && a !== undefined ? Math.round(a * 255).toString(16).padStart(2, '0') : '');
-    static hexToRgba = (hex) => ({
-        red: parseInt(hex.slice(1, 3), 16),
-        green: parseInt(hex.slice(3, 5), 16),
-        blue: parseInt(hex.slice(5, 7), 16),
-        alpha: hex.length === 9 ? parseInt(hex.slice(7, 9), 16) : undefined
-    });
 }
 exports.CanvasUtil = CanvasUtil;
 ;
