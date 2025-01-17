@@ -131,7 +131,8 @@ export enum ColorDataType {
 };
 export enum ColorOutput {
     Rgba,
-    IndexedPixels 
+    IndexedPixels,
+    Hex
 };
 export enum DisposalMethod {
     Any,
