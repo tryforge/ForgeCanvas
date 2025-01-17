@@ -35,8 +35,9 @@ export default new NativeFunction({
         let options = name
             ? ctx.gifManager.getDecodeOptions(name)
             : ctx.gifManager.currentOptions;
+        if (!options) return this.customError('No decode options');
 
-        if (options) options.setColorOutput(output as unknown as import('@gifsx/gifsx').ColorOutput);
+        options.setColorOutput(output as unknown as import('@gifsx/gifsx').ColorOutput);
         return this.success();
     }
 });

@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil, Context, parseArgs, loadFrame } from '../..';
+import { Context, parseArgs, loadFrame } from '../..';
 import { DisposalMethod, Frame } from '@gifsx/gifsx';
 
 export default new NativeFunction({
@@ -54,10 +54,7 @@ export default new NativeFunction({
         } else if (frame.startsWith('hex://')) {
             const [size, data] = parseArgs(frame, 'hex://', 2);
             const [width, height] = size.split('x').map(Number);
-            f = Frame.fromRgba(width, height, data.split(',').flatMap(hex => {
-                const rgba = CanvasUtil.hexToRgba(hex.trim());
-                return [rgba.red, rgba.green, rgba.blue, rgba.alpha ?? 255];
-            }), speed);
+            f = Frame.fromHex(width, height, data.split(',').map(x => x.trim()), speed);
         } else if (frame.startsWith('rgb://')) {
             const [size, data] = parseArgs(frame, 'rgb://', 2);
             const [width, height] = size.split('x').map(Number);

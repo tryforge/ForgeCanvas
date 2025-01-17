@@ -23,7 +23,7 @@ export default new NativeFunction({
             image = ctx.imageManager.get(path.slice(9));
         else image = await loadImage(path);
         
-        if (!image) return this.customError('Failed to load image.');
+        if (!image) return this.customError('Invalid image');
 
         return this.success(
             typeof image.src !== 'string'

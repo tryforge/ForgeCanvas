@@ -1,6 +1,7 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { Context } from '../..';
 import { createCanvas, Image } from '@napi-rs/canvas';
+import { hexToRgba } from '@gifsx/gifsx';
 
 export default new NativeFunction({
     name: '$drawImage',
@@ -79,7 +80,10 @@ export default new NativeFunction({
             const context = canvas.getContext('2d');
             const imageData = context.createImageData(width, height);
 
-            imageData.data.set(buffer);
+            imageData.data.set(
+                !(buffer instanceof Uint8ClampedArray)
+                    ? hexToRgba(buffer) : buffer
+            );
             context.putImageData(imageData, 0, 0);
             
             img = canvas.toBuffer('image/png');
