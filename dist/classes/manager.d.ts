@@ -1,7 +1,7 @@
 import { Image } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
-import { DecodeOptions, Decoder, Encoder, Frame } from '@gifsx/gifsx';
+import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
 declare class Manager<T> {
     map: Map<string, T>;
     constructor();
@@ -46,6 +46,9 @@ export declare class GIFManager {
     removeDecoder(name: string): void;
     removeDecodeOptions(name: string): void;
     removeFrame(name: string): void;
+}
+export declare class NeuQuantManager extends Manager<NeuQuant> {
+    set(name: string, nq: NeuQuant): void;
 }
 export {};
 //# sourceMappingURL=manager.d.ts.map
