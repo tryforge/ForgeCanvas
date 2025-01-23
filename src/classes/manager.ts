@@ -1,7 +1,7 @@
 import { createCanvas, Image, SKRSContext2D } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
-import { DecodeOptions, Decoder, Encoder, Frame } from '@gifsx/gifsx';
+import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
 
 class Manager<T> {
     public map: Map<string, T>;
@@ -92,3 +92,7 @@ export class GIFManager {
     public removeDecodeOptions(name: string) { this.decodeOptions.delete(name) };
     public removeFrame(name: string) { this.frames.delete(name) };
 };
+
+export class NeuQuantManager extends Manager<NeuQuant> {
+    public set(name: string, nq: NeuQuant) { this.map.set(name, nq) };
+}

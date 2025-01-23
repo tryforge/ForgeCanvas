@@ -103,12 +103,12 @@ export class CanvasUtil {
             s = (hexRegex.test(style) ? style 
                 : (rgbaRegex.test(style) ? (() => {
                     const match = style.match(rgbaRegex) as RegExpMatchArray;
-                    return rgbaToHex([
+                    return rgbaToHex(Uint8Array.from([
                         parseInt(match[1], 10),
                         parseInt(match[2], 10),
                         parseInt(match[3], 10),
                         match[5] ? parseFloat(match[5]) : 255
-                    ], false, true);
+                    ]), false, true);
                 })() : Colors[style])) ?? '#000000';
         };
 
@@ -171,11 +171,11 @@ export async function loadFrame(
     ctx.drawImage(img, 0, 0);
     return Frame.fromRgba(
         canvas.width, canvas.height,
-        ctx.getImageData(
+        Uint8Array.from(ctx.getImageData(
             0, 0,
             canvas.width,
             canvas.height
-        ).data,
+        ).data),
         speed
     );
 };

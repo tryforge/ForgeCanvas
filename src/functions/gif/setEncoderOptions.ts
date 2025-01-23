@@ -37,9 +37,9 @@ export default new NativeFunction({
             ctx.gifManager = new GIFManager();
 
         if (palette !== null && !Array.isArray(palette))
-            return this.customError('The global palette must be an array.');
+            return this.customError('The global palette must be an array');
 
-        ctx.gifManager.currentEncoder.push(new Encoder(w, h, palette));
+        ctx.gifManager.currentEncoder.push(new Encoder(w, h, Uint8Array.from(palette ?? [])));
         return this.success();
     }
 });

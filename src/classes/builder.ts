@@ -444,7 +444,7 @@ export class CanvasBuilder {
         if (t === ColorDataType.Rgba)
             return Array.from(data) as T extends ColorDataType.Rgba ? number[] : string[];
 
-        return rgbaToHex(data, false, true) as T extends ColorDataType.Rgba ? number[] : string[];
+        return rgbaToHex(Uint8Array.from(data), false, true) as T extends ColorDataType.Rgba ? number[] : string[];
     };
     
     public setPixels<T extends ColorDataType>(

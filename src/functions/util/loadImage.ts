@@ -1,7 +1,7 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { ImageManager, Context, CanvasUtil, parseArgs } from '../..';
+import { ImageManager, Context, parseArgs } from '../..';
 import { createCanvas, loadImage } from '@napi-rs/canvas';
-import { hexToRgba } from '@gifsx/gifsx';
+import { hexToRgba, indexedToRgba } from '@gifsx/gifsx';
 
 export default new NativeFunction({
     name: '$loadImage',
@@ -66,7 +66,11 @@ export default new NativeFunction({
             const context = canvas.getContext('2d');
             const imageData = context.createImageData(width, height);
 
-            imageData.data.set(Array.isArray(buffer) ? hexToRgba(buffer) : buffer);
+            imageData.data.set(buffer.length === width * height * 4
+                            ? buffer : indexedToRgba(
+                            Uint8Array.from(buffer), frame.palette ?? Uint8Array.from([]),
+                            frame.transparent
+                        ));
             context.putImageData(imageData, 0, 0);
             
             source = canvas.toBuffer('image/png');

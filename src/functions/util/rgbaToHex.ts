@@ -4,7 +4,7 @@ import { rgbaToHex } from '@gifsx/gifsx';
 export default new NativeFunction({
     name: '$rgbaToHex',
     description: 'Converts RGBA into HEX.',
-    version: '1.2.0',
+    version: '1.2.1',
     brackets: true,
     unwrap: true,
     args: [
@@ -33,7 +33,7 @@ export default new NativeFunction({
     ],
     async execute (_, [aia, a_s, rgba]) {
         try {
-            const res = rgbaToHex(rgba, aia ?? false, a_s ?? false);
+            const res = rgbaToHex(Uint8Array.from(rgba), aia ?? false, a_s ?? false);
             return this.success(`[${res.map(x => `"${x}"`).join(', ')}]`);
         } catch(e) {
             return this.customError((e as any).toString());

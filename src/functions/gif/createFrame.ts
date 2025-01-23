@@ -1,6 +1,6 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { CanvasUtil, Context, GIFManager, parseArgs, loadFrame } from '../..';
-import { DisposalMethod, Frame, hexToRgba } from '@gifsx/gifsx';
+import { Context, GIFManager, parseArgs, loadFrame } from '../..';
+import { DisposalMethod, Frame } from '@gifsx/gifsx';
 
 export default new NativeFunction({
     name: '$createFrame',
@@ -48,7 +48,7 @@ export default new NativeFunction({
         if (frame.startsWith('rgba://')) {
             const [size, data] = parseArgs(frame, 'rgba://', 2);
             const [width, height] = size.split('x').map(Number);
-            f = Frame.fromRgba(width, height, data.split(',').map(Number), speed);
+            f = Frame.fromRgba(width, height, Uint8Array.from(data.split(',').map(Number)), speed);
         } else if (frame.startsWith('hex://')) {
             const [size, data] = parseArgs(frame, 'hex://', 2);
             const [width, height] = size.split('x').map(Number);
@@ -56,11 +56,11 @@ export default new NativeFunction({
         } else if (frame.startsWith('rgb://')) {
             const [size, data] = parseArgs(frame, 'rgb://', 2);
             const [width, height] = size.split('x').map(Number);
-            f = Frame.fromRgb(width, height, data.split(',').map(Number), speed);
+            f = Frame.fromRgb(width, height, Uint8Array.from(data.split(',').map(Number)), speed);
         } else if (frame.startsWith('indexed://')) {
             const [size, data] = parseArgs(frame, 'indexed://', 2);
             const [width, height] = size.split('x').map(Number);
-            f = Frame.fromIndexedPixels(width, height, data.split(',').map(Number));
+            f = Frame.fromIndexedPixels(width, height, Uint8Array.from(data.split(',').map(Number)));
         } else if (frame.startsWith('images://')) {
             const img = ctx.imageManager?.get(frame.slice(9));
             if (!img) return this.customError('No image');
@@ -70,7 +70,7 @@ export default new NativeFunction({
             if (!canvas) return this.customError('No canvas');
             f = Frame.fromRgba(
                 canvas.width, canvas.height,
-                canvas.ctx.getImageData(0, 0, canvas.width, canvas.height).data,
+                Uint8Array.from(canvas.ctx.getImageData(0, 0, canvas.width, canvas.height).data),
                 speed
             );
         } else f = await loadFrame(frame, speed);
@@ -94,7 +94,7 @@ export default new NativeFunction({
 
             if (typeof options.interlaced === 'boolean') f.interlaced = options.interlaced;
 
-            if (Array.isArray(options.palette)) f.setPalette(options.palette);
+            if (Array.isArray(options.palette)) f.setPalette(Uint8Array.from(options.palette));
         };
 
         ctx.gifManager.setFrame(name, f);

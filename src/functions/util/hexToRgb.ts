@@ -4,7 +4,7 @@ import { hexToRgb } from '@gifsx/gifsx';
 export default new NativeFunction({
     name: '$hexToRgb',
     description: 'Converts HEX into RGB.',
-    version: '1.2.0',
+    version: '1.2.1',
     brackets: true,
     unwrap: true,
     args: [

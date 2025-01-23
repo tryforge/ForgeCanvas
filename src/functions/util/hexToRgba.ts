@@ -4,7 +4,7 @@ import { hexToRgba } from '@gifsx/gifsx';
 export default new NativeFunction({
     name: '$hexToRgba',
     description: 'Converts HEX into RGBA.',
-    version: '1.2.0',
+    version: '1.2.1',
     brackets: true,
     unwrap: true,
     args: [

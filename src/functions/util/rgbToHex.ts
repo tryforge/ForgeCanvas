@@ -4,7 +4,7 @@ import { rgbToHex } from '@gifsx/gifsx';
 export default new NativeFunction({
     name: '$rgbToHex',
     description: 'Converts RGB into HEX.',
-    version: '1.2.0',
+    version: '1.2.1',
     brackets: true,
     unwrap: true,
     args: [
@@ -26,7 +26,7 @@ export default new NativeFunction({
     ],
     async execute (_, [a_s, rgb]) {
         try {
-            const res = rgbToHex(rgb, a_s ?? false);
+            const res = rgbToHex(Uint8Array.from(rgb), a_s ?? false);
             return this.success(`[${res.map(x => `"${x}"`).join(', ')}]`);
         } catch(e) {
             return this.customError((e as any).toString());
