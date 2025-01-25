@@ -33,7 +33,7 @@ export default new NativeFunction({
         },
         {
             name: 'font',
-            description: 'The font text.',
+            description: 'The font text. ({size}px {font name})',
             type: ArgType.String,
             check: (i: string) => CanvasUtil.isValidFont(i),
             required: true,

@@ -1,11 +1,12 @@
 import { Context as ctx } from '@tryforge/forgescript';
-import { CanvasManager, GIFManager, GradientManager, ImageManager } from './classes';
+import { CanvasManager, GIFManager, GradientManager, ImageManager, NeuQuantManager } from './classes';
 
 export class Context extends ctx {
     canvasManager?: CanvasManager;
     gradientManager?: GradientManager;
     imageManager?: ImageManager;
     gifManager?: GIFManager;
+    neuquantManager?: NeuQuantManager;
 };
 
 export interface CustomCanvasProperties {
@@ -131,7 +132,8 @@ export enum ColorDataType {
 };
 export enum ColorOutput {
     Rgba,
-    IndexedPixels 
+    IndexedPixels,
+    Hex
 };
 export enum DisposalMethod {
     Any,

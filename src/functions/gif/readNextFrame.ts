@@ -28,10 +28,12 @@ export default new NativeFunction({
         if (!gif) return this.customError('No gif');
 
         const frame = gif.readNextFrame();
-        if (frame)
+        if (frame) {
             ctx.gifManager?.setFrame(f, frame);
-        else ctx.gifManager?.removeFrame(f);
+            return this.success(f);
+        }
 
+        ctx.gifManager?.removeFrame(f);
         return this.success();
     }
 });

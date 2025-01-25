@@ -51,15 +51,12 @@ export default new NativeFunction({
             gif = encoder.getBuffer();
         } else gif = await readFile(path, null);
 
-        let decoder;
-        if (options) {
-            const opts = ctx.gifManager.getDecodeOptions(options);
-            if (!opts) return this.customError('No options');
-
-            decoder = opts.readInfo(Buffer.from(gif));
-        } else decoder = new Decoder(Buffer.from(gif));
-
-        ctx.gifManager.setDecoder(name, decoder);
+        ctx.gifManager.setDecoder(
+            name, new Decoder(
+                Buffer.from(gif),
+                options ? ctx.gifManager.getDecodeOptions(options) : undefined
+            )
+        );
         return this.success();
     }
 });

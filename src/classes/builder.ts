@@ -17,6 +17,7 @@ import {
     PieChartOptions,
     BarData
 } from '..';
+import { hexToRgba, rgbaToHex } from '@gifsx/gifsx';
 
 export class CanvasBuilder {
     public ctx: SKRSContext2D;
@@ -443,17 +444,7 @@ export class CanvasBuilder {
         if (t === ColorDataType.Rgba)
             return Array.from(data) as T extends ColorDataType.Rgba ? number[] : string[];
 
-        const colors = [];
-        for (let i = 0; i < data.length; i += 4) {
-            colors.push(CanvasUtil.rgbaToHex(
-                data[i],
-                data[i + 1],
-                data[i + 2],
-                data[i + 3] / 255
-            ));
-        };
-    
-        return colors as T extends ColorDataType.Rgba ? number[] : string[];
+        return rgbaToHex(Uint8Array.from(data), false, true) as T extends ColorDataType.Rgba ? number[] : string[];
     };
     
     public setPixels<T extends ColorDataType>(
@@ -472,15 +463,7 @@ export class CanvasBuilder {
         const data = ctx.createImageData(width, height);
     
         if (t !== ColorDataType.Rgba)
-            colors?.forEach((hex, i) => {
-                const colors = CanvasUtil.hexToRgba(hex as string);
-                i *= 4;
-            
-                data.data[i] = colors.red;
-                data.data[i + 1] = colors.green;
-                data.data[i + 2] = colors.blue;
-                data.data[i + 3] = colors.alpha ?? 255;
-            });
+            data.data.set(Uint8ClampedArray.from(hexToRgba(colors as string[])));
         else data.data.set(Uint8ClampedArray.from(colors as number[]));
         
         ctx.putImageData(data, x, y);
