@@ -15,17 +15,17 @@ export declare class CanvasBuilder {
     drawProgressBar(x: number, y: number, width: number, height: number, progress: number, config?: ProgressBarOptions): number[];
     drawPieChart(x: number, y: number, width: number, height: number, data: BarData[], config?: PieChartOptions): void;
     measureText(text: string, font: string): TextMetrics;
-    filter(method: FilterMethod, filter?: Filters | null, value?: string | null): string | {
+    filter<T extends FilterMethod>(method: T, filter?: Filters | null, value?: string | null): T extends FilterMethod.get ? string : T extends FilterMethod.json ? {
         filter: string;
         value: string;
         raw: string;
-    }[] | undefined;
+    }[] : void;
     rotate(angle: number): void;
     trim(): void;
     getPixels<T extends ColorDataType>(x: number, y: number, width: number, height: number, t?: T | null): T extends ColorDataType.Rgba ? number[] : string[];
     setPixels<T extends ColorDataType>(x: number, y: number, width: number, height: number, colors: T extends ColorDataType.Rgba ? number[] : string[], t?: T | null): void;
     resize(width: number, height: number): void;
-    get dataUrl(): string;
-    get buffer(): Buffer;
+    dataUrl(mime: 'image/png' | 'image/jpeg' | 'image/webp'): string;
+    buffer(mime: 'image/png' | 'image/jpeg' | 'image/webp'): Buffer;
 }
 //# sourceMappingURL=builder.d.ts.map
