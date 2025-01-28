@@ -34,10 +34,10 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx: Context, [name, filename, f]) {
-        const canvas = ctx.canvasManager?.get(name)?.ctx?.canvas;
+        const canvas = ctx.canvasManager?.get(name);
         if (!canvas) return this.customError('No canvas');
 
-        ctx.container.files.push(new AttachmentBuilder(canvas.toBuffer((f !== null 
+        ctx.container.files.push(new AttachmentBuilder(canvas.buffer((f !== null 
             ? 'image/' + (typeof f === 'number' ? ImageFormat[f] : f)
         : 'image/png') as any), {
             name: filename ?? `${name}.png`

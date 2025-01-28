@@ -56,7 +56,7 @@ export default new NativeFunction({
         } else if (src.startsWith('canvas://')) {
             const canvas = ctx.canvasManager?.get(src.slice(9));
             if (!canvas) return this.customError('Invalid canvas');
-            source = canvas.buffer;
+            source = canvas.buffer('image/png');
         } else if (src.startsWith('frame://')) {
             const frame = ctx.gifManager?.getFrame(src.slice(8));
             if (!frame) return this.customError('No frame');

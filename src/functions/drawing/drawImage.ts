@@ -66,9 +66,7 @@ export default new NativeFunction({
             ? ctx.canvasManager?.get(name)
                 : !name && ctx.canvasManager?.current?.length !== 0 
                     ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+        if (!canvas) return this.customError('No canvas');
 
         let img: string | Image | undefined | Buffer = path;
         if (path.startsWith('frame://')) {
@@ -91,7 +89,7 @@ export default new NativeFunction({
         } else if (path.startsWith('images://') && ctx.imageManager)
             img = ctx.imageManager.get(path.slice(9));
         else if (path.startsWith('canvas://'))
-            img = ctx.canvasManager?.get(path.slice(9))?.buffer;
+            img = ctx.canvasManager?.get(path.slice(9))?.buffer('image/png');
 
         if (!img) return this.customError('Failed to load an image.');
 
