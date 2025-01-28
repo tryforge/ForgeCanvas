@@ -67,7 +67,7 @@ export class CanvasBuilder {
         ctx.roundRect(x, y, width, height, radius);
 
         ({
-            [FillOrStrokeOrClear.clear]: () => ctx.clearRect(x, y, width, height),
+            [FillOrStrokeOrClear.clear]: () => (ctx.clip(), ctx.clearRect(x, y, width, height)),
             [FillOrStrokeOrClear.fill]: () => ctx.fill(),
             [FillOrStrokeOrClear.stroke]: () => ctx.stroke()
         })[type]();
@@ -336,11 +336,13 @@ export class CanvasBuilder {
         return metrics;
     };
 
-    public filter(
-        method: FilterMethod,
+    public filter<T extends FilterMethod>(
+        method: T,
         filter?: Filters | null,
         value?: string | null
-    ) {
+    ): T extends FilterMethod.get ? string
+        : T extends FilterMethod.json ? { filter: string, value: string, raw: string }[] : void
+    {
         const ctx = this.ctx;
     
         if (filter && typeof filter === 'string')
@@ -351,33 +353,31 @@ export class CanvasBuilder {
                 (filter === Filters.blur ? 'px' : '');
 
         if (method === FilterMethod.add) {
-            if (!filter || !value) return;
-            ctx.filter = CanvasUtil.parseFilters(
+            if (!filter || !value) throw new Error('No filter or value provided');
+            const result = CanvasUtil.parseFilters(
                 (ctx.filter === 'none' ? '' : ctx.filter)
-                 + `${Filters[filter]}(${value + PxOrPerc})`
-            )?.map(x => x?.raw)?.join(' ')?.trim();
-        }
-        else if (method === FilterMethod.set) {
-            if (!filter || !value) return;
+                 + `${Filters[filter]}(${value + PxOrPerc})`);
+            ctx.filter = result?.map(x => x?.raw)?.join(' ')?.trim() || 'none';
+        } else if (method === FilterMethod.set) {
+            if (!filter || !value) throw new Error('No filter or value provided');
             ctx.filter = `${Filters[filter]}(${value + PxOrPerc})`;
-        }
-        else if (method === FilterMethod.remove) {
-            if (!filter) return;
+        } else if (method === FilterMethod.remove) {
+            if (!filter) throw new Error('No filter provided');
         
             let filters = CanvasUtil.parseFilters(ctx.filter);
-            const index = filters.findIndex((obj: { filter: string, raw: string, value: string }) => obj?.filter === Filters[filter]);
+            const index = filters.findIndex((obj) => obj?.filter === Filters[filter]);
     
             if (index !== -1)
                 filters.splice(index, 1);
     
             ctx.filter = filters.length > 0 ? filters?.map(x => x?.raw)?.join(' ')?.trim() : 'none';
-        }
-        else if (method === FilterMethod.clear)
+        } else if (method === FilterMethod.clear)
             ctx.filter = 'none';
         else if (method === FilterMethod.get)
-            return ctx.filter;
+            return ctx.filter as any;
         else if (method === FilterMethod.json)
-            return CanvasUtil.parseFilters(ctx.filter);
+            return CanvasUtil.parseFilters(ctx.filter) as any;
+        return undefined as any;
     };
 
     public rotate(angle: number) {
@@ -478,6 +478,12 @@ export class CanvasBuilder {
         ctx.putImageData(data, 0, 0);
     };
 
-    public get dataUrl() { return this.ctx.canvas.toDataURL('image/png') };
-    public get buffer() { return this.ctx.canvas.toBuffer('image/png') };
+    public dataUrl(mime: 'image/png' | 'image/jpeg' | 'image/webp') {
+        return this.ctx.canvas.toDataURL(mime);
+    };
+    public buffer(mime: 'image/png' | 'image/jpeg' | 'image/webp') {
+        if (mime === 'image/png') {
+            return this.ctx.canvas.toBuffer('image/png');
+        } else return this.ctx.canvas.toBuffer(mime);
+    };
 };
