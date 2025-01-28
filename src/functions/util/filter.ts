@@ -45,11 +45,9 @@ export default new NativeFunction({
                 : !name && ctx.canvasManager?.current?.length !== 0 
                     ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
         
-        if (!canvas)
-            return this.customError('No canvas');
+        if (!canvas) return this.customError('No canvas');
 
         const res = canvas.filter(method, filter, value);
-
         return this.success(typeof res === 'object' ? JSON.stringify(res) : res);
     }
 });
