@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, BarOptions, CanvasUtil, CanvasBuilder } from '../..';
+import { Context, BarOptions, } from '../..';
 
 export default new NativeFunction({
     name: '$barOptions',
@@ -10,7 +10,7 @@ export default new NativeFunction({
     args: [
         {
             name: 'options',
-            description: 'Options (type:normal/ratio/pie, height:number, maxWidth:number, background:color/gradient/pattern, radius:...number).',
+            description: 'Options (type:normal/ratio/pie, draw-type:fill/stroke/clear/none, background-style:color/gradient/pattern, background-radius:number, background-padding:number, background-type:fill/stroke/clear/none, radius:number, direction:horizontal/vertical, clip-radius:number, left:number).',
             type: ArgType.String,
             required: true,
             rest: true
