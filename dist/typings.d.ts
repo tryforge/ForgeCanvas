@@ -1,5 +1,5 @@
 import { Context as ctx } from '@tryforge/forgescript';
-import { CanvasManager, GIFManager, GradientManager, ImageManager, NeuQuantManager } from './classes';
+import type { CanvasManager, GIFManager, GradientManager, ImageManager, NeuQuantManager } from './classes';
 export declare class Context extends ctx {
     canvasManager?: CanvasManager;
     gradientManager?: GradientManager;
@@ -227,4 +227,3 @@ export declare enum DecoderOption {
     lineLength = 3,
     loops = 4
 }
-//# sourceMappingURL=typings.d.ts.map

@@ -26,4 +26,3 @@ declare const _default: NativeFunction<[{
     rest: false;
 }], true>;
 export default _default;
-//# sourceMappingURL=addFrame.d.ts.map

@@ -7,4 +7,3 @@ declare const _default: NativeFunction<[{
     rest: false;
 }], true>;
 export default _default;
-//# sourceMappingURL=beginPath.d.ts.map

@@ -51,4 +51,3 @@ export declare class NeuQuantManager extends Manager<NeuQuant> {
     set(name: string, nq: NeuQuant): void;
 }
 export {};
-//# sourceMappingURL=manager.d.ts.map

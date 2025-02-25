@@ -1,8 +1,8 @@
 import { ForgeExtension } from '@tryforge/forgescript';
-export declare const registerFonts: (fonts: {
+export declare function registerFonts(fonts: {
     src: string;
     name?: string | null;
-}[]) => Promise<void>;
+}[], log: boolean): Promise<void>;
 export declare class ForgeCanvas extends ForgeExtension {
     name: string;
     description: string;
@@ -11,4 +11,3 @@ export declare class ForgeCanvas extends ForgeExtension {
 }
 export * from './classes';
 export * from './typings';
-//# sourceMappingURL=index.d.ts.map
