@@ -23,7 +23,7 @@ export default new NativeFunction({
         }) as [string, string[]];
         const barOptions = (ctx.getEnvironmentKey('progressBarOptions') ?? {}) as BarOptions;
 
-        for (let [option, val] of opts) {
+        for (const [option, val] of opts) {
             const value = val as unknown as string[];
             switch (option) {
                 case 'type':
@@ -44,15 +44,16 @@ export default new NativeFunction({
                     barOptions['background-style'] = value[0] !== 'none'
                         ? value.join(':') : undefined;
                     break;
-                case 'background-radius':
-                    const rad = value.map(x => parseFloat(x));
+                case 'background-radius': {
+                    const rad = value.map(x => Number.parseFloat(x));
                     barOptions[option] = value[0] !== 'none'
                         ? rad.length === 1 ? rad[0] : rad
                         : undefined;
                     break;
+                }
                 case 'background-padding':
                     barOptions['background-padding'] = value[0] !== 'none'
-                        ? parseFloat(value[0]) : undefined;
+                        ? Number.parseFloat(value[0]) : undefined;
                     break;
                 case 'background-type':
                     if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
@@ -61,27 +62,30 @@ export default new NativeFunction({
                     barOptions['background-type'] = value[0] !== 'none'
                         ? value[0] as any : undefined;
                     break;
-                case 'radius':
-                    const r = value.map(x => parseFloat(x));
+                case 'radius': {
+                    const r = value.map(x => Number.parseFloat(x));
                     barOptions.radius = value[0] !== 'none'
                         ? r.length === 1 ? r[0] : r
                         : undefined;
                     break;
-                case 'direction':
+                }
+                case 'direction': 
                     if (!['horizontal', 'vertical', 'none'].includes(value[0]))
                         return this.customError('Invalid direction');
 
                     barOptions.direction = value[0] !== 'none'
                         ? value[0] as any : undefined;
-                case 'clip-radius':
-                    const clip = value.map(x => parseFloat(x));
+                    break;
+                case 'clip-radius': {
+                    const clip = value.map(x => Number.parseFloat(x));
                     barOptions['clip-radius'] = value[0] !== 'none'
                         ? clip.length === 1 ? clip[0] : clip
                         : undefined;
                     break;
+                }
                 case 'left':
-                    barOptions['left'] = value[0] !== 'none'
-                    ? value.join(':') : undefined;
+                    barOptions.left = value[0] !== 'none'
+                        ? value.join(':') : undefined;
                     break;
                 default: return this.customError(`Unknown bar option: ${option}`);
             };

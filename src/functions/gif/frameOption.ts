@@ -39,7 +39,7 @@ export default new NativeFunction({
         if (opt instanceof Uint8ClampedArray || opt instanceof ArrayBuffer || Array.isArray(opt)) {
             if (opt instanceof Uint8ClampedArray)
                 return this.success(`[${Array.from(opt).join(', ')}]`);
-            else if (Array.isArray(opt))
+            if (Array.isArray(opt))
                 return this.success(`[${opt.map(x => typeof x === 'string' ? `"${x}"` : x).join(', ')}]`);
             
             return this.success(`[${Array.from(new Uint8Array(opt)).join(', ')}]`);

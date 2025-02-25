@@ -40,15 +40,13 @@ export const Colors: Record<string, string> = {
     NotQuiteBlack: '#23272a'
 };
 
-export class CanvasUtil {
-    public static isValidFont(font: string) {
-        if (!font)
-            return false;
-      
+export const CanvasUtil = {
+    isValidFont: (font: string) => {
+        if (!font) return false;
         if (fontRegex.test(font)) {
             const res = fontRegex.exec(font)
           
-            if (res && res[0]) {
+            if (res?.[0]) {
                 const families = res[6].split(',').map(x => x?.trim());
 
                 if (families) {
@@ -63,9 +61,9 @@ export class CanvasUtil {
             return false;
         };
         return false;
-    };
+    },
 
-    public static async parseStyle(self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) {
+    parseStyle: async(self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => {
         if (!style) return '#000000';
         let s: string[] | string | CanvasGradient | CanvasPattern = style.split('://');
 
@@ -104,43 +102,42 @@ export class CanvasUtil {
                 : (rgbaRegex.test(style) ? (() => {
                     const match = style.match(rgbaRegex) as RegExpMatchArray;
                     return rgbaToHex(Uint8Array.from([
-                        parseInt(match[1], 10),
-                        parseInt(match[2], 10),
-                        parseInt(match[3], 10),
-                        match[5] ? parseFloat(match[5]) : 255
+                        Number.parseInt(match[1], 10),
+                        Number.parseInt(match[2], 10),
+                        Number.parseInt(match[3], 10),
+                        match[5] ? Number.parseFloat(match[5]) : 255
                     ]), false, true);
                 })() : Colors[style])) ?? '#000000';
         };
 
         return s;
-    };
+    },
 
-    public static calculateRectAlignOrBaseline(
+    calculateRectAlignOrBaseline: (
         XorY: number,
         WorH: number,
         AorB: RectAlign | RectBaseline 
-    ) {
+    ) => {
         AorB = typeof AorB === 'string' ? RectAlign[AorB as keyof typeof RectAlign] : AorB;
         return AorB === RectAlign.center
                 ? XorY - WorH / 2
             : AorB === RectAlign.right || AorB === RectBaseline.top
                 ? XorY - WorH
             : XorY;
-    };
+    },
 
-    public static parseFilters(filters: string) {
+    parseFilters: (filters: string) => {
         const result = [];
-      
         const regex = /([a-zA-Z-]+)\(([^)]+)\)/g;
-        let match;
-      
+
+        let match: RegExpExecArray | null;
         while ((match = regex.exec(filters)) !== null) {
             const [raw, filter, value] = match;
             result.push({ filter, value, raw });
         }
       
         return result;
-    };
+    }
 };
 
 export const Logger = {

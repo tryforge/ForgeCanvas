@@ -71,7 +71,10 @@ export default new NativeFunction({
             ctx.gradientManager = new GradientManager();
 
         ctx.gradientManager.set(name, GradientType.radial, x1, y1, r1, x2, y2, r2);
-        ctx.gradientManager.stops.forEach(x => ctx.gradientManager?.get(name)?.addColorStop(...x));
+        for (const stop of ctx.gradientManager.stops) {
+            ctx.gradientManager?.get(name)?.addColorStop(...stop);
+        }
+        
         return this.success();
     }
 });

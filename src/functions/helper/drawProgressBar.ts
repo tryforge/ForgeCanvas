@@ -63,7 +63,7 @@ export default new NativeFunction({
         const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {}) as BarOptions;
         const type = options.type ?? 'normal';
 
-        let res;
+        let res: any;
         if (type === 'normal') {
             const progress = data[0];
             res = canvas.drawProgressBar(

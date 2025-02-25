@@ -88,7 +88,7 @@ export class CanvasBuilder {
     ) {
         const ctx = this.ctx,
             oldfont = ctx.font,
-            fontsize = parseFloat((fontRegex.exec(font) as RegExpExecArray)[4]),
+            fontsize = Number.parseFloat((fontRegex.exec(font) as RegExpExecArray)[4]),
             lines = multiline ? text.split('\n') : [text],
             func = (text: string, x: number, y: number, maxWidth?: number) =>
                 type === FillOrStroke.fill 
@@ -99,7 +99,7 @@ export class CanvasBuilder {
 
         ctx.font = font;
         if (multiline || wrap) {
-            lines.forEach(t => {
+            for (const t of lines) {
                 if (wrap) {
                     let line = '';
                     
@@ -117,7 +117,7 @@ export class CanvasBuilder {
                     func(t, x, offset, maxWidth);
                     offset += fontsize + (lineOffset ?? 0);
                 };
-            });
+            }
         } else func(text, x, y, maxWidth);
         ctx.font = oldfont;
     };
@@ -239,7 +239,7 @@ export class CanvasBuilder {
         ctx[options.type as 'fill' | 'stroke']();
         ctx.restore();
 
-        return [x, y, width, height, pwidth, pheight]
+        return [x, y, width, height, pwidth, pheight];
     };
 
     public drawPieChart(
@@ -291,7 +291,7 @@ export class CanvasBuilder {
         const total = data.reduce((acc, val) => acc + val.value, 0);
         let angle = 0;
 
-        data.forEach((seg) => {
+        for (const seg of data) {
             const angl = angle + (seg.value / total) * Math.PI * 2;
 
             ctx.save();
@@ -317,7 +317,7 @@ export class CanvasBuilder {
 
             ctx.restore();
             angle = angl;
-        });
+        }
     };
 
     public measureText(text: string, font: string) {
@@ -364,7 +364,7 @@ export class CanvasBuilder {
         } else if (method === FilterMethod.remove) {
             if (!filter) throw new Error('No filter provided');
         
-            let filters = CanvasUtil.parseFilters(ctx.filter);
+            const filters = CanvasUtil.parseFilters(ctx.filter);
             const index = filters.findIndex((obj) => obj?.filter === Filters[filter]);
     
             if (index !== -1)
@@ -396,14 +396,14 @@ export class CanvasBuilder {
             canvas = ctx.canvas,
             pixels = ctx.getImageData(0, 0, canvas.width, canvas.height),
             l = pixels.data.length,
-            i,
+            i: number,
             bound = {
                 top: canvas.height,
                 left: canvas.width,
                 right: 0,
                 bottom: 0
             },
-            x, y;
+            x: number, y: number;
     
         for (i = 0; i < l; i += 4) {
             if (pixels.data[i + 3] === 0)
@@ -482,8 +482,8 @@ export class CanvasBuilder {
         return this.ctx.canvas.toDataURL(mime);
     };
     public buffer(mime: 'image/png' | 'image/jpeg' | 'image/webp') {
-        if (mime === 'image/png') {
+        if (mime === 'image/png')
             return this.ctx.canvas.toBuffer('image/png');
-        } else return this.ctx.canvas.toBuffer(mime);
+        return this.ctx.canvas.toBuffer(mime);
     };
 };

@@ -1,12 +1,12 @@
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { basename, join } from 'node:path';
 import { GlobalFonts } from '@napi-rs/canvas';
 import { ForgeExtension } from '@tryforge/forgescript';
-import { existsSync, statSync, readdirSync } from 'node:fs';
-import { basename, join } from 'node:path';
-import { Logger } from './classes';
 import { version } from '../package.json';
+import { Logger } from './classes';
 
-export const registerFonts = async (fonts: { src: string, name?: string | null }[]) => 
-    fonts.forEach(font => {
+export async function registerFonts(fonts: { src: string, name?: string | null }[], log: boolean) {
+    for (const font of fonts) {
         if (!existsSync(font.src))
             throw Logger.log('ERROR', `Invalid font source. (${font.src})`);
     
@@ -16,11 +16,14 @@ export const registerFonts = async (fonts: { src: string, name?: string | null }
                 return;
     
             filename = font.name ?? filename.split('.').slice(0, -1).join('.');
-            if (GlobalFonts.has(filename)) Logger.log('WARN', `Font with name '${filename}' already exists.`);
+            if (log && GlobalFonts.has(filename))
+                Logger.log('WARN', `Font with name '${filename}' already exists.`);
+            
             GlobalFonts.registerFromPath(font.src, filename);
-            Logger.log('INFO', `Successfully registered '${filename}'.`);
-        } else return registerFonts(readdirSync(font.src).map(x => ({ src: join(font.src, x) })));
-    });
+            if (log) Logger.log('INFO', `Successfully registered '${filename}'.`);
+        } else return registerFonts(readdirSync(font.src).map(x => ({ src: join(font.src, x) })), log);
+    }
+};
 
 export class ForgeCanvas extends ForgeExtension {
     name = 'forge.canvas';

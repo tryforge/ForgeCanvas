@@ -30,7 +30,7 @@ export default new NativeFunction({
         if (!ctx.imageManager || !(ctx.imageManager instanceof ImageManager))
             ctx.imageManager = new ImageManager();
 
-        let source;
+        let source: Buffer | string | null = null;
         if (['rgba://', 'rgb://', 'hex://'].find(x => src.startsWith(x))) {
             const [size, data] = parseArgs(src, src.split('//')[0].length + 2, 2);
             const [width, height] = size.split('x').map(Number);

@@ -31,7 +31,7 @@ export default new NativeFunction({
         if (!name && !ctx.gifManager.currentOptions)
             ctx.gifManager.currentOptions = new DecodeOptions();
 
-        let options = name
+        const options = name
             ? ctx.gifManager.getDecodeOptions(name)
             : ctx.gifManager.currentOptions;
 

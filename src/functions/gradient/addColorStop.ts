@@ -37,7 +37,7 @@ export default new NativeFunction({
             ctx.gradientManager = new GradientManager();
 
         const gradient = ctx.gradientManager?.get(name as string);
-        if (name && !gradient) return this.customError(`No gradient`);
+        if (name && !gradient) return this.customError('No gradient');
 
         if (gradient)
             gradient.addColorStop(offset, color);
