@@ -41,16 +41,16 @@ export default new NativeFunction({
             offsetX: 'shadowOffsetX',
             offsetY: 'shadowOffsetY'
         };
-
+        
+        const res: any[] = [];
         if (!Array.isArray(options)) {
             for (const option in options) { // @ts-ignore
                 canvas[shadowOptions?.[option]] = options[x];
             }
-        };
-
-        const res: any[] = [];
-        for (const option in options) {
+        } else {
+          for (const option in options) {
             res.push(canvas[shadowOptions[option]]);
+          }
         }
 
         return this.success(Array.isArray(options) ? JSON.stringify(res) : undefined);
