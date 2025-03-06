@@ -11,6 +11,7 @@ declare class Manager<T> {
 export declare class CanvasManager extends Manager<CanvasBuilder> {
     current: CanvasBuilder[];
     constructor();
+    get lastCurrent(): CanvasBuilder;
     set(name: string, canvas: CanvasBuilder): void;
     set(name: string, width: number, height: number): void;
 }
@@ -34,6 +35,7 @@ export declare class GIFManager {
     currentOptions: DecodeOptions | null;
     currentEncoder: Encoder[];
     constructor();
+    get lastCurrentEncoder(): Encoder;
     setEncoder(name: string, encoder: Encoder): void;
     setDecoder(name: string, decoder: Decoder): void;
     setDecodeOptions(name: string, options: DecodeOptions): void;

@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { ImageFormat } from '../../';
+import { ImageFormat } from '../..';
 declare const _default: NativeFunction<[{
     name: string;
     description: string;

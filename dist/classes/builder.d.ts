@@ -35,5 +35,5 @@ export declare class CanvasBuilder {
     setPixels<T extends ColorDataType>(x: number, y: number, width: number, height: number, colors: T extends ColorDataType.Rgba ? number[] : string[], t?: T | null): void;
     resize(width: number, height: number): void;
     dataUrl(mime: 'image/png' | 'image/jpeg' | 'image/webp'): string;
-    buffer(mime: 'image/png' | 'image/jpeg' | 'image/webp'): Buffer;
+    buffer(mime: 'image/png' | 'image/jpeg' | 'image/webp'): Buffer<ArrayBufferLike>;
 }
