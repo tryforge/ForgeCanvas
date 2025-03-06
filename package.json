@@ -28,14 +28,13 @@
   },
   "homepage": "https://github.com/tryforge/ForgeCanvas#readme",
   "devDependencies": {
-    "@tryforge/forgescript": "^2.0.0",
-    "@types/node": "^22.5.0",
-    "discord.js": "^14.17.2",
-    "typedoc": "^0.26.6",
-    "typescript": "^5.5.4"
+    "@tryforge/forgescript": "^2.2.0",
+    "@types/node": "^22.13.5",
+    "typedoc": "^0.26.11",
+    "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@gifsx/gifsx": "^1.0.9",
-    "@napi-rs/canvas": "^0.1.65"
+    "@gifsx/gifsx": "^1.0.15",
+    "@napi-rs/canvas": "^0.1.67"
   }
 }
