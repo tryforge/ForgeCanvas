@@ -4,6 +4,7 @@ import {
     SKRSContext2D,
     Image
 } from '@napi-rs/canvas';
+import { hexToRgba, rgbaToHex } from '@gifsx/gifsx';
 import {
     CustomCanvasProperties,
     FillOrStroke,
@@ -17,7 +18,6 @@ import {
     PieChartOptions,
     BarData
 } from '..';
-import { hexToRgba, rgbaToHex } from '@gifsx/gifsx';
 
 export class CanvasBuilder {
     public ctx: SKRSContext2D;
@@ -25,14 +25,14 @@ export class CanvasBuilder {
 
     public customProperties: CustomCanvasProperties = {};
     
-    public get width() { return this.ctx.canvas.width };
-    public get height() { return this.ctx.canvas.height };
-    public set width(val: number) { this.resize(val, this.height) };
-    public set height(val: number) { this.resize(this.width, val) };
+    public get width() { return this.ctx.canvas.width }
+    public get height() { return this.ctx.canvas.height }
+    public set width(val: number) { this.resize(val, this.height) }
+    public set height(val: number) { this.resize(this.width, val) }
 
     constructor(width: number, height: number) {
         this.ctx = createCanvas(width, height).getContext('2d');
-    };
+    }
 
     public rect(
         type: FillOrStrokeOrClear,
@@ -60,7 +60,7 @@ export class CanvasBuilder {
             if (type === FillOrStrokeOrClear.stroke) ctx.strokeRect(x, y, width, height);
             if (type === FillOrStrokeOrClear.clear) ctx.clearRect(x, y, width, height);
             return;
-        };
+        }
 
         ctx.save();
         ctx.beginPath();
@@ -116,11 +116,11 @@ export class CanvasBuilder {
                 } else {
                     func(t, x, offset, maxWidth);
                     offset += fontsize + (lineOffset ?? 0);
-                };
+                }
             }
         } else func(text, x, y, maxWidth);
         ctx.font = oldfont;
-    };
+    }
 
     public async drawImage(
         image: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL,
@@ -149,7 +149,7 @@ export class CanvasBuilder {
         ctx.clip();
         ctx.drawImage(image, x, y, width, height);
         ctx.restore();
-    };
+    }
 
     public drawProgressBar(
         x: number,
@@ -193,14 +193,14 @@ export class CanvasBuilder {
                 ctx[options.background.type as 'fill' | 'stroke']();
                 ctx.restore();
             } else this.rect(FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
-        };
+        }
 
         if (options.background.padding) {
             width = width - options.background.padding * 2;
             height = height - options.background.padding * 2;
             x = x + options.background.padding;
             y = y + + options.background.padding;
-        };
+        }
 
         const pwidth = Math.min(['horizontal', 'both'].includes(options.direction)
             ? width * progress : width, width);
@@ -222,14 +222,14 @@ export class CanvasBuilder {
                 options.clip
             );
             ctx.clip();
-        };
+        }
 
         if (options.left) {
             ctx.fillStyle = options.left;
             ctx.beginPath();
             ctx.roundRect(x, y, width, height, options.radius);
             ctx.fill();
-        };
+        }
 
         ctx[`${options.type}Style` as 'fillStyle' | 'strokeStyle'] = options.style;
 
@@ -240,7 +240,7 @@ export class CanvasBuilder {
         ctx.restore();
 
         return [x, y, width, height, pwidth, pheight];
-    };
+    }
 
     public drawPieChart(
         x: number,
@@ -279,14 +279,14 @@ export class CanvasBuilder {
                 ctx[options.background.type as 'fill' | 'stroke']();
                 ctx.restore();
             } else this.rect(FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
-        };
+        }
 
         if (options.background.padding) {
             width = width - options.background.padding * 2;
             height = height - options.background.padding * 2;
             x = x + options.background.padding;
             y = y + options.background.padding;
-        };
+        }
 
         const total = data.reduce((acc, val) => acc + val.value, 0);
         let angle = 0;
@@ -318,7 +318,7 @@ export class CanvasBuilder {
             ctx.restore();
             angle = angl;
         }
-    };
+    }
 
     public measureText(text: string, font: string) {
         const ctx = this.ctx,
@@ -334,7 +334,7 @@ export class CanvasBuilder {
         ctx.font = oldfont;
     
         return metrics;
-    };
+    }
 
     public filter<T extends FilterMethod>(
         method: T,
@@ -378,7 +378,7 @@ export class CanvasBuilder {
         else if (method === FilterMethod.json)
             return CanvasUtil.parseFilters(ctx.filter) as any;
         return undefined as any;
-    };
+    }
 
     public rotate(angle: number) {
         const ctx = this.ctx;
@@ -389,7 +389,7 @@ export class CanvasBuilder {
         ctx.translate(centerX, centerY);
         ctx.rotate((angle * Math.PI) / 180);
         ctx.translate(-centerX, -centerY);
-    };
+    }
     
     public trim() {
         let ctx = this.ctx,
@@ -416,7 +416,7 @@ export class CanvasBuilder {
             if (y < bound.top) bound.top = y;
             if (y > bound.bottom) bound.bottom = y;
             if (x > bound.right) bound.right = x;
-        };
+        }
     
         const height = bound.bottom - bound.top + 1;
         const width = bound.right - bound.left + 1;
@@ -426,7 +426,7 @@ export class CanvasBuilder {
         canvas.height = height;
     
         ctx.putImageData(trimmed, 0, 0);
-    };
+    }
     
     public getPixels<T extends ColorDataType>(
         x: number,
@@ -445,7 +445,7 @@ export class CanvasBuilder {
             return Array.from(data) as T extends ColorDataType.Rgba ? number[] : string[];
 
         return rgbaToHex(Uint8Array.from(data), false, true) as T extends ColorDataType.Rgba ? number[] : string[];
-    };
+    }
     
     public setPixels<T extends ColorDataType>(
         x: number,
@@ -467,7 +467,7 @@ export class CanvasBuilder {
         else data.data.set(Uint8ClampedArray.from(colors as number[]));
         
         ctx.putImageData(data, x, y);
-    };
+    }
     
     public resize(width: number, height: number) {
         const ctx = this.ctx,
@@ -476,14 +476,14 @@ export class CanvasBuilder {
         ctx.canvas.width = width;
         ctx.canvas.height = height;
         ctx.putImageData(data, 0, 0);
-    };
+    }
 
     public dataUrl(mime: 'image/png' | 'image/jpeg' | 'image/webp') {
         return this.ctx.canvas.toDataURL(mime);
-    };
+    }
     public buffer(mime: 'image/png' | 'image/jpeg' | 'image/webp') {
         if (mime === 'image/png')
             return this.ctx.canvas.toBuffer('image/png');
         return this.ctx.canvas.toBuffer(mime);
-    };
-};
+    }
+}

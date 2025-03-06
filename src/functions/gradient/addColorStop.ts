@@ -32,7 +32,9 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx: Context, [name, offset, color]) {
-        if (!(offset / 100 >= 0 && offset / 100 <= 1)) return this.customError('Offset must be between 0 and 100');
+        if (!(offset / 100 >= 0 && offset / 100 <= 1))
+            return this.customError('Offset must be between 0 and 100');
+        
         if (!ctx.gradientManager || !(ctx.gradientManager instanceof GradientManager))
             ctx.gradientManager = new GradientManager();
 
@@ -41,7 +43,7 @@ export default new NativeFunction({
 
         if (gradient)
             gradient.addColorStop(offset, color);
-        else 
+        else
             ctx.gradientManager.stops.push([offset, color]);
 
         return this.success();

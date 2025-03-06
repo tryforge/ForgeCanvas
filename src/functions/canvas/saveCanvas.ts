@@ -1,7 +1,7 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, ImageManager, ImageFormat } from '../..';
-import { writeFileSync } from 'node:fs';
 import { loadImage } from '@napi-rs/canvas';
+import { writeFileSync } from 'node:fs';
+import { Context, ImageManager, ImageFormat } from '../..';
 
 export default new NativeFunction({
     name: '$saveCanvas',
@@ -35,15 +35,15 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx: Context, [name, path, f]) {
-        const canvas = name ? ctx.canvasManager?.get(name)
-            : !name && ctx.canvasManager?.current?.length !== 0 
-                ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas) return this.customError('No canvas');
 
         const format = (f !== null 
             ? 'image/' + (typeof f === 'number' ? ImageFormat[f] : f)
         : 'image/png') as any;
 
-        if (!canvas) return this.customError('No canvas');
         if (!path) return this.customError('No path provided');
 
         if (path.startsWith('images://')) {

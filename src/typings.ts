@@ -1,5 +1,11 @@
 import { Context as ctx } from '@tryforge/forgescript';
-import type { CanvasManager, GIFManager, GradientManager, ImageManager, NeuQuantManager } from './classes';
+import type {
+    CanvasManager,
+    GIFManager,
+    GradientManager,
+    ImageManager,
+    NeuQuantManager
+} from './classes';
 
 export class Context extends ctx {
     canvasManager?: CanvasManager;
@@ -7,12 +13,12 @@ export class Context extends ctx {
     imageManager?: ImageManager;
     gifManager?: GIFManager;
     neuquantManager?: NeuQuantManager;
-};
+}
 
 export interface CustomCanvasProperties {
     rectAlign?: RectAlign;
     rectBaseline?: RectBaseline;
-};
+}
 
 export interface ProgressBarOptions {
     style?: string | CanvasGradient | CanvasPattern;
@@ -28,7 +34,7 @@ export interface ProgressBarOptions {
     direction?: 'horizontal' | 'vertical';
     clip?: number | number[];
     left?: string | CanvasGradient | CanvasPattern;
-};
+}
 
 export interface PieChartOptions {
     type?: 'fill' | 'stroke';
@@ -41,12 +47,12 @@ export interface PieChartOptions {
     }
     radius?: number;
     left?: string | CanvasGradient | CanvasPattern;
-};
+}
 
 export interface BarData {
     value: number;
     style: string | CanvasGradient | CanvasPattern;
-};
+}
 export interface BarOptions {
     'type'?: 'normal' | 'pie';
     'draw-type'?: 'fill' | 'stroke' | 'clear';
@@ -60,23 +66,23 @@ export interface BarOptions {
     'direction'?: 'horizontal' | 'vertical';
     'clip-radius'?: number | number[];
     'left'?: string;
-};
+}
 
-export enum ImageFormat { png, jpeg, avif, webp };
-export enum RectAlign { left, center, right };
-export enum RectBaseline { top, center, bottom };
-export enum FillOrStroke { fill, stroke };
-export enum FillOrStrokeOrClear { none, fill, stroke, clear };
-export enum WidthOrHeight { width, height };
-export enum AlignOrBaseline { align, baseline };
-export enum StyleType { color, gradient, pattern };
-export enum FilterMethod { add, set, remove, clear, get, json };
-export enum Filters { none, blur, sepia, grayscale, brightness, contrast, invert, saturate, 'drop-shadow' };
-export enum TextBaseline { top, hanging, middle, alphabetic, ideographic, bottom };
-export enum TextAlign { start, right, center, left, end };
-export enum GradientType { linear, radial, conic };
-export enum FillRule { evenodd, nonzero };
-export enum LineJoinShape { round, bevel, miter };
+export enum ImageFormat { png, jpeg, avif, webp }
+export enum RectAlign { left, center, right }
+export enum RectBaseline { top, center, bottom }
+export enum FillOrStroke { fill, stroke }
+export enum FillOrStrokeOrClear { none, fill, stroke, clear }
+export enum WidthOrHeight { width, height }
+export enum AlignOrBaseline { align, baseline }
+export enum StyleType { color, gradient, pattern }
+export enum FilterMethod { add, set, remove, clear, get, json }
+export enum Filters { none, blur, sepia, grayscale, brightness, contrast, invert, saturate, 'drop-shadow' }
+export enum TextBaseline { top, hanging, middle, alphabetic, ideographic, bottom }
+export enum TextAlign { start, right, center, left, end }
+export enum GradientType { linear, radial, conic }
+export enum FillRule { evenodd, nonzero }
+export enum LineJoinShape { round, bevel, miter }
 export enum MeasureTextProperty {
     actualBoundingBoxAscent,
     actualBoundingBoxDescent,
@@ -88,7 +94,7 @@ export enum MeasureTextProperty {
     emHeightAscent,
     emHeightDescent,
     width
-};
+}
 export enum CompositingOperation {
     'source-over',
     'source-in',
@@ -116,7 +122,7 @@ export enum CompositingOperation {
     'saturation',
     'color',
     'luminosity'
-};
+}
 export enum FontVariantCaps {
     'normal',
     'small-caps',
@@ -125,22 +131,22 @@ export enum FontVariantCaps {
     'all-petite-caps',
     'unicase',
     'titling-caps'
-};
+}
 export enum ColorDataType {
     Rgba,
     Hex
-};
+}
 export enum ColorOutput {
     Rgba,
     IndexedPixels,
     Hex
-};
+}
 export enum DisposalMethod {
     Any,
     Keep,
     Background,
     Previous
-};
+}
 export enum FrameOption {
     delay,
     dispose,
@@ -153,11 +159,11 @@ export enum FrameOption {
     interlaced,
     palette,
     buffer
-};
+}
 export enum DecoderOption {
     bgColor,
     bufferSize,
     globalPalette,
     lineLength,
     loops
-};
+}

@@ -20,10 +20,9 @@ export default new NativeFunction({
     async execute (ctx: Context, [name]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
-                : !name && ctx.gifManager?.currentEncoder?.length !== 0 
-                    ? ctx.gifManager?.currentEncoder?.[ctx.gifManager?.currentEncoder?.length - 1] : null;
-        
+            : ctx.gifManager?.lastCurrentEncoder;
         if (!gif) return this.customError('No gif');
+        
         return this.success(gif.palette !== null 
             ? `[${Array.from(gif.palette).join(', ')}]` : null
         );

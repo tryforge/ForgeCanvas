@@ -1,7 +1,8 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 import { createCanvas, Image } from '@napi-rs/canvas';
 import { indexedToRgba } from '@gifsx/gifsx';
+import { Context } from '../..';
+
 
 export default new NativeFunction({
     name: '$drawImage',
@@ -64,8 +65,7 @@ export default new NativeFunction({
     async execute (ctx: Context, [name, path, x, y, w, h, r]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
+            : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError('No canvas');
 
         let img: string | Image | undefined | Buffer = path;

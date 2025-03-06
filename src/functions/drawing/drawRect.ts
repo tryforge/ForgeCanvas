@@ -70,11 +70,8 @@ export default new NativeFunction({
     async execute (ctx: Context, [name, t, style, x, y, w, h, r]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas) return this.customError('No canvas');
 
         if (!style && (t === FillOrStrokeOrClear.fill || t === FillOrStrokeOrClear.stroke))
             return this.customError('No style provided.');

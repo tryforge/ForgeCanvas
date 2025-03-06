@@ -42,8 +42,7 @@ export default new NativeFunction({
     async execute (ctx: Context, [name, frame, options, speed]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
-                : !name && ctx.gifManager?.currentEncoder?.length !== 0 
-                    ? ctx.gifManager?.currentEncoder?.[ctx.gifManager?.currentEncoder?.length - 1] : null;
+            : ctx.gifManager?.lastCurrentEncoder;
         if (!gif) return this.customError('No gif');
 
         let f: Frame | undefined;

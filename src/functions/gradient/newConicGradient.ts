@@ -50,9 +50,8 @@ export default new NativeFunction({
             ctx.gradientManager = new GradientManager();
 
         ctx.gradientManager.set(name, GradientType.conic, sAngle, x, y);
-        for (const stop of ctx.gradientManager.stops) {
+        for (const stop of ctx.gradientManager.stops)
             ctx.gradientManager?.get(name)?.addColorStop(...stop);
-        }
         
         return this.success();
     }

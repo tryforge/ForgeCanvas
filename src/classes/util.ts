@@ -1,8 +1,7 @@
 import { GlobalFonts, loadImage, Image, createCanvas } from '@napi-rs/canvas';
-import chalk from 'chalk';
+import { Frame, rgbaToHex } from '@gifsx/gifsx';
 import { Context, RectAlign, RectBaseline } from '..';
 import { CanvasBuilder } from './builder';
-import { Frame, rgbaToHex } from '@gifsx/gifsx';
 
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i
 export const rgbaRegex = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
@@ -53,13 +52,13 @@ export const CanvasUtil = {
                     for (const family of families) {
                         if (!GlobalFonts.has(family.replace(/['',]/g, '')))
                             return false;
-                    };
-                };
+                    }
+                }
 
                 return true;
-            };
+            }
             return false;
-        };
+        }
         return false;
     },
 
@@ -108,8 +107,7 @@ export const CanvasUtil = {
                         match[5] ? Number.parseFloat(match[5]) : 255
                     ]), false, true);
                 })() : Colors[style])) ?? '#000000';
-        };
-
+        }
         return s;
     },
 
@@ -140,23 +138,6 @@ export const CanvasUtil = {
     }
 };
 
-export const Logger = {
-    DateColor: chalk.green.bold,
-    Colors: {
-        INFO: chalk.cyan.bold,
-        WARN: chalk.yellow.bold,
-        ERROR: chalk.red.bold,
-        MESSAGE: chalk.cyan.bold
-    },
-    log(type: 'INFO' | 'WARN' | 'ERROR' | 'MESSAGE', message: string) {
-        console.log(
-            this.DateColor(`[${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}]`),
-            this.Colors[type](`[${type}]`),
-            this.Colors.MESSAGE(message)
-        );
-    }
-};
-
 export async function loadFrame(
     src: string | URL | Buffer | ArrayBufferLike | Uint8Array | Image | import("stream").Readable,
     speed?: number | null
@@ -175,12 +156,12 @@ export async function loadFrame(
         ).data),
         speed
     );
-};
+}
 
 export function parseArgs(str: string, prefix: string | number, length: number, rest?: boolean) {
     const args = str.slice(typeof prefix === 'string' ? prefix.length : prefix).split(':');
     if (!rest ? args.length !== length : args.length < length)
-        throw new Error(`${prefix} frame expects ${length} arguments.`);
+        throw new Error(`${prefix} expects ${length} arguments.`);
 
     return args;
-};
+}

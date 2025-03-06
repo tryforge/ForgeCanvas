@@ -1,6 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { AttachmentBuilder } from 'discord.js';
-import { Context, ImageFormat } from '../../';
+import { Context, ImageFormat } from '../..';
 
 export default new NativeFunction({
     name: '$attachCanvas',

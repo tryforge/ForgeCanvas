@@ -25,9 +25,9 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx: Context, [name, f]) {
-        const canvas = name ? ctx.canvasManager?.get(name)
-            : !name && ctx.canvasManager?.current?.length !== 0 
-                ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError('No canvas');
 
         return this.success(canvas.dataUrl((f !== null 

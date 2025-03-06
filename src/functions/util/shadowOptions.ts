@@ -27,12 +27,9 @@ export default new NativeFunction({
     async execute (ctx: Context, [name, options]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null)?.ctx;
-        
-        if (!canvas)
-            return this.customError('No canvas');
-        
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+
+        if (!canvas) return this.customError('No canvas');
         if (typeof options === 'string') options = JSON.parse(options);
 
         const shadowOptions: Record<string, 'shadowColor' | 'shadowBlur' | 'shadowOffsetX' | 'shadowOffsetY'> = {
@@ -44,14 +41,10 @@ export default new NativeFunction({
         
         const res: any[] = [];
         if (!Array.isArray(options)) {
-            for (const option in options) { // @ts-ignore
+            for (const option in options) // @ts-ignore
                 canvas[shadowOptions?.[option]] = options[x];
-            }
-        } else {
-          for (const option in options) {
+        } else for (const option in options)
             res.push(canvas[shadowOptions[option]]);
-          }
-        }
 
         return this.success(Array.isArray(options) ? JSON.stringify(res) : undefined);
     }

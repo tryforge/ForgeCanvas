@@ -28,10 +28,8 @@ export default new NativeFunction({
         if (!ctx.canvasManager || ctx.canvasManager.current.length === 0)
             return this.customError('No size has been set');
 
-        const i = ctx.canvasManager.current.length - 1;
-
-        ctx.canvasManager.set(name, ctx.canvasManager.current[i]);
-        ctx.canvasManager.current = ctx.canvasManager.current.slice(0, i);
+        ctx.canvasManager.set(name, ctx.canvasManager.lastCurrent);
+        ctx.canvasManager.current = ctx.canvasManager.current.slice(0, ctx.canvasManager.current.length - 1);
 
         return this.success();
     }

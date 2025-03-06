@@ -24,20 +24,17 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx: Context, [name, segments]) {
-        const canvas = name
+        const canvas = (name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas) return this.customError('No canvas');
 
         if (segments && (!Array.isArray(segments) || !segments.every(x => typeof x === 'number')))
             return this.customError('Invalid segments.');
 
         return this.success(segments 
-            ? (canvas.ctx.setLineDash(segments), undefined)
-            : canvas.ctx.getLineDash()
+            ? (canvas.setLineDash(segments), undefined)
+            : canvas.getLineDash()
         );
     }
 });

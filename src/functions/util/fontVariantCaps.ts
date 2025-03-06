@@ -28,11 +28,8 @@ export default new NativeFunction({
     async execute (ctx: Context, [name, t]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null)?.ctx;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas) return this.customError('No canvas');
 
         return this.success(t !== null
             ? (canvas.fontVariantCaps = (typeof t === 'number' 

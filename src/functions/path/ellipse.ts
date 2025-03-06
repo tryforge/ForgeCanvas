@@ -76,11 +76,8 @@ export default new NativeFunction({
     async execute (ctx: Context, [name, x, y, rX, rY, rotation, sAngle, eAngle, ccw]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas) return this.customError('No canvas');
 
         canvas.ctx.ellipse(x, y, rX, rY, rotation, sAngle, eAngle, ccw ?? false);
         return this.success();
