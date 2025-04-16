@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$wordSpacing',
@@ -24,7 +23,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, spacing]) {
+    async execute (ctx, [name, spacing]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;

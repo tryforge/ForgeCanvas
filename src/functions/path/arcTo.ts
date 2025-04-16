@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$arcTo',
@@ -51,7 +50,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, x1, y1, x2, y2, r]) {
+    async execute (ctx, [name, x1, y1, x2, y2, r]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

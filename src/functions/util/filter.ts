@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, FilterMethod, Filters } from '../..';
+import { FilterMethod, Filters } from '../..';
 
 export default new NativeFunction({
     name: '$filter',
@@ -39,7 +39,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, method, filter, value]) {
+    async execute (ctx, [name, method, filter, value]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

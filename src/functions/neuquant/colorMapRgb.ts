@@ -1,5 +1,4 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$colorMapRgb',
@@ -17,7 +16,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name]) {
+    async execute (ctx, [name]) {
         const nq = ctx.neuquantManager?.get(name);
         if (!nq) return this.customError('No NeuQuant instance');
 

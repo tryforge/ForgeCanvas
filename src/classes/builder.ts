@@ -96,6 +96,7 @@ export class CanvasBuilder {
                 : ctx.strokeText(text, x, y, maxWidth);
         let offset = y;
         maxWidth??= undefined;
+        lineOffset??= 0;
 
         ctx.font = font;
         if (multiline || wrap) {
@@ -104,18 +105,19 @@ export class CanvasBuilder {
                     let line = '';
                     
                     t.split(' ').forEach((word, i) => {
+                        if (word?.trim() === '') return;
                         if (maxWidth && ctx.measureText(line + word + ' ').width > maxWidth && i > 0) {
                             func(line, x, offset, maxWidth);
                             line = word + ' ';
-                            offset += fontsize + (lineOffset ?? 0);
+                            offset += fontsize + lineOffset;
                         } else line += word + ' ';
                     });
                 
                     func(line, x, offset, maxWidth);
-                    offset += fontsize + (lineOffset ?? 0);
+                    offset += fontsize + lineOffset;
                 } else {
                     func(t, x, offset, maxWidth);
-                    offset += fontsize + (lineOffset ?? 0);
+                    offset += fontsize + lineOffset;
                 }
             }
         } else func(text, x, y, maxWidth);
@@ -208,15 +210,20 @@ export class CanvasBuilder {
             ? height * progress : height, height);
 
         if (options.type === 'clear')
-            return (this.rect(FillOrStrokeOrClear.clear, x, y, pwidth, pheight, options.radius), [x, y, width, height, pwidth, pheight]);
+            return (
+                this.rect(
+                    FillOrStrokeOrClear.clear,
+                    x, y, pwidth, pheight,
+                    options.radius
+                ), [x, y, width, height, pwidth, pheight]
+            );
 
         ctx.save();
 
         if (options.clip !== undefined) {
             ctx.beginPath();
             ctx.roundRect(
-                x,
-                y,
+                x, y,
                 width,
                 height,
                 options.clip
@@ -444,7 +451,9 @@ export class CanvasBuilder {
         if (t === ColorDataType.Rgba)
             return Array.from(data) as T extends ColorDataType.Rgba ? number[] : string[];
 
-        return rgbaToHex(Uint8Array.from(data), false, true) as T extends ColorDataType.Rgba ? number[] : string[];
+        return rgbaToHex(
+            Uint8Array.from(data), false, true
+        ) as T extends ColorDataType.Rgba ? number[] : string[];
     }
     
     public setPixels<T extends ColorDataType>(
@@ -478,12 +487,11 @@ export class CanvasBuilder {
         ctx.putImageData(data, 0, 0);
     }
 
-    public dataUrl(mime: 'image/png' | 'image/jpeg' | 'image/webp') {
-        return this.ctx.canvas.toDataURL(mime);
+    public dataUrl(mime?: 'image/png' | 'image/jpeg' | 'image/webp') {
+        return this.ctx.canvas.toDataURL(mime ?? 'image/png');
     }
-    public buffer(mime: 'image/png' | 'image/jpeg' | 'image/webp') {
-        if (mime === 'image/png')
-            return this.ctx.canvas.toBuffer('image/png');
-        return this.ctx.canvas.toBuffer(mime);
+    public buffer(mime?: 'image/png' | 'image/jpeg' | 'image/webp') {
+        // @ts-ignore
+        return this.ctx.canvas.toBuffer(mime ?? 'image/png');
     }
 }

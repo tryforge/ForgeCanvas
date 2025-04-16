@@ -1,6 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { AttachmentBuilder } from 'discord.js';
-import { Context } from '../../';
 
 export default new NativeFunction({
     name: '$attachGIF',
@@ -25,7 +24,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, filename]) {
+    async execute (ctx, [name, filename]) {
         const gif = ctx.gifManager?.getEncoder(name);
         filename = `${filename ?? name}.gif`;
         

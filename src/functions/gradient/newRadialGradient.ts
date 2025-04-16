@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, GradientManager, GradientType } from '../..';
+import { GradientManager, GradientType } from '../..';
 
 export default new NativeFunction({
     name: '$newRadialGradient',
@@ -66,7 +66,7 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx: Context, [name, x1, y1, r1, x2, y2, r2]) {
+    async execute (ctx, [name, x1, y1, r1, x2, y2, r2]) {
         if (!ctx.gradientManager || !(ctx.gradientManager instanceof GradientManager))
             ctx.gradientManager = new GradientManager();
 

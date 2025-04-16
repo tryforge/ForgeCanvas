@@ -1,7 +1,7 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { loadImage } from '@napi-rs/canvas';
 import { writeFileSync } from 'node:fs';
-import { Context, ImageManager, ImageFormat } from '../..';
+import { ImageManager, ImageFormat } from '../..';
 
 export default new NativeFunction({
     name: '$saveCanvas',
@@ -34,7 +34,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, path, f]) {
+    async execute (ctx, [name, path, f]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

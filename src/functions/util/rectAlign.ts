@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, RectAlign } from '../..';
+import { RectAlign } from '../..';
 
 export default new NativeFunction({
     name: '$rectAlign',
@@ -25,7 +25,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, align]) {
+    async execute (ctx, [name, align]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

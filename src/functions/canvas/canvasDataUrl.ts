@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, ImageFormat } from '../..';
+import { ImageFormat } from '../..';
 
 export default new NativeFunction({
     name: '$canvasDataUrl',
@@ -24,7 +24,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, f]) {
+    async execute (ctx, [name, f]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

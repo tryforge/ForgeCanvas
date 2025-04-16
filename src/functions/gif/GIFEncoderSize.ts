@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, WidthOrHeight } from '../..';
+import { WidthOrHeight } from '../..';
 
 export default new NativeFunction({
     name: '$GIFEncoderSize',
@@ -25,7 +25,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, property]) {
+    async execute (ctx, [name, property]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
             : ctx.gifManager?.lastCurrentEncoder;

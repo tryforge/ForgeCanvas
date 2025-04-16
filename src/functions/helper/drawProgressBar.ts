@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, BarData, BarOptions, CanvasUtil } from '../..';
+import { BarData, BarOptions, CanvasUtil } from '../..';
 
 export default new NativeFunction({
     name: '$drawProgressBar',
@@ -51,7 +51,7 @@ export default new NativeFunction({
             rest: false
         },
     ],
-    async execute(ctx: Context, [name, x, y, width, height]) {
+    async execute(ctx, [name, x, y, width, height]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$bezierCurveTo',
@@ -59,7 +58,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, ...args]) {
+    async execute (ctx, [name, ...args]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

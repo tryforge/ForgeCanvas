@@ -1,6 +1,7 @@
 import { GlobalFonts, loadImage, Image, createCanvas } from '@napi-rs/canvas';
+import { Context } from '@tryforge/forgescript';
 import { Frame, rgbaToHex } from '@gifsx/gifsx';
-import { Context, RectAlign, RectBaseline } from '..';
+import { RectAlign, RectBaseline } from '..';
 import { CanvasBuilder } from './builder';
 
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i
@@ -42,24 +43,17 @@ export const Colors: Record<string, string> = {
 export const CanvasUtil = {
     isValidFont: (font: string) => {
         if (!font) return false;
-        if (fontRegex.test(font)) {
-            const res = fontRegex.exec(font)
-          
-            if (res?.[0]) {
-                const families = res[6].split(',').map(x => x?.trim());
+        if (!fontRegex.test(font)) return false;
+        
+        const res = fontRegex.exec(font)
+        if (!res?.[0]) return false;
 
-                if (families) {
-                    for (const family of families) {
-                        if (!GlobalFonts.has(family.replace(/['',]/g, '')))
-                            return false;
-                    }
-                }
-
-                return true;
-            }
-            return false;
+        const families = res[6].split(',').map(x => x?.trim());
+        for (const family of families) {
+            if (!GlobalFonts.has(family.replace(/['',]/g, '')))
+                return false;
         }
-        return false;
+        return true;
     },
 
     parseStyle: async(self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => {
@@ -84,7 +78,7 @@ export const CanvasUtil = {
                     return self.customError('No canvas with provided name found.');
         
                 image = canvas_2.getImageData(0, 0, canvas_2.canvas.width, canvas_2.canvas.height);
-            } else if (type === 'image') {
+            } else {
                 if (splits?.join(':')?.startsWith('images://')) {
                     const img = ctx?.imageManager?.get(splits.join(':').slice(9));
                     
@@ -93,7 +87,7 @@ export const CanvasUtil = {
 
                     image = img;
                 } else image = await loadImage(repeat ? splits.join(':') : splits.join());
-            } else return self.customError('Invalid pattern type.');
+            }
 
             s = canvas.ctx.createPattern(image, repeat as any);
         } else {

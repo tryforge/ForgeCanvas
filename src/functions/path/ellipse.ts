@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$ellipse',
@@ -73,7 +72,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, x, y, rX, rY, rotation, sAngle, eAngle, ccw]) {
+    async execute (ctx, [name, x, y, rX, rY, rotation, sAngle, eAngle, ccw]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

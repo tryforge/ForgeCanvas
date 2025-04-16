@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$createCanvas',
@@ -24,12 +23,14 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx: Context, [name]) {
+    async execute (ctx, [name]) {
         if (!ctx.canvasManager || ctx.canvasManager.current.length === 0)
             return this.customError('No size has been set');
 
         ctx.canvasManager.set(name, ctx.canvasManager.lastCurrent);
-        ctx.canvasManager.current = ctx.canvasManager.current.slice(0, ctx.canvasManager.current.length - 1);
+        ctx.canvasManager.current = ctx.canvasManager.current.slice(
+            0, ctx.canvasManager.current.length - 1
+        );
 
         return this.success();
     }

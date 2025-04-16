@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, registerFonts } from '../..';
+import { registerFonts } from '../..';
 
 export default new NativeFunction({
     name: '$registerFont',
@@ -30,7 +30,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (_: Context, [src, name, log]) {
+    async execute (_, [src, name, log]) {
         await registerFonts([{ src: src, name }], log ?? false);
         return this.success();
     }

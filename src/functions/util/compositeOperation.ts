@@ -1,9 +1,9 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, CompositingOperation } from '../..';
+import { CompositingOperation } from '../..';
 
 export default new NativeFunction({
     name: '$compositeOperation',
-    aliases: ['$compositingOperation'],
+    aliases: ['$compositingOperation', '$globalCompositingOperation', '$globalCompositeOperation'],
     description: 'Sets or returns the compositing operation in a canvas.',
     version: '1.1.0',
     brackets: false,
@@ -25,7 +25,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, operation]) {
+    async execute (ctx, [name, operation]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;

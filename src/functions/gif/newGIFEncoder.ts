@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$newGIFEncoder',
@@ -24,7 +23,7 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx: Context, [name]) {
+    async execute (ctx, [name]) {
         if (!ctx.gifManager || ctx.gifManager.currentEncoder.length === 0)
             return this.customError('No size and palette has been set');
 

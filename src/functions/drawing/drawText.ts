@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil, Context, FillOrStroke } from '../..';
+import { CanvasUtil, FillOrStroke } from '../..';
 
 export default new NativeFunction({
     name: '$drawText',
@@ -33,7 +33,7 @@ export default new NativeFunction({
         },
         {
             name: 'font',
-            description: 'The font text. ({size}px {font name})',
+            description: 'The text font. ({size}px {font name})',
             type: ArgType.String,
             check: (i: string) => CanvasUtil.isValidFont(i),
             required: true,
@@ -89,7 +89,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset]) {
+    async execute (ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

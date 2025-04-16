@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$resizeCanvas',
@@ -31,7 +30,7 @@ export default new NativeFunction({
             rest: false
         },
     ],
-    async execute (ctx: Context, [name, w, h]) {
+    async execute (ctx, [name, w, h]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

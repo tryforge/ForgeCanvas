@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil, Context, FillRule } from '../..';
+import { CanvasUtil, FillRule } from '../..';
 
 export default new NativeFunction({
     name: '$fill',
@@ -32,7 +32,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, style, rule]) {
+    async execute (ctx, [name, style, rule]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

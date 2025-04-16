@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, TextBaseline } from '../..';
+import { TextBaseline } from '../..';
 
 export default new NativeFunction({
     name: '$textBaseline',
@@ -24,7 +24,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, baseline]) {
+    async execute (ctx, [name, baseline]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;

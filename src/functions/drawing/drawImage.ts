@@ -1,8 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { createCanvas, Image } from '@napi-rs/canvas';
 import { indexedToRgba } from '@gifsx/gifsx';
-import { Context } from '../..';
-
 
 export default new NativeFunction({
     name: '$drawImage',
@@ -62,7 +60,7 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx: Context, [name, path, x, y, w, h, r]) {
+    async execute (ctx, [name, path, x, y, w, h, r]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
@@ -80,9 +78,11 @@ export default new NativeFunction({
 
             imageData.data.set(buffer.length === width * height * 4
                 ? buffer : indexedToRgba(
-                Uint8Array.from(buffer), frame.palette ?? Uint8Array.from([]),
-                frame.transparent
-            ));
+                    Uint8Array.from(buffer),
+                    frame.palette ?? Uint8Array.from([]),
+                    frame.transparent
+                )
+            );
             context.putImageData(imageData, 0, 0);
             
             img = canvas.toBuffer('image/png');

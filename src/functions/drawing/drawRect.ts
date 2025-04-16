@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil, Context, FillOrStrokeOrClear } from '../..';
+import { CanvasUtil, FillOrStrokeOrClear } from '../..';
 
 export default new NativeFunction({
     name: '$drawRect',
@@ -67,7 +67,7 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx: Context, [name, t, style, x, y, w, h, r]) {
+    async execute (ctx, [name, t, style, x, y, w, h, r]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;

@@ -1,5 +1,5 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { Context, GIFManager, parseArgs, loadFrame } from '../..';
+import { GIFManager, parseArgs, loadFrame } from '../..';
 import { DisposalMethod, Frame } from '@gifsx/gifsx';
 
 export default new NativeFunction({
@@ -40,7 +40,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, frame, options, speed]) {
+    async execute (ctx, [name, frame, options, speed]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
         

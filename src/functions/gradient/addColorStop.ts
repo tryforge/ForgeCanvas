@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, GradientManager } from '../..';
+import { GradientManager } from '../..';
 
 export default new NativeFunction({
     name: '$addColorStop',
@@ -31,7 +31,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, offset, color]) {
+    async execute (ctx, [name, offset, color]) {
         if (!(offset / 100 >= 0 && offset / 100 <= 1))
             return this.customError('Offset must be between 0 and 100');
         

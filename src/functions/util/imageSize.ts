@@ -1,7 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { Image, loadImage } from '@napi-rs/canvas';
-import { Context, WidthOrHeight } from '../..';
-
+import { WidthOrHeight } from '../..';
 
 export default new NativeFunction({
     name: '$imageSize',
@@ -27,7 +26,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [path, property]) {
+    async execute (ctx, [path, property]) {
         let image: Image | undefined;
 
         if (path.startsWith('images://') && ctx.imageManager)

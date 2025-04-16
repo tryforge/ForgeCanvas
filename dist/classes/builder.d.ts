@@ -4,7 +4,7 @@ export declare class CanvasBuilder {
     ctx: SKRSContext2D;
     util: {
         isValidFont: (font: string) => boolean;
-        parseStyle: (self: any, ctx: import("..").Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<any>;
+        parseStyle: (self: any, ctx: import("@tryforge/forgescript").Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<any>;
         calculateRectAlignOrBaseline: (XorY: number, WorH: number, AorB: import("..").RectAlign | import("..").RectBaseline) => number;
         parseFilters: (filters: string) => {
             filter: string;
@@ -34,6 +34,6 @@ export declare class CanvasBuilder {
     getPixels<T extends ColorDataType>(x: number, y: number, width: number, height: number, t?: T | null): T extends ColorDataType.Rgba ? number[] : string[];
     setPixels<T extends ColorDataType>(x: number, y: number, width: number, height: number, colors: T extends ColorDataType.Rgba ? number[] : string[], t?: T | null): void;
     resize(width: number, height: number): void;
-    dataUrl(mime: 'image/png' | 'image/jpeg' | 'image/webp'): string;
-    buffer(mime: 'image/png' | 'image/jpeg' | 'image/webp'): Buffer<ArrayBufferLike>;
+    dataUrl(mime?: 'image/png' | 'image/jpeg' | 'image/webp'): string;
+    buffer(mime?: 'image/png' | 'image/jpeg' | 'image/webp'): Buffer<ArrayBufferLike>;
 }

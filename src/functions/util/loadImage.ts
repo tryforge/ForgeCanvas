@@ -1,7 +1,7 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { createCanvas, loadImage } from '@napi-rs/canvas';
 import { hexToRgba, indexedToRgba } from '@gifsx/gifsx';
-import { ImageManager, Context, parseArgs } from '../..';
+import { ImageManager, parseArgs } from '../..';
 
 export default new NativeFunction({
     name: '$loadImage',
@@ -26,7 +26,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, src]) {
+    async execute (ctx, [name, src]) {
         if (!ctx.imageManager || !(ctx.imageManager instanceof ImageManager))
             ctx.imageManager = new ImageManager();
 

@@ -1,5 +1,4 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$NQmapPixel',
@@ -45,7 +44,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, r, g, b, a]) {
+    async execute (ctx, [name, r, g, b, a]) {
         const nq = ctx.neuquantManager?.get(name);
         if (!nq) return this.customError('No NeuQuant instance');
 

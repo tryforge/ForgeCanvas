@@ -1,6 +1,7 @@
 import { Image } from '@napi-rs/canvas';
+import { Context } from '@tryforge/forgescript';
 import { Frame } from '@gifsx/gifsx';
-import { Context, RectAlign, RectBaseline } from '..';
+import { RectAlign, RectBaseline } from '..';
 import { CanvasBuilder } from './builder';
 export declare const fontRegex: RegExp;
 export declare const rgbaRegex: RegExp;

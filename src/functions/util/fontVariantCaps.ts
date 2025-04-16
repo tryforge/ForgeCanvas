@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, FontVariantCaps } from '../..';
+import { FontVariantCaps } from '../..';
 
 export default new NativeFunction({
     name: '$fontVariantCaps',
@@ -25,7 +25,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, t]) {
+    async execute (ctx, [name, t]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;

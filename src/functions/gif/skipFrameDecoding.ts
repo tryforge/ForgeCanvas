@@ -1,6 +1,6 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { Context, GIFManager } from '../..';
 import { DecodeOptions } from '@gifsx/gifsx';
+import { GIFManager } from '../..';
 
 export default new NativeFunction({
     name: '$skipFrameDecoding',
@@ -25,7 +25,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, bool]) {
+    async execute (ctx, [name, bool]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
         if (!name && !ctx.gifManager.currentOptions)

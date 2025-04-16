@@ -1,6 +1,6 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { Context, NeuQuantManager } from '../..';
 import { NeuQuant } from '@gifsx/gifsx';
+import { NeuQuantManager } from '../..';
 
 export default new NativeFunction({
     name: '$newNeuQuant',
@@ -39,11 +39,17 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, sample, maxColors, pixels]) {
+    async execute (ctx, [name, sample, maxColors, pixels]) {
         if (!ctx.neuquantManager || !(ctx.neuquantManager instanceof NeuQuantManager))
             ctx.neuquantManager = new NeuQuantManager();
 
-        ctx.neuquantManager.set(name, new NeuQuant(sample, maxColors, Uint8Array.from(pixels as unknown as number[])));
+        ctx.neuquantManager.set(
+            name,
+            new NeuQuant(
+                sample, maxColors,
+                Uint8Array.from(pixels as unknown as number[])
+            )
+        );
         return this.success();
     }
 });

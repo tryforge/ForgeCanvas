@@ -1,8 +1,8 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { Context, GIFManager } from '../..';
 import { Decoder } from '@gifsx/gifsx';
 import { fetch } from 'undici';
 import { readFile } from 'node:fs/promises';
+import { GIFManager } from '../..';
 
 export default new NativeFunction({
     name: '$newGIFDecoder',
@@ -34,7 +34,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, path, options]) {
+    async execute (ctx, [name, path, options]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
 

@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, parseArgs, loadFrame } from '../..';
+import { parseArgs, loadFrame } from '../..';
 import { DisposalMethod, Frame } from '@gifsx/gifsx';
 
 export default new NativeFunction({
@@ -39,7 +39,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, frame, options, speed]) {
+    async execute (ctx, [name, frame, options, speed]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
             : ctx.gifManager?.lastCurrentEncoder;

@@ -1,5 +1,5 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { Context, FrameOption } from '../..';
+import { FrameOption } from '../..';
 import { Frame } from '@gifsx/gifsx';
 
 export default new NativeFunction({
@@ -26,7 +26,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, option]) {
+    async execute (ctx, [name, option]) {
         const frame = ctx.gifManager?.getFrame(name);
         if (!frame) return this.success();
 

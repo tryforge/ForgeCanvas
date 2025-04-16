@@ -1,7 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { writeFileSync } from 'node:fs';
-import { Context } from '../..';
-
 
 export default new NativeFunction({
     name: '$saveEncoder',
@@ -26,7 +24,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, path]) {
+    async execute (ctx, [name, path]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
             : ctx.gifManager?.lastCurrentEncoder;

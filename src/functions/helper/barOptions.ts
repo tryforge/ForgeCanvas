@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, BarOptions, } from '../..';
+import { BarOptions } from '../..';
 
 export default new NativeFunction({
     name: '$barOptions',
@@ -16,7 +16,7 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute(ctx: Context, [options]) {
+    async execute(ctx, [options]) {
         const opts = options.map(x => {
             const args = x.trim().split(':');
             return [args[0], args.slice(1)];
