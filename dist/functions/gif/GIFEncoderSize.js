@@ -1,1 +1,39 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),__1=require("../..");exports.default=new forgescript_1.NativeFunction({name:"$GIFEncoderSize",aliases:["$encoderSize"],description:"Returns the size of the GIF Encoder.",version:"1.2.0",brackets:!1,unwrap:!0,args:[{name:"gif",description:"Name of the Encoder.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"property",description:"The size property to return.",type:forgescript_1.ArgType.Enum,enum:__1.WidthOrHeight,required:!1,rest:!1}],async execute(t,[i,e]){const r=i?t.gifManager?.getEncoder(i):t.gifManager?.lastCurrentEncoder;return r?this.success(e!==null?r[__1.WidthOrHeight[typeof e=="string"?__1.WidthOrHeight[e]:e]]:JSON.stringify({width:r.width,height:r.height})):this.customError("No gif")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$GIFEncoderSize',
+    aliases: ['$encoderSize'],
+    description: 'Returns the size of the GIF Encoder.',
+    version: '1.2.0',
+    brackets: false,
+    unwrap: true,
+    args: [
+        {
+            name: 'gif',
+            description: 'Name of the Encoder.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'property',
+            description: 'The size property to return.',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.WidthOrHeight,
+            required: false,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, property]) {
+        const gif = name
+            ? ctx.gifManager?.getEncoder(name)
+            : ctx.gifManager?.lastCurrentEncoder;
+        if (!gif)
+            return this.customError('No gif');
+        return this.success(property !== null // @ts-ignore
+            ? gif[__1.WidthOrHeight[(typeof property === 'string' ? __1.WidthOrHeight[property] : property)]]
+            : JSON.stringify({ width: gif.width, height: gif.height }));
+    }
+});

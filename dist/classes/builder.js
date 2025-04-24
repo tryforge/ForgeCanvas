@@ -1,2 +1,334 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.CanvasBuilder=void 0;const canvas_1=require("@napi-rs/canvas"),gifsx_1=require("@gifsx/gifsx"),__1=require("..");class CanvasBuilder{ctx;util=__1.CanvasUtil;customProperties={};get width(){return this.ctx.canvas.width}get height(){return this.ctx.canvas.height}set width(a){this.resize(a,this.height)}set height(a){this.resize(this.width,a)}constructor(a,e){this.ctx=(0,canvas_1.createCanvas)(a,e).getContext("2d")}rect(a,e,r,s,n,l){const t=this.ctx;if(s??=t.canvas.width-e,n??=t.canvas.height-r,l??=0,this.customProperties.rectAlign&&(e=__1.CanvasUtil.calculateRectAlignOrBaseline(e,s,this.customProperties.rectAlign)),this.customProperties.rectBaseline&&(r=__1.CanvasUtil.calculateRectAlignOrBaseline(r,n,this.customProperties.rectBaseline)),a===__1.FillOrStrokeOrClear.none)return t.roundRect(e,r,s,n,l);if(!l){a===__1.FillOrStrokeOrClear.fill&&t.fillRect(e,r,s,n),a===__1.FillOrStrokeOrClear.stroke&&t.strokeRect(e,r,s,n),a===__1.FillOrStrokeOrClear.clear&&t.clearRect(e,r,s,n);return}t.save(),t.beginPath(),t.roundRect(e,r,s,n,l),{[__1.FillOrStrokeOrClear.clear]:()=>(t.clip(),t.clearRect(e,r,s,n)),[__1.FillOrStrokeOrClear.fill]:()=>t.fill(),[__1.FillOrStrokeOrClear.stroke]:()=>t.stroke()}[a](),t.restore()}text(a,e,r,s,n,l,t,i,o){const c=this.ctx,d=c.font,u=Number.parseFloat(__1.fontRegex.exec(n)[4]),m=t?e.split(`
-`):[e],k=(b,f,p,v)=>a===__1.FillOrStroke.fill?c.fillText(b,f,p,v):c.strokeText(b,f,p,v);let g=s;if(l??=void 0,o??=0,c.font=n,t||i)for(const b of m)if(i){let f="";b.split(" ").forEach((p,v)=>{p?.trim()!==""&&(l&&c.measureText(f+p+" ").width>l&&v>0?(k(f,r,g,l),f=p+" ",g+=u+o):f+=p+" ")}),k(f,r,g,l),g+=u+o}else k(b,r,g,l),g+=u+o;else k(e,r,s,l);c.font=d}async drawImage(a,e,r,s,n,l){const t=this.ctx;if(a=await(0,canvas_1.loadImage)(a),s??=a.width,n??=a.height,this.customProperties.rectAlign&&(e=__1.CanvasUtil.calculateRectAlignOrBaseline(e,s,this.customProperties.rectAlign)),this.customProperties.rectBaseline&&(r=__1.CanvasUtil.calculateRectAlignOrBaseline(r,n,this.customProperties.rectBaseline)),!l)return t.drawImage(a,e,r,s,n);t.save(),t.beginPath(),t.roundRect(e,r,s,n,l),t.clip(),t.drawImage(a,e,r,s,n),t.restore()}drawProgressBar(a,e,r,s,n,l={}){const t=this.ctx;n=Math.min(n||0,100)/100;const i={style:l?.style??"#FFFFFF",background:{enabled:l?.background?.enabled??!0,style:l?.background?.style??"#000000",radius:l?.background?.radius,type:l?.background?.type??"fill",padding:l?.background?.padding??0},type:l?.type??"fill",radius:l?.radius,direction:l?.direction??"horizontal",clip:l?.clip,left:l?.left};this.customProperties.rectAlign&&(a=__1.CanvasUtil.calculateRectAlignOrBaseline(a,r,this.customProperties.rectAlign)),this.customProperties.rectBaseline&&(e=__1.CanvasUtil.calculateRectAlignOrBaseline(e,s,this.customProperties.rectBaseline)),i.background.enabled&&(i.background.type!=="clear"?(t.save(),t[`${i.background.type}Style`]=i.background.style,t.beginPath(),t.roundRect(a,e,r,s,i.background.radius),t[i.background.type](),t.restore()):this.rect(__1.FillOrStrokeOrClear.clear,a,e,r,s,i.background.radius)),i.background.padding&&(r=r-i.background.padding*2,s=s-i.background.padding*2,a=a+i.background.padding,e=e+ +i.background.padding);const o=Math.min(["horizontal","both"].includes(i.direction)?r*n:r,r),c=Math.min(["vertical","both"].includes(i.direction)?s*n:s,s);return i.type==="clear"?(this.rect(__1.FillOrStrokeOrClear.clear,a,e,o,c,i.radius),[a,e,r,s,o,c]):(t.save(),i.clip!==void 0&&(t.beginPath(),t.roundRect(a,e,r,s,i.clip),t.clip()),i.left&&(t.fillStyle=i.left,t.beginPath(),t.roundRect(a,e,r,s,i.radius),t.fill()),t[`${i.type}Style`]=i.style,t.beginPath(),t.roundRect(a,e,o,c,i.radius),t[i.type](),t.restore(),[a,e,r,s,o,c])}drawPieChart(a,e,r,s,n,l={}){const t=this.ctx,i={type:l.type??"fill",background:{enabled:l.background?.enabled??!0,style:l.background?.style??"#000000",radius:l.background?.radius,type:l.background?.type??"fill",padding:l.background?.padding??0},radius:l.radius??Math.min(r,s)/2};this.customProperties.rectAlign&&(a=__1.CanvasUtil.calculateRectAlignOrBaseline(a,r,this.customProperties.rectAlign)),this.customProperties.rectBaseline&&(e=__1.CanvasUtil.calculateRectAlignOrBaseline(e,s,this.customProperties.rectBaseline)),i.background.enabled&&(i.background.type!=="clear"?(t.save(),t[`${i.background.type}Style`]=i.background.style,t.beginPath(),t.roundRect(a,e,r,s,i.background.radius),t[i.background.type](),t.restore()):this.rect(__1.FillOrStrokeOrClear.clear,a,e,r,s,i.background.radius)),i.background.padding&&(r=r-i.background.padding*2,s=s-i.background.padding*2,a=a+i.background.padding,e=e+i.background.padding);const o=n.reduce((d,u)=>d+u.value,0);let c=0;for(const d of n){const u=c+d.value/o*Math.PI*2;t.save(),t.beginPath(),t.moveTo(a+r/2,e+s/2),t.arc(a+r/2,e+s/2,Math.min(r,s)/2,c,u),t.arc(a+r/2,e+s/2,i.radius??0,u,c,!0),t.lineTo(a+r/2,e+s/2),t.closePath(),t.fillStyle=d.style,t.fill(),t.restore(),c=u}}measureText(a,e){const r=this.ctx,s=r.fillStyle,n=r.font;r.fillStyle="#000000",r.font=e;const l=r.measureText(a);return r.fillStyle=s,r.font=n,l}filter(a,e,r){const s=this.ctx;e&&typeof e=="string"&&(e=__1.Filters[e]);const n=e===__1.Filters.grayscale||e===__1.Filters.sepia?"%":e===__1.Filters.blur?"px":"";if(a===__1.FilterMethod.add){if(!e||!r)throw new Error("No filter or value provided");const l=__1.CanvasUtil.parseFilters((s.filter==="none"?"":s.filter)+`${__1.Filters[e]}(${r+n})`);s.filter=l?.map(t=>t?.raw)?.join(" ")?.trim()||"none"}else if(a===__1.FilterMethod.set){if(!e||!r)throw new Error("No filter or value provided");s.filter=`${__1.Filters[e]}(${r+n})`}else if(a===__1.FilterMethod.remove){if(!e)throw new Error("No filter provided");const l=__1.CanvasUtil.parseFilters(s.filter),t=l.findIndex(i=>i?.filter===__1.Filters[e]);t!==-1&&l.splice(t,1),s.filter=l.length>0?l?.map(i=>i?.raw)?.join(" ")?.trim():"none"}else if(a===__1.FilterMethod.clear)s.filter="none";else{if(a===__1.FilterMethod.get)return s.filter;if(a===__1.FilterMethod.json)return __1.CanvasUtil.parseFilters(s.filter)}}rotate(a){const e=this.ctx,r=e.canvas.width/2,s=e.canvas.height/2;e.translate(r,s),e.rotate(a*Math.PI/180),e.translate(-r,-s)}trim(){let a=this.ctx,e=a.canvas,r=a.getImageData(0,0,e.width,e.height),s=r.data.length,n,l={top:e.height,left:e.width,right:0,bottom:0},t,i;for(n=0;n<s;n+=4)r.data[n+3]!==0&&(t=n/4%e.width,i=Math.floor(n/4/e.width),t<l.left&&(l.left=t),i<l.top&&(l.top=i),i>l.bottom&&(l.bottom=i),t>l.right&&(l.right=t));const o=l.bottom-l.top+1,c=l.right-l.left+1,d=a.getImageData(l.left,l.top,c,o);e.width=c,e.height=o,a.putImageData(d,0,0)}getPixels(a,e,r,s,n){const l=this.ctx;r??=l.canvas.width,s??=l.canvas.height;const t=l.getImageData(a,e,r,s).data;return n===__1.ColorDataType.Rgba?Array.from(t):(0,gifsx_1.rgbaToHex)(Uint8Array.from(t),!1,!0)}setPixels(a,e,r,s,n,l){const t=this.ctx;r??=t.canvas.width,s??=t.canvas.height;const i=t.createImageData(r,s);l!==__1.ColorDataType.Rgba?i.data.set(Uint8ClampedArray.from((0,gifsx_1.hexToRgba)(n))):i.data.set(Uint8ClampedArray.from(n)),t.putImageData(i,a,e)}resize(a,e){const r=this.ctx,s=r.getImageData(0,0,r.canvas.width,r.canvas.height);r.canvas.width=a,r.canvas.height=e,r.putImageData(s,0,0)}dataUrl(a){return this.ctx.canvas.toDataURL(a??"image/png")}buffer(a){return this.ctx.canvas.toBuffer(a??"image/png")}}exports.CanvasBuilder=CanvasBuilder;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CanvasBuilder = void 0;
+const gifsx_1 = require("@gifsx/gifsx");
+const canvas_1 = require("@napi-rs/canvas");
+const __1 = require("..");
+class CanvasBuilder {
+    ctx;
+    util = __1.CanvasUtil;
+    customProperties = {};
+    get width() { return this.ctx.canvas.width; }
+    get height() { return this.ctx.canvas.height; }
+    set width(val) { this.resize(val, this.height); }
+    set height(val) { this.resize(this.width, val); }
+    constructor(width, height) {
+        this.ctx = (0, canvas_1.createCanvas)(width, height).getContext('2d');
+    }
+    rect(type, x, y, width, height, radius) {
+        const ctx = this.ctx;
+        width ??= ctx.canvas.width - x;
+        height ??= ctx.canvas.height - y;
+        radius ??= 0;
+        if (this.customProperties.rectAlign)
+            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
+        if (type === __1.FillOrStrokeOrClear.none)
+            return ctx.roundRect(x, y, width, height, radius);
+        if (!radius) {
+            if (type === __1.FillOrStrokeOrClear.fill)
+                ctx.fillRect(x, y, width, height);
+            if (type === __1.FillOrStrokeOrClear.stroke)
+                ctx.strokeRect(x, y, width, height);
+            if (type === __1.FillOrStrokeOrClear.clear)
+                ctx.clearRect(x, y, width, height);
+            return;
+        }
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, radius);
+        ({
+            [__1.FillOrStrokeOrClear.clear]: () => (ctx.clip(), ctx.clearRect(x, y, width, height)),
+            [__1.FillOrStrokeOrClear.fill]: () => ctx.fill(),
+            [__1.FillOrStrokeOrClear.stroke]: () => ctx.stroke()
+        })[type]();
+        ctx.restore();
+    }
+    ;
+    text(type, text, x, y, font, maxWidth, multiline, wrap, lineOffset) {
+        const ctx = this.ctx, oldfont = ctx.font, fontsize = Number.parseFloat(__1.fontRegex.exec(font)[4]), lines = multiline ? text.split('\n') : [text], func = (text, x, y, maxWidth) => type === __1.FillOrStroke.fill
+            ? ctx.fillText(text, x, y, maxWidth)
+            : ctx.strokeText(text, x, y, maxWidth);
+        let offset = y;
+        maxWidth ??= undefined;
+        lineOffset ??= 0;
+        ctx.font = font;
+        if (multiline || wrap) {
+            for (const t of lines) {
+                if (wrap) {
+                    let line = '';
+                    t.split(' ').forEach((word, i) => {
+                        if (word?.trim() === '')
+                            return;
+                        if (maxWidth && ctx.measureText(line + word + ' ').width > maxWidth && i > 0) {
+                            func(line, x, offset, maxWidth);
+                            line = word + ' ';
+                            offset += fontsize + lineOffset;
+                        }
+                        else
+                            line += word + ' ';
+                    });
+                    func(line, x, offset, maxWidth);
+                    offset += fontsize + lineOffset;
+                }
+                else {
+                    func(t, x, offset, maxWidth);
+                    offset += fontsize + lineOffset;
+                }
+            }
+        }
+        else
+            func(text, x, y, maxWidth);
+        ctx.font = oldfont;
+    }
+    async drawImage(image, x, y, width, height, radius) {
+        const ctx = this.ctx;
+        image = await (0, canvas_1.loadImage)(image);
+        width ??= image.width;
+        height ??= image.height;
+        if (this.customProperties.rectAlign)
+            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
+        if (!radius)
+            return ctx.drawImage(image, x, y, width, height);
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(x, y, width, height, radius);
+        ctx.clip();
+        ctx.drawImage(image, x, y, width, height);
+        ctx.restore();
+    }
+    drawProgressBar(x, y, width, height, progress, config = {}) {
+        const ctx = this.ctx;
+        progress = Math.min(progress || 0, 100) / 100;
+        const options = {
+            style: config?.style ?? '#FFFFFF',
+            background: {
+                enabled: config?.background?.enabled ?? true,
+                style: config?.background?.style ?? '#000000',
+                radius: config?.background?.radius,
+                type: config?.background?.type ?? 'fill',
+                padding: config?.background?.padding ?? 0
+            },
+            type: config?.type ?? 'fill',
+            radius: config?.radius,
+            direction: config?.direction ?? 'horizontal',
+            clip: config?.clip,
+            left: config?.left
+        };
+        if (this.customProperties.rectAlign)
+            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
+        if (options.background.enabled) {
+            if (options.background.type !== 'clear') {
+                ctx.save();
+                ctx[`${options.background.type}Style`] = options.background.style;
+                ctx.beginPath();
+                ctx.roundRect(x, y, width, height, options.background.radius);
+                ctx[options.background.type]();
+                ctx.restore();
+            }
+            else
+                this.rect(__1.FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
+        }
+        if (options.background.padding) {
+            width = width - options.background.padding * 2;
+            height = height - options.background.padding * 2;
+            x = x + options.background.padding;
+            y = y + +options.background.padding;
+        }
+        const pwidth = Math.min(['horizontal', 'both'].includes(options.direction)
+            ? width * progress : width, width);
+        const pheight = Math.min(['vertical', 'both'].includes(options.direction)
+            ? height * progress : height, height);
+        if (options.type === 'clear')
+            return (this.rect(__1.FillOrStrokeOrClear.clear, x, y, pwidth, pheight, options.radius), [x, y, width, height, pwidth, pheight]);
+        ctx.save();
+        if (options.clip !== undefined) {
+            ctx.beginPath();
+            ctx.roundRect(x, y, width, height, options.clip);
+            ctx.clip();
+        }
+        if (options.left) {
+            ctx.fillStyle = options.left;
+            ctx.beginPath();
+            ctx.roundRect(x, y, width, height, options.radius);
+            ctx.fill();
+        }
+        ctx[`${options.type}Style`] = options.style;
+        ctx.beginPath();
+        ctx.roundRect(x, y, pwidth, pheight, options.radius);
+        ctx[options.type]();
+        ctx.restore();
+        return [x, y, width, height, pwidth, pheight];
+    }
+    drawPieChart(x, y, width, height, data, config = {}) {
+        const ctx = this.ctx;
+        const options = {
+            type: config.type ?? 'fill',
+            background: {
+                enabled: config.background?.enabled ?? true,
+                style: config.background?.style ?? '#000000',
+                radius: config.background?.radius,
+                type: config.background?.type ?? 'fill',
+                padding: config.background?.padding ?? 0
+            },
+            radius: config.radius ?? Math.min(width, height) / 2,
+        };
+        if (this.customProperties.rectAlign)
+            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
+        if (this.customProperties.rectBaseline)
+            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
+        if (options.background.enabled) {
+            if (options.background.type !== 'clear') {
+                ctx.save();
+                ctx[`${options.background.type}Style`] = options.background.style;
+                ctx.beginPath();
+                ctx.roundRect(x, y, width, height, options.background.radius);
+                ctx[options.background.type]();
+                ctx.restore();
+            }
+            else
+                this.rect(__1.FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
+        }
+        if (options.background.padding) {
+            width = width - options.background.padding * 2;
+            height = height - options.background.padding * 2;
+            x = x + options.background.padding;
+            y = y + options.background.padding;
+        }
+        const total = data.reduce((acc, val) => acc + val.value, 0);
+        let angle = 0;
+        for (const seg of data) {
+            const angl = angle + (seg.value / total) * Math.PI * 2;
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x + width / 2, y + height / 2);
+            ctx.arc(x + width / 2, y + height / 2, Math.min(width, height) / 2, angle, angl);
+            ctx.arc(x + width / 2, y + height / 2, options.radius ?? 0, angl, angle, true);
+            ctx.lineTo(x + width / 2, y + height / 2);
+            ctx.closePath();
+            ctx.fillStyle = seg.style;
+            ctx.fill();
+            ctx.restore();
+            angle = angl;
+        }
+    }
+    measureText(text, font) {
+        const ctx = this.ctx, oldcolor = ctx.fillStyle, oldfont = ctx.font;
+        ctx.fillStyle = '#000000';
+        ctx.font = font;
+        const metrics = ctx.measureText(text);
+        ctx.fillStyle = oldcolor;
+        ctx.font = oldfont;
+        return metrics;
+    }
+    filter(method, filter, value) {
+        const ctx = this.ctx;
+        if (filter && typeof filter === 'string')
+            filter = __1.Filters[filter];
+        const PxOrPerc = filter === __1.Filters.grayscale || filter === __1.Filters.sepia ? '%' :
+            (filter === __1.Filters.blur ? 'px' : '');
+        if (method === __1.FilterMethod.add) {
+            if (!filter || !value)
+                throw new Error('No filter or value provided');
+            const result = __1.CanvasUtil.parseFilters((ctx.filter === 'none' ? '' : ctx.filter)
+                + `${__1.Filters[filter]}(${value + PxOrPerc})`);
+            ctx.filter = result?.map(x => x?.raw)?.join(' ')?.trim() || 'none';
+        }
+        else if (method === __1.FilterMethod.set) {
+            if (!filter || !value)
+                throw new Error('No filter or value provided');
+            ctx.filter = `${__1.Filters[filter]}(${value + PxOrPerc})`;
+        }
+        else if (method === __1.FilterMethod.remove) {
+            if (!filter)
+                throw new Error('No filter provided');
+            const filters = __1.CanvasUtil.parseFilters(ctx.filter);
+            const index = filters.findIndex((obj) => obj?.filter === __1.Filters[filter]);
+            if (index !== -1)
+                filters.splice(index, 1);
+            ctx.filter = filters.length > 0 ? filters?.map(x => x?.raw)?.join(' ')?.trim() : 'none';
+        }
+        else if (method === __1.FilterMethod.clear)
+            ctx.filter = 'none';
+        else if (method === __1.FilterMethod.get)
+            return ctx.filter;
+        else if (method === __1.FilterMethod.json)
+            return __1.CanvasUtil.parseFilters(ctx.filter);
+        return undefined;
+    }
+    rotate(angle) {
+        const ctx = this.ctx;
+        const centerX = ctx.canvas.width / 2;
+        const centerY = ctx.canvas.height / 2;
+        ctx.translate(centerX, centerY);
+        ctx.rotate((angle * Math.PI) / 180);
+        ctx.translate(-centerX, -centerY);
+    }
+    trim() {
+        let ctx = this.ctx, canvas = ctx.canvas, pixels = ctx.getImageData(0, 0, canvas.width, canvas.height), l = pixels.data.length, i, bound = {
+            top: canvas.height,
+            left: canvas.width,
+            right: 0,
+            bottom: 0
+        }, x, y;
+        for (i = 0; i < l; i += 4) {
+            if (pixels.data[i + 3] === 0)
+                continue;
+            x = (i / 4) % canvas.width;
+            y = Math.floor((i / 4) / canvas.width);
+            if (x < bound.left)
+                bound.left = x;
+            if (y < bound.top)
+                bound.top = y;
+            if (y > bound.bottom)
+                bound.bottom = y;
+            if (x > bound.right)
+                bound.right = x;
+        }
+        const height = bound.bottom - bound.top + 1;
+        const width = bound.right - bound.left + 1;
+        const trimmed = ctx.getImageData(bound.left, bound.top, width, height);
+        canvas.width = width;
+        canvas.height = height;
+        ctx.putImageData(trimmed, 0, 0);
+    }
+    getPixels(x, y, width, height, t) {
+        const ctx = this.ctx;
+        width ??= ctx.canvas.width;
+        height ??= ctx.canvas.height;
+        const data = ctx.getImageData(x, y, width, height).data;
+        if (t === __1.ColorDataType.Rgba)
+            return Array.from(data);
+        return (0, gifsx_1.rgbaToHex)(Uint8Array.from(data), false, true);
+    }
+    setPixels(x, y, width, height, colors, t) {
+        const ctx = this.ctx;
+        width ??= ctx.canvas.width;
+        height ??= ctx.canvas.height;
+        const data = ctx.createImageData(width, height);
+        if (t !== __1.ColorDataType.Rgba)
+            data.data.set(Uint8ClampedArray.from((0, gifsx_1.hexToRgba)(colors)));
+        else
+            data.data.set(Uint8ClampedArray.from(colors));
+        ctx.putImageData(data, x, y);
+    }
+    resize(width, height) {
+        const ctx = this.ctx, data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.canvas.width = width;
+        ctx.canvas.height = height;
+        ctx.putImageData(data, 0, 0);
+    }
+    dataUrl(mime) {
+        return this.ctx.canvas.toDataURL(mime ?? 'image/png');
+    }
+    buffer(mime) {
+        // @ts-ignore
+        return this.ctx.canvas.toBuffer(mime ?? 'image/png');
+    }
+}
+exports.CanvasBuilder = CanvasBuilder;

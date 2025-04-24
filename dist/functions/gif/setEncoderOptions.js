@@ -1,1 +1,44 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),gifsx_1=require("@gifsx/gifsx"),__1=require("../..");exports.default=new forgescript_1.NativeFunction({name:"$setEncoderOptions",aliases:["$setGIFOptions","$setEncoderConfig","$setGIFConfig"],description:"Sets the size and global palette for the new GIF encoder.",version:"1.2.0",brackets:!0,unwrap:!0,args:[{name:"width",description:"Width of the new canvas.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"height",description:"Height of the new canvas.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"palette",description:"Palette for the GIF.",type:forgescript_1.ArgType.Json,required:!1,rest:!1}],async execute(e,[t,s,r]){return(!e.gifManager||!(e.gifManager instanceof __1.GIFManager))&&(e.gifManager=new __1.GIFManager),r!==null&&!Array.isArray(r)?this.customError("The global palette must be an array"):(e.gifManager.currentEncoder.push(new gifsx_1.Encoder(t,s,Uint8Array.from(r??[]))),this.success())}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const gifsx_1 = require("@gifsx/gifsx");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$setEncoderOptions',
+    aliases: ['$setGIFOptions', '$setEncoderConfig', '$setGIFConfig'],
+    description: 'Sets the size and global palette for the new GIF encoder.',
+    version: '1.2.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'width',
+            description: 'Width of the new canvas.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'height',
+            description: 'Height of the new canvas.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'palette',
+            description: 'Palette for the GIF.',
+            type: forgescript_1.ArgType.Json,
+            required: false,
+            rest: false
+        }
+    ],
+    async execute(ctx, [w, h, palette]) {
+        if (!ctx.gifManager || !(ctx.gifManager instanceof __1.GIFManager))
+            ctx.gifManager = new __1.GIFManager();
+        if (palette !== null && !Array.isArray(palette))
+            return this.customError('The global palette must be an array');
+        ctx.gifManager.currentEncoder.push(new gifsx_1.Encoder(w, h, Uint8Array.from(palette ?? [])));
+        return this.success();
+    }
+});

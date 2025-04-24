@@ -1,1 +1,37 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$imageSmoothing",description:"Sets or returns the image smoothing in a canvas.",version:"1.0.0",aliases:["$imageSmooth"],brackets:!1,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"enabled",description:"Determines whether scaled images are smoothed or not.",type:forgescript_1.ArgType.Boolean,required:!1,rest:!1}],async execute(r,[a,t]){const e=(a?r.canvasManager?.get(a):r.canvasManager?.lastCurrent)?.ctx;return e?this.success(t?(e.imageSmoothingEnabled=t,void 0):e.imageSmoothingEnabled):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$imageSmoothing',
+    description: 'Sets or returns the image smoothing in a canvas.',
+    version: '1.0.0',
+    aliases: ["$imageSmooth"],
+    brackets: false,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'enabled',
+            description: 'Determines whether scaled images are smoothed or not.',
+            type: forgescript_1.ArgType.Boolean,
+            required: false,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, enabled]) {
+        const canvas = (name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas)
+            return this.customError('No canvas');
+        return this.success(enabled
+            ? (canvas.imageSmoothingEnabled = enabled, undefined)
+            : canvas.imageSmoothingEnabled);
+    }
+});

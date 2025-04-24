@@ -1,1 +1,75 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),__1=require("../..");exports.default=new forgescript_1.NativeFunction({name:"$putPixels",aliases:["$putImageData","$setPixels"],description:"Places pixels in the canvas.",version:"1.0.0",brackets:!0,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"pixels",description:"The pixels to place.",type:forgescript_1.ArgType.Json,required:!0,rest:!1},{name:"x",description:"The X coordinate of the top-left corner of the rectangle from which the pixel colors will be extracted.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"y",description:"The Y coordinate of the top-left corner of the rectangle from which the pixel colors will be extracted.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"width",description:"The width of the rectangle from which the pixel colors will be extracted.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"height",description:"The height of the rectangle from which the pixel colors will be extracted.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"type",description:"The pixels (image data) content type.",type:forgescript_1.ArgType.Enum,enum:__1.ColorDataType,required:!1,rest:!1}],async execute(e,[r,t,a,i,o,n,c]){const s=r?e.canvasManager?.get(r):e.canvasManager?.lastCurrent;return s?Array.isArray(t)?(s.setPixels(a,i,o,n,t,c),this.success()):this.customError("Invalid pixels"):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$putPixels',
+    aliases: ['$putImageData', '$setPixels'],
+    description: 'Places pixels in the canvas.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'pixels',
+            description: 'The pixels to place.',
+            type: forgescript_1.ArgType.Json,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'x',
+            description: 'The X coordinate of the top-left corner of the rectangle from which the pixel colors will be extracted.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'y',
+            description: 'The Y coordinate of the top-left corner of the rectangle from which the pixel colors will be extracted.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'width',
+            description: 'The width of the rectangle from which the pixel colors will be extracted.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'height',
+            description: 'The height of the rectangle from which the pixel colors will be extracted.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'type',
+            description: 'The pixels (image data) content type.',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.ColorDataType,
+            required: false,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, pixels, x, y, w, h, t]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError('No canvas');
+        if (!Array.isArray(pixels))
+            return this.customError('Invalid pixels');
+        canvas.setPixels(x, y, w, h, pixels, t);
+        return this.success();
+    }
+});

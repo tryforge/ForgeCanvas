@@ -1,1 +1,93 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),canvas_1=require("@napi-rs/canvas"),gifsx_1=require("@gifsx/gifsx");exports.default=new forgescript_1.NativeFunction({name:"$drawImage",aliases:["$placeImage"],description:"Draws an image on a canvas.",version:"1.0.0",brackets:!0,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"path",description:"The image path.",type:forgescript_1.ArgType.String,required:!0,rest:!1},{name:"x",description:"The image start X coordinate.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"y",description:"The image start Y coordinate.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"width",description:"The image width.",type:forgescript_1.ArgType.Number,required:!1,rest:!1},{name:"height",description:"The image height.",type:forgescript_1.ArgType.Number,required:!1,rest:!1},{name:"radius",description:"The image radius.",type:forgescript_1.ArgType.Number,required:!1,rest:!0}],async execute(r,[o,e,d,p,l,h,s]){const c=o?r.canvasManager?.get(o):r.canvasManager?.lastCurrent;if(!c)return this.customError("No canvas");let a=e;if(e.startsWith("frame://")){const t=r.gifManager?.getFrame(e.slice(8));if(!t)return this.customError("No frame");const{width:i,height:n,buffer:g}=t,u=(0,canvas_1.createCanvas)(i,n),m=u.getContext("2d"),f=m.createImageData(i,n);f.data.set(g.length===i*n*4?g:(0,gifsx_1.indexedToRgba)(Uint8Array.from(g),t.palette??Uint8Array.from([]),t.transparent)),m.putImageData(f,0,0),a=u.toBuffer("image/png")}else e.startsWith("images://")&&r.imageManager?a=r.imageManager.get(e.slice(9)):e.startsWith("canvas://")&&(a=r.canvasManager?.get(e.slice(9))?.buffer("image/png"));return a?(await c.drawImage(a,d,p,l,h,s.length===1?s[0]:s),this.success()):this.customError("Failed to load an image.")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const canvas_1 = require("@napi-rs/canvas");
+const gifsx_1 = require("@gifsx/gifsx");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$drawImage',
+    aliases: ['$placeImage'],
+    description: 'Draws an image on a canvas.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'path',
+            description: 'The image path.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'x',
+            description: 'The image start X coordinate.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'y',
+            description: 'The image start Y coordinate.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'width',
+            description: 'The image width.',
+            type: forgescript_1.ArgType.Number,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'height',
+            description: 'The image height.',
+            type: forgescript_1.ArgType.Number,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'radius',
+            description: 'The image radius.',
+            type: forgescript_1.ArgType.Number,
+            required: false,
+            rest: true
+        }
+    ],
+    async execute(ctx, [name, path, x, y, w, h, r]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError('No canvas');
+        let img = path;
+        if (path.startsWith('frame://')) {
+            const frame = ctx.gifManager?.getFrame(path.slice(8));
+            if (!frame)
+                return this.customError('No frame');
+            const { width, height, buffer } = frame;
+            const canvas = (0, canvas_1.createCanvas)(width, height);
+            const context = canvas.getContext('2d');
+            const imageData = context.createImageData(width, height);
+            imageData.data.set(buffer.length === width * height * 4
+                ? buffer : (0, gifsx_1.indexedToRgba)(Uint8Array.from(buffer), frame.palette ?? Uint8Array.from([]), frame.transparent));
+            context.putImageData(imageData, 0, 0);
+            img = canvas.toBuffer('image/png');
+        }
+        else if (path.startsWith('images://') && ctx.imageManager)
+            img = ctx.imageManager.get(path.slice(9));
+        else if (path.startsWith('canvas://'))
+            img = ctx.canvasManager?.get(path.slice(9))?.buffer('image/png');
+        if (!img)
+            return this.customError('Failed to load an image.');
+        await canvas.drawImage(img, x, y, w, h, r.length === 1 ? r[0] : r);
+        return this.success();
+    }
+});

@@ -1,1 +1,36 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$rotate",aliases:["$rotateCanvas","$rotation"],description:"Rotates a canvas.",version:"1.0.0",brackets:!0,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"angle",description:"The rotation angle.",type:forgescript_1.ArgType.Number,required:!0,rest:!1}],async execute(e,[r,a]){const t=r?e.canvasManager?.get(r):e.canvasManager?.lastCurrent;return t?(t.rotate(a),this.success()):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$rotate',
+    aliases: ['$rotateCanvas', '$rotation'],
+    description: 'Rotates a canvas.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'angle',
+            description: 'The rotation angle.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, angle]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError('No canvas');
+        canvas.rotate(angle);
+        return this.success();
+    }
+});

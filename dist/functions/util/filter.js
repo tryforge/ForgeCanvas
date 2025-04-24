@@ -1,1 +1,52 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),__1=require("../..");exports.default=new forgescript_1.NativeFunction({name:"$filter",description:"Use filters in your canvas.",version:"1.0.0",brackets:!0,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"method",description:"The method.",type:forgescript_1.ArgType.Enum,enum:__1.FilterMethod,required:!0,rest:!1},{name:"filter",description:"Name of the filter.",type:forgescript_1.ArgType.Enum,enum:__1.Filters,required:!1,rest:!1},{name:"value",description:"Filter's value.",type:forgescript_1.ArgType.String,required:!1,rest:!1}],async execute(r,[t,a,n,i]){const s=t?r.canvasManager?.get(t):r.canvasManager?.lastCurrent;if(!s)return this.customError("No canvas");const e=s.filter(a,n,i);return this.success(typeof e=="object"?JSON.stringify(e):e)}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$filter',
+    description: 'Use filters in your canvas.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'method',
+            description: 'The method.',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.FilterMethod,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'filter',
+            description: 'Name of the filter.',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.Filters,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'value',
+            description: 'Filter\'s value.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, method, filter, value]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError('No canvas');
+        const res = canvas.filter(method, filter, value);
+        return this.success(typeof res === 'object' ? JSON.stringify(res) : res);
+    }
+});

@@ -1,1 +1,38 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$readNextFrame",description:"Reads and saves the next frame (including the buffer) of the GIF Decoder into an env.",version:"1.2.0",brackets:!0,unwrap:!0,args:[{name:"gif",description:"Name of the Decoder.",type:forgescript_1.ArgType.String,required:!0,rest:!1},{name:"name",description:"Name of the env to save the frame info.",type:forgescript_1.ArgType.String,required:!0,rest:!1}],async execute(e,[a,r]){const t=e.gifManager?.getDecoder(a);if(!t)return this.customError("No gif");const s=t.readNextFrame();return s?(e.gifManager?.setFrame(r,s),this.success(r)):(e.gifManager?.removeFrame(r),this.success())}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$readNextFrame',
+    description: 'Reads and saves the next frame (including the buffer) of the GIF Decoder into an env.',
+    version: '1.2.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'gif',
+            description: 'Name of the Decoder.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'name',
+            description: 'Name of the env to save the frame info.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, f]) {
+        const gif = ctx.gifManager?.getDecoder(name);
+        if (!gif)
+            return this.customError('No gif');
+        const frame = gif.readNextFrame();
+        if (frame) {
+            ctx.gifManager?.setFrame(f, frame);
+            return this.success(f);
+        }
+        ctx.gifManager?.removeFrame(f);
+        return this.success();
+    }
+});

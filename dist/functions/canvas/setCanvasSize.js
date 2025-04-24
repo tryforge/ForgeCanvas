@@ -1,1 +1,35 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),__1=require("../..");exports.default=new forgescript_1.NativeFunction({name:"$setCanvasSize",aliases:["$setCanvasDimensions"],description:"Sets size of the new canvas.",version:"1.0.0",brackets:!0,unwrap:!0,args:[{name:"width",description:"Width of the new canvas.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"height",description:"Height of the new canvas.",type:forgescript_1.ArgType.Number,required:!0,rest:!1}],async execute(e,[a,r]){return(!e.canvasManager||!(e.canvasManager instanceof __1.CanvasManager))&&(e.canvasManager=new __1.CanvasManager),e.canvasManager.current.push(new __1.CanvasBuilder(a,r)),this.success()}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$setCanvasSize',
+    aliases: ['$setCanvasDimensions'],
+    description: 'Sets size of the new canvas.',
+    version: '1.0.0',
+    brackets: true,
+    deprecated: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'width',
+            description: 'Width of the new canvas.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'height',
+            description: 'Height of the new canvas.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        }
+    ],
+    async execute(ctx, [w, h]) {
+        if (!ctx.canvasManager || !(ctx.canvasManager instanceof __1.CanvasManager))
+            ctx.canvasManager = new __1.CanvasManager();
+        ctx.canvasManager.current.push(new __1.CanvasBuilder(w, h));
+        return this.success();
+    }
+});

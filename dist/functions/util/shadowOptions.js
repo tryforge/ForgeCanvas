@@ -1,1 +1,51 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$shadowOptions",aliases:["$shadowConfig"],description:"Sets or returns the shadow options in a canvas.",version:"1.1.0",brackets:!0,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"options",description:"The options.",type:forgescript_1.ArgType.Json,required:!0,rest:!1}],async execute(t,[a,e]){const r=(a?t.canvasManager?.get(a):t.canvasManager?.lastCurrent)?.ctx;if(!r)return this.customError("No canvas");typeof e=="string"&&(e=JSON.parse(e));const n={color:"shadowColor",blur:"shadowBlur",offsetX:"shadowOffsetX",offsetY:"shadowOffsetY"},o=[];if(Array.isArray(e))for(const s in e)o.push(r[n[s]]);else for(const s in e)r[n?.[s]]=e[x];return this.success(Array.isArray(e)?JSON.stringify(o):void 0)}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$shadowOptions',
+    aliases: ['$shadowConfig'],
+    description: 'Sets or returns the shadow options in a canvas.',
+    version: '1.1.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'options',
+            description: 'The options.',
+            type: forgescript_1.ArgType.Json,
+            required: true,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, options]) {
+        const canvas = (name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas)
+            return this.customError('No canvas');
+        if (typeof options === 'string')
+            options = JSON.parse(options);
+        const shadowOptions = {
+            color: 'shadowColor',
+            blur: 'shadowBlur',
+            offsetX: 'shadowOffsetX',
+            offsetY: 'shadowOffsetY'
+        };
+        const res = [];
+        if (!Array.isArray(options)) {
+            for (const option in options) // @ts-ignore
+                canvas[shadowOptions?.[option]] = options[x];
+        }
+        else
+            for (const option in options)
+                res.push(canvas[shadowOptions[option]]);
+        return this.success(Array.isArray(options) ? JSON.stringify(res) : undefined);
+    }
+});

@@ -1,1 +1,49 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),gifsx_1=require("@gifsx/gifsx"),__1=require("../..");exports.default=new forgescript_1.NativeFunction({name:"$newNeuQuant",aliases:["$createNeuQuant","$NeuQuant"],description:"Creates a new NeuQuant instance.",version:"1.2.1",brackets:!0,unwrap:!0,args:[{name:"name",description:"Name of the new NeuQuant instance.",type:forgescript_1.ArgType.String,required:!0,rest:!1},{name:"sample",description:"Sample factor.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"maxColors",description:"Maximum number of colors.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"pixels",description:"The pixels.",type:forgescript_1.ArgType.Json,required:!0,rest:!1}],async execute(e,[r,n,t,a]){return(!e.neuquantManager||!(e.neuquantManager instanceof __1.NeuQuantManager))&&(e.neuquantManager=new __1.NeuQuantManager),e.neuquantManager.set(r,new gifsx_1.NeuQuant(n,t,Uint8Array.from(a))),this.success()}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const gifsx_1 = require("@gifsx/gifsx");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$newNeuQuant',
+    aliases: ['$createNeuQuant', '$NeuQuant'],
+    description: 'Creates a new NeuQuant instance.',
+    version: '1.2.1',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'name',
+            description: 'Name of the new NeuQuant instance.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'sample',
+            description: 'Sample factor.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'maxColors',
+            description: 'Maximum number of colors.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'pixels',
+            description: 'The pixels.',
+            type: forgescript_1.ArgType.Json,
+            required: true,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, sample, maxColors, pixels]) {
+        if (!ctx.neuquantManager || !(ctx.neuquantManager instanceof __1.NeuQuantManager))
+            ctx.neuquantManager = new __1.NeuQuantManager();
+        ctx.neuquantManager.set(name, new gifsx_1.NeuQuant(sample, maxColors, Uint8Array.from(pixels)));
+        return this.success();
+    }
+});

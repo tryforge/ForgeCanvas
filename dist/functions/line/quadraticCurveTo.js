@@ -1,1 +1,57 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$quadraticCurveTo",aliases:["$quadraticCurve","$quadraticLineTo"],description:"Draws a quadratic B\xE9zier curve in the current path.",version:"1.0.0",brackets:!0,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"cx",description:"The X coordinate of the control point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"cy",description:"The Y coordinate of the control point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"x",description:"The X coordinate of the end point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"y",description:"The Y coordinate of the end point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1}],async execute(e,[r,a,n,i,s]){const t=r?e.canvasManager?.get(r):e.canvasManager?.lastCurrent;return t?(t.ctx.quadraticCurveTo(a,n,i,s),this.success()):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$quadraticCurveTo',
+    aliases: ['$quadraticCurve', '$quadraticLineTo'],
+    description: 'Draws a quadratic Bézier curve in the current path.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'cx',
+            description: 'The X coordinate of the control point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'cy',
+            description: 'The Y coordinate of the control point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'x',
+            description: 'The X coordinate of the end point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'y',
+            description: 'The Y coordinate of the end point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, cx, cy, x, y]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError('No canvas');
+        canvas.ctx.quadraticCurveTo(cx, cy, x, y);
+        return this.success();
+    }
+});

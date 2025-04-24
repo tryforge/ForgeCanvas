@@ -1,1 +1,42 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$translate",description:"Adds a translation transformation.",version:"1.0.0",brackets:!0,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"x",description:"Distance to move in the horizontal direction.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"y",description:"Distance to move in the vertical direction.",type:forgescript_1.ArgType.Number,required:!0,rest:!1}],async execute(e,[r,a,s]){const t=r?e.canvasManager?.get(r):e.canvasManager?.lastCurrent;return t?(t.ctx.translate(a,s),this.success()):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$translate',
+    description: 'Adds a translation transformation.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'x',
+            description: 'Distance to move in the horizontal direction.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'y',
+            description: 'Distance to move in the vertical direction.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, x, y]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError('No canvas');
+        canvas.ctx.translate(x, y);
+        return this.success();
+    }
+});

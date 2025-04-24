@@ -1,1 +1,36 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$lineDashOffset",description:"Sets or returns the line dash offset in a canvas.",version:"1.0.0",brackets:!1,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"offset",description:"The new offset.",type:forgescript_1.ArgType.Number,required:!1,rest:!1}],async execute(s,[r,t]){const e=(r?s.canvasManager?.get(r):s.canvasManager?.lastCurrent)?.ctx;return e?this.success(t?(e.lineDashOffset=t,void 0):e.lineDashOffset):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$lineDashOffset',
+    description: 'Sets or returns the line dash offset in a canvas.',
+    version: '1.0.0',
+    brackets: false,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'offset',
+            description: 'The new offset.',
+            type: forgescript_1.ArgType.Number,
+            required: false,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, offset]) {
+        const canvas = (name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas)
+            return this.customError('No canvas');
+        return this.success(offset
+            ? (canvas.lineDashOffset = offset, undefined)
+            : canvas.lineDashOffset);
+    }
+});
