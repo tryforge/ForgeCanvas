@@ -27,8 +27,7 @@ $addField[Reviewers;$math[$get[good]+$get[bad]]]
 $addField[Pos To Neg; $round[$math[$get[good]/($get[good]+$get[bad])*100]]%:$round[$math[$get[bad]/($get[good]+$get[bad])*100]]%]
 
 $c[Creates The Canvas Baseplate and sets the canvas size!]
-$createCanvas[profile;
- $setCanvasSize[90;50]]
+$createCanvas[profile;90;50]
  $c[Draws a red bar to reprasent negative and green bar from positive]
 $drawRect[profile;fill;#006400;0;0;$round[$math[(900*$get[good]/($get[good]+$get[bad]))]];50]
 $drawRect[profile;fill;#8B0000;$round[$math[(900*$get[good]/($get[good]+$get[bad]))]];0;$round[$math[(900*$get[bad]/($get[good]+$get[bad]))]];50]
