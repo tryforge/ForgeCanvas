@@ -41,7 +41,7 @@ export default new NativeFunction({
         const res: any[] = [];
         if (!Array.isArray(options)) {
             for (const option in options) // @ts-ignore
-                canvas[shadowOptions?.[option]] = options[x];
+                canvas[shadowOptions?.[option]] = options[option];
         } else for (const option in options)
             res.push(canvas[shadowOptions[option]]);
 
