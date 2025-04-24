@@ -7,6 +7,7 @@ export default new NativeFunction({
     description: 'Sets size of the new canvas.',
     version: '1.0.0',
     brackets: true,
+    deprecated: true,
     unwrap: true,
     args: [
         {

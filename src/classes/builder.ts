@@ -1,10 +1,10 @@
+import { hexToRgba, rgbaToHex } from '@gifsx/gifsx';
 import {
     createCanvas,
     loadImage,
     SKRSContext2D,
     Image
 } from '@napi-rs/canvas';
-import { hexToRgba, rgbaToHex } from '@gifsx/gifsx';
 import {
     CustomCanvasProperties,
     FillOrStroke,
