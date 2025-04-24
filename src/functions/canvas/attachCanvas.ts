@@ -1,6 +1,6 @@
-import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { NativeFunction, ArgType, Context } from '@tryforge/forgescript';
 import { AttachmentBuilder } from 'discord.js';
-import { Context, ImageFormat } from '../../';
+import { ImageFormat } from '../..';
 
 export default new NativeFunction({
     name: '$attachCanvas',
@@ -33,11 +33,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, filename, f]) {
-        const canvas = ctx.canvasManager?.get(name)?.ctx?.canvas;
+    async execute (ctx, [name, filename, f]) {
+        const canvas = ctx.canvasManager?.get(name);
         if (!canvas) return this.customError('No canvas');
 
-        ctx.container.files.push(new AttachmentBuilder(canvas.toBuffer((f !== null 
+        ctx.container.files.push(new AttachmentBuilder(canvas.buffer((f !== null 
             ? 'image/' + (typeof f === 'number' ? ImageFormat[f] : f)
         : 'image/png') as any), {
             name: filename ?? `${name}.png`

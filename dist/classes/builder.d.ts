@@ -1,8 +1,17 @@
 import { SKRSContext2D, Image } from '@napi-rs/canvas';
-import { CustomCanvasProperties, FillOrStroke, FillOrStrokeOrClear, FilterMethod, Filters, CanvasUtil, ProgressBarOptions, ColorDataType, PieChartOptions, BarData } from '..';
+import { CustomCanvasProperties, FillOrStroke, FillOrStrokeOrClear, FilterMethod, Filters, ProgressBarOptions, ColorDataType, PieChartOptions, BarData } from '..';
 export declare class CanvasBuilder {
     ctx: SKRSContext2D;
-    util: typeof CanvasUtil;
+    util: {
+        isValidFont: (font: string) => boolean;
+        parseStyle: (self: any, ctx: import("@tryforge/forgescript").Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<any>;
+        calculateRectAlignOrBaseline: (XorY: number, WorH: number, AorB: import("..").RectAlign | import("..").RectBaseline) => number;
+        parseFilters: (filters: string) => {
+            filter: string;
+            value: string;
+            raw: string;
+        }[];
+    };
     customProperties: CustomCanvasProperties;
     get width(): number;
     get height(): number;
@@ -15,17 +24,16 @@ export declare class CanvasBuilder {
     drawProgressBar(x: number, y: number, width: number, height: number, progress: number, config?: ProgressBarOptions): number[];
     drawPieChart(x: number, y: number, width: number, height: number, data: BarData[], config?: PieChartOptions): void;
     measureText(text: string, font: string): TextMetrics;
-    filter(method: FilterMethod, filter?: Filters | null, value?: string | null): string | {
+    filter<T extends FilterMethod>(method: T, filter?: Filters | null, value?: string | null): T extends FilterMethod.get ? string : T extends FilterMethod.json ? {
         filter: string;
         value: string;
         raw: string;
-    }[] | undefined;
+    }[] : void;
     rotate(angle: number): void;
     trim(): void;
     getPixels<T extends ColorDataType>(x: number, y: number, width: number, height: number, t?: T | null): T extends ColorDataType.Rgba ? number[] : string[];
     setPixels<T extends ColorDataType>(x: number, y: number, width: number, height: number, colors: T extends ColorDataType.Rgba ? number[] : string[], t?: T | null): void;
     resize(width: number, height: number): void;
-    get dataUrl(): string;
-    get buffer(): Buffer;
+    dataUrl(mime?: 'image/png' | 'image/jpeg' | 'image/webp'): string;
+    buffer(mime?: 'image/png' | 'image/jpeg' | 'image/webp'): Buffer<ArrayBufferLike>;
 }
-//# sourceMappingURL=builder.d.ts.map

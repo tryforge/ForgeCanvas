@@ -1,5 +1,5 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { CanvasBuilder, CanvasManager, Context } from '../..';
+import { CanvasBuilder, CanvasManager } from '../..';
 
 export default new NativeFunction({
     name: '$setCanvasSize',
@@ -7,6 +7,7 @@ export default new NativeFunction({
     description: 'Sets size of the new canvas.',
     version: '1.0.0',
     brackets: true,
+    deprecated: true,
     unwrap: true,
     args: [
         {
@@ -24,7 +25,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [w, h]) {
+    async execute (ctx, [w, h]) {
         if (!ctx.canvasManager || !(ctx.canvasManager instanceof CanvasManager))
             ctx.canvasManager = new CanvasManager();
 

@@ -1,7 +1,7 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { ImageManager, Context, parseArgs } from '../..';
 import { createCanvas, loadImage } from '@napi-rs/canvas';
 import { hexToRgba, indexedToRgba } from '@gifsx/gifsx';
+import { ImageManager, parseArgs } from '../..';
 
 export default new NativeFunction({
     name: '$loadImage',
@@ -26,11 +26,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, src]) {
+    async execute (ctx, [name, src]) {
         if (!ctx.imageManager || !(ctx.imageManager instanceof ImageManager))
             ctx.imageManager = new ImageManager();
 
-        let source;
+        let source: Buffer | string | null = null;
         if (['rgba://', 'rgb://', 'hex://'].find(x => src.startsWith(x))) {
             const [size, data] = parseArgs(src, src.split('//')[0].length + 2, 2);
             const [width, height] = size.split('x').map(Number);
@@ -56,7 +56,7 @@ export default new NativeFunction({
         } else if (src.startsWith('canvas://')) {
             const canvas = ctx.canvasManager?.get(src.slice(9));
             if (!canvas) return this.customError('Invalid canvas');
-            source = canvas.buffer;
+            source = canvas.buffer('image/png');
         } else if (src.startsWith('frame://')) {
             const frame = ctx.gifManager?.getFrame(src.slice(8));
             if (!frame) return this.customError('No frame');
@@ -66,18 +66,19 @@ export default new NativeFunction({
             const context = canvas.getContext('2d');
             const imageData = context.createImageData(width, height);
 
-            imageData.data.set(buffer.length === width * height * 4
-                            ? buffer : indexedToRgba(
-                            Uint8Array.from(buffer), frame.palette ?? Uint8Array.from([]),
-                            frame.transparent
-                        ));
+            imageData.data.set(
+                buffer.length === width * height * 4
+                    ? buffer : indexedToRgba(
+                        Uint8Array.from(buffer), frame.palette ?? Uint8Array.from([]),
+                        frame.transparent
+                    )
+            );
             context.putImageData(imageData, 0, 0);
             
             source = canvas.toBuffer('image/png');
         } else source = src;
 
         if (!source) return this.customError('Invalid source');
-
         ctx.imageManager.set(name, await loadImage(source));
         return this.success();
     }

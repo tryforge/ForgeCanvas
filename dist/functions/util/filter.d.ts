@@ -28,4 +28,3 @@ declare const _default: NativeFunction<[{
     rest: false;
 }], true>;
 export default _default;
-//# sourceMappingURL=filter.d.ts.map

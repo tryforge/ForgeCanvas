@@ -1,9 +1,14 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$setEncoderLoops',
-    aliases: ['$setEncoderRepeat', '$setGIFEncoderRepeat', '$setGIFEncoderLoops', '$setLoops', '$setRepeat'],
+    aliases: [
+        '$setEncoderRepeat',
+        '$setGIFEncoderRepeat',
+        '$setGIFEncoderLoops',
+        '$setLoops',
+        '$setRepeat'
+    ],
     description: 'Sets the number of loops for the GIF Encoder.',
     version: '1.2.0',
     brackets: true,
@@ -24,12 +29,10 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, loops]) {
+    async execute (ctx, [name, loops]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
-                : !name && ctx.gifManager?.currentEncoder?.length !== 0 
-                    ? ctx.gifManager?.currentEncoder?.[ctx.gifManager?.currentEncoder?.length - 1] : null;
-        
+            : ctx.gifManager?.lastCurrentEncoder;
         if (!gif) return this.customError('No gif');
 
         gif.setRepeat(loops);

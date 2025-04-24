@@ -1,1 +1,45 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),__1=require("../..");exports.default=new forgescript_1.NativeFunction({name:"$frameOption",aliases:["$frameProperty","$gifFrameOption","$frameProp","$frameOpt"],description:"Sets or returns a GIF Frame option.",version:"1.2.0",brackets:!0,unwrap:!0,args:[{name:"frame",description:"Name of the GIF Frame.",type:forgescript_1.ArgType.String,required:!0,rest:!1},{name:"option",description:"Option to get.",type:forgescript_1.ArgType.Enum,enum:__1.FrameOption,required:!0,rest:!1}],async execute(i,[n,r]){const s=i.gifManager?.getFrame(n);if(!s)return this.success();const e=s?.[typeof r=="number"?__1.FrameOption[r]:r];return e instanceof Uint8ClampedArray||e instanceof ArrayBuffer||Array.isArray(e)?e instanceof Uint8ClampedArray?this.success(`[${Array.from(e).join(", ")}]`):Array.isArray(e)?this.success(`[${e.map(t=>typeof t=="string"?`"${t}"`:t).join(", ")}]`):this.success(`[${Array.from(new Uint8Array(e)).join(", ")}]`):this.success(e)}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$frameOption',
+    aliases: ['$frameProperty', '$gifFrameOption', '$frameProp', '$frameOpt'],
+    description: 'Sets or returns a GIF Frame option.',
+    version: '1.2.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'frame',
+            description: 'Name of the GIF Frame.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'option',
+            description: 'Option to get.',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.FrameOption,
+            required: true,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, option]) {
+        const frame = ctx.gifManager?.getFrame(name);
+        if (!frame)
+            return this.success();
+        const opt = frame?.[(typeof option === 'number'
+            ? __1.FrameOption[option] : option)];
+        if (opt instanceof Uint8ClampedArray || opt instanceof ArrayBuffer || Array.isArray(opt)) {
+            if (opt instanceof Uint8ClampedArray)
+                return this.success(`[${Array.from(opt).join(', ')}]`);
+            if (Array.isArray(opt))
+                return this.success(`[${opt.map(x => typeof x === 'string' ? `"${x}"` : x).join(', ')}]`);
+            return this.success(`[${Array.from(new Uint8Array(opt)).join(', ')}]`);
+        }
+        ;
+        return this.success(opt);
+    }
+});

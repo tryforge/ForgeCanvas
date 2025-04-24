@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 import { createCanvas, Image } from '@napi-rs/canvas';
 import { indexedToRgba } from '@gifsx/gifsx';
 
@@ -61,14 +60,11 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx: Context, [name, path, x, y, w, h, r]) {
+    async execute (ctx, [name, path, x, y, w, h, r]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas) return this.customError('No canvas');
 
         let img: string | Image | undefined | Buffer = path;
         if (path.startsWith('frame://')) {
@@ -82,16 +78,18 @@ export default new NativeFunction({
 
             imageData.data.set(buffer.length === width * height * 4
                 ? buffer : indexedToRgba(
-                Uint8Array.from(buffer), frame.palette ?? Uint8Array.from([]),
-                frame.transparent
-            ));
+                    Uint8Array.from(buffer),
+                    frame.palette ?? Uint8Array.from([]),
+                    frame.transparent
+                )
+            );
             context.putImageData(imageData, 0, 0);
             
             img = canvas.toBuffer('image/png');
         } else if (path.startsWith('images://') && ctx.imageManager)
             img = ctx.imageManager.get(path.slice(9));
         else if (path.startsWith('canvas://'))
-            img = ctx.canvasManager?.get(path.slice(9))?.buffer;
+            img = ctx.canvasManager?.get(path.slice(9))?.buffer('image/png');
 
         if (!img) return this.customError('Failed to load an image.');
 

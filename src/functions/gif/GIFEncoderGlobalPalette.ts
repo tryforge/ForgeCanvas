@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$GIFEncoderGlobalPalette',
@@ -17,13 +16,12 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name]) {
+    async execute (ctx, [name]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
-                : !name && ctx.gifManager?.currentEncoder?.length !== 0 
-                    ? ctx.gifManager?.currentEncoder?.[ctx.gifManager?.currentEncoder?.length - 1] : null;
-        
+            : ctx.gifManager?.lastCurrentEncoder;
         if (!gif) return this.customError('No gif');
+        
         return this.success(gif.palette !== null 
             ? `[${Array.from(gif.palette).join(', ')}]` : null
         );

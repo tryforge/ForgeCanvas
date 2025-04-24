@@ -30,8 +30,7 @@ $let[m2;$arrayAt[m;1]]
 $onlyIf[$get[m2]!=;$description[Separate the messages using \`||\`]]
 
 
- $createCanvas[fake;
- $setCanvasSize[1500;1000]
+ $createCanvas[fake;1500;1000;
  $drawRect[;fill;#1c1d22;0;0;1500;1000]
  $drawRect[;fill;#383A43;0;250;1500;2]
 

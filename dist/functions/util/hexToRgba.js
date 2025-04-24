@@ -1,1 +1,29 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),gifsx_1=require("@gifsx/gifsx");exports.default=new forgescript_1.NativeFunction({name:"$hexToRgba",description:"Converts HEX into RGBA.",version:"1.2.1",brackets:!0,unwrap:!0,args:[{name:"hex",description:"The hex to convert into RGBA.",type:forgescript_1.ArgType.String,required:!0,rest:!0}],async execute(t,[r]){try{const e=(0,gifsx_1.hexToRgba)(r);return this.success(`[${e.join(", ")}]`)}catch(e){return this.customError(e.toString())}}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const gifsx_1 = require("@gifsx/gifsx");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$hexToRgba',
+    description: 'Converts HEX into RGBA.',
+    version: '1.2.1',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'hex',
+            description: 'The hex to convert into RGBA.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: true
+        }
+    ],
+    async execute(_, [hex]) {
+        try {
+            const res = (0, gifsx_1.hexToRgba)(hex);
+            return this.success(`[${res.join(', ')}]`);
+        }
+        catch (e) {
+            return this.customError(e.toString());
+        }
+    }
+});

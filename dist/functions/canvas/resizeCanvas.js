@@ -1,1 +1,43 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$resizeCanvas",aliases:["$canvasResize"],description:"Resizes a canvas.",version:"1.0.0",brackets:!0,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"width",description:"The new canvas width.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"height",description:"The new canvas height.",type:forgescript_1.ArgType.Number,required:!0,rest:!1}],async execute(e,[r,s,t]){const a=r?e.canvasManager?.get(r):!r&&e.canvasManager?.current?.length!==0?e.canvasManager?.current?.[e.canvasManager?.current?.length-1]:null;return a?(a.resize(s,t),this.success()):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$resizeCanvas',
+    aliases: ['$canvasResize'],
+    description: 'Resizes a canvas.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'width',
+            description: 'The new canvas width.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'height',
+            description: 'The new canvas height.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+    ],
+    async execute(ctx, [name, w, h]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError('No canvas');
+        canvas.resize(w, h);
+        return this.success();
+    }
+});

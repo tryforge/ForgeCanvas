@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { ImageFormat } from '../../';
+import { ImageFormat } from '../..';
 declare const _default: NativeFunction<[{
     name: string;
     description: string;
@@ -21,4 +21,3 @@ declare const _default: NativeFunction<[{
     rest: false;
 }], true>;
 export default _default;
-//# sourceMappingURL=attachCanvas.d.ts.map

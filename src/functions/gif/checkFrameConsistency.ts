@@ -1,5 +1,5 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { Context, GIFManager } from '../..';
+import { GIFManager } from '../..';
 import { DecodeOptions } from '@gifsx/gifsx';
 
 export default new NativeFunction({
@@ -25,13 +25,13 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, bool]) {
+    async execute (ctx, [name, bool]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
         if (!name && !ctx.gifManager.currentOptions)
             ctx.gifManager.currentOptions = new DecodeOptions();
 
-        let options = name
+        const options = name
             ? ctx.gifManager.getDecodeOptions(name)
             : ctx.gifManager.currentOptions;
 

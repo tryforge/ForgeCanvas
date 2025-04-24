@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$letterSpacing',
@@ -23,14 +22,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, spacing]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)?.ctx
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1]?.ctx : null;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+    async execute (ctx, [name, spacing]) {
+        const canvas = (name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas) return this.customError('No canvas');
  
         return this.success(spacing
             ? (canvas.letterSpacing = `${spacing}px`, undefined) 

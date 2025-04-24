@@ -1,1 +1,40 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),__1=require("../.."),gifsx_1=require("@gifsx/gifsx");exports.default=new forgescript_1.NativeFunction({name:"$decodeOptions",aliases:["$decoderOptions"],description:"Creates new GIF Decode Options.",version:"1.2.0",brackets:!0,unwrap:!0,args:[{name:"name",description:"Name of the new GIF Decode Options.",type:forgescript_1.ArgType.String,required:!0,rest:!1},{name:"options",description:"Options.",type:forgescript_1.ArgType.Unknown,required:!1,rest:!0}],async execute(e,[r]){return(!e.gifManager||!(e.gifManager instanceof __1.GIFManager))&&(e.gifManager=new __1.GIFManager),e.gifManager.currentOptions?(e.gifManager.setDecodeOptions(r,e.gifManager.currentOptions),e.gifManager.currentOptions=null):e.gifManager.setDecodeOptions(r,new gifsx_1.DecodeOptions),this.success()}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+const gifsx_1 = require("@gifsx/gifsx");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$decodeOptions',
+    aliases: ['$decoderOptions'],
+    description: 'Creates new GIF Decode Options.',
+    version: '1.2.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'name',
+            description: 'Name of the new GIF Decode Options.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'options',
+            description: 'Options.',
+            type: forgescript_1.ArgType.Unknown,
+            required: false,
+            rest: true
+        }
+    ],
+    async execute(ctx, [name]) {
+        if (!ctx.gifManager || !(ctx.gifManager instanceof __1.GIFManager))
+            ctx.gifManager = new __1.GIFManager();
+        if (ctx.gifManager.currentOptions) {
+            ctx.gifManager.setDecodeOptions(name, ctx.gifManager.currentOptions);
+            ctx.gifManager.currentOptions = null;
+        }
+        else
+            ctx.gifManager.setDecodeOptions(name, new gifsx_1.DecodeOptions());
+        return this.success();
+    }
+});

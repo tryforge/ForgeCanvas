@@ -51,4 +51,3 @@ declare const _default: NativeFunction<[{
     rest: true;
 }], true>;
 export default _default;
-//# sourceMappingURL=drawRect.d.ts.map

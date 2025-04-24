@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$lineDashOffset',
@@ -23,14 +22,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, offset]) {
+    async execute (ctx, [name, offset]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null)?.ctx;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas) return this.customError('No canvas');
 
         return this.success(offset
             ? (canvas.lineDashOffset = offset, undefined)

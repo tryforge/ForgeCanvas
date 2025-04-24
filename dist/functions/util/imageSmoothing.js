@@ -1,1 +1,37 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$imageSmoothing",description:"Sets or returns the image smoothing in a canvas.",version:"1.0.0",aliases:["$imageSmooth"],brackets:!1,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"enabled",description:"Determines whether scaled images are smoothed or not.",type:forgescript_1.ArgType.Boolean,required:!1,rest:!1}],async execute(e,[r,n]){const a=(r?e.canvasManager?.get(r):!r&&e.canvasManager?.current?.length!==0?e.canvasManager?.current?.[e.canvasManager?.current?.length-1]:null)?.ctx;return a?this.success(n?(a.imageSmoothingEnabled=n,void 0):a.imageSmoothingEnabled):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$imageSmoothing',
+    description: 'Sets or returns the image smoothing in a canvas.',
+    version: '1.0.0',
+    aliases: ["$imageSmooth"],
+    brackets: false,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'enabled',
+            description: 'Determines whether scaled images are smoothed or not.',
+            type: forgescript_1.ArgType.Boolean,
+            required: false,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, enabled]) {
+        const canvas = (name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas)
+            return this.customError('No canvas');
+        return this.success(enabled
+            ? (canvas.imageSmoothingEnabled = enabled, undefined)
+            : canvas.imageSmoothingEnabled);
+    }
+});

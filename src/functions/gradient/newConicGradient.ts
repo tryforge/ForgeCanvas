@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, GradientManager, GradientType } from '../..';
+import { GradientManager, GradientType } from '../..';
 
 export default new NativeFunction({
     name: '$newConicGradient',
@@ -45,12 +45,14 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx: Context, [name, sAngle, x, y]) {
+    async execute (ctx, [name, sAngle, x, y]) {
         if (!ctx.gradientManager || !(ctx.gradientManager instanceof GradientManager))
             ctx.gradientManager = new GradientManager();
 
         ctx.gradientManager.set(name, GradientType.conic, sAngle, x, y);
-        ctx.gradientManager.stops.forEach(x => ctx.gradientManager?.get(name)?.addColorStop(...x));
+        for (const stop of ctx.gradientManager.stops)
+            ctx.gradientManager?.get(name)?.addColorStop(...stop);
+        
         return this.success();
     }
 });

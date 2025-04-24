@@ -1,1 +1,71 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript");exports.default=new forgescript_1.NativeFunction({name:"$bezierCurveTo",aliases:["$bezierCurve","$bezierLineTo"],description:"Draws a cubic B\xE9zier curve in the current path.",version:"1.0.0",brackets:!0,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"cx1",description:"The X coordinate of the first control point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"cy1",description:"The Y coordinate of the first control point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"cx2",description:"The X coordinate of the second control point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"cy2",description:"The Y coordinate of the second control point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"x",description:"The X coordinate of the end point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1},{name:"y",description:"The Y coordinate of the end point.",type:forgescript_1.ArgType.Number,required:!0,rest:!1}],async execute(e,[r,...n]){const t=r?e.canvasManager?.get(r):!r&&e.canvasManager?.current?.length!==0?e.canvasManager?.current?.[e.canvasManager?.current?.length-1]:null;return t?(t.ctx.bezierCurveTo(...n),this.success()):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$bezierCurveTo',
+    aliases: ['$bezierCurve', '$bezierLineTo'],
+    description: 'Draws a cubic Bézier curve in the current path.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'cx1',
+            description: 'The X coordinate of the first control point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'cy1',
+            description: 'The Y coordinate of the first control point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'cx2',
+            description: 'The X coordinate of the second control point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'cy2',
+            description: 'The Y coordinate of the second control point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'x',
+            description: 'The X coordinate of the end point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'y',
+            description: 'The Y coordinate of the end point.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, ...args]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError('No canvas');
+        canvas.ctx.bezierCurveTo(...args);
+        return this.success();
+    }
+});

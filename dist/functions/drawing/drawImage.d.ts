@@ -43,4 +43,3 @@ declare const _default: NativeFunction<[{
     rest: true;
 }], true>;
 export default _default;
-//# sourceMappingURL=drawImage.d.ts.map

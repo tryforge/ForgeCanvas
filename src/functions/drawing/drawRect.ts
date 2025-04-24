@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil, Context, FillOrStrokeOrClear } from '../..';
+import { CanvasUtil, FillOrStrokeOrClear } from '../..';
 
 export default new NativeFunction({
     name: '$drawRect',
@@ -67,14 +67,11 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx: Context, [name, t, style, x, y, w, h, r]) {
+    async execute (ctx, [name, t, style, x, y, w, h, r]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas) return this.customError('No canvas');
 
         if (!style && (t === FillOrStrokeOrClear.fill || t === FillOrStrokeOrClear.stroke))
             return this.customError('No style provided.');

@@ -1,8 +1,8 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$opacity',
+    aliases: ['$globalAlpha', '$alpha'],
     description: 'Sets or returns the opacity in a canvas.',
     version: '1.0.0',
     brackets: false,
@@ -23,14 +23,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, opacity]) {
+    async execute (ctx, [name, opacity]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null)?.ctx;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas) return this.customError('No canvas');
 
         return this.success(opacity
             ? (canvas.globalAlpha = opacity / 100, undefined)

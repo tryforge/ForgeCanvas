@@ -13,4 +13,3 @@ declare const _default: NativeFunction<[{
     rest: true;
 }], true>;
 export default _default;
-//# sourceMappingURL=decodeOptions.d.ts.map

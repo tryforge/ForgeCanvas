@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, ColorDataType } from '../..';
+import { ColorDataType } from '../..';
 
 export default new NativeFunction({
     name: '$getPixels',
@@ -53,13 +53,12 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, x, y, w, h, t]) {
+    async execute (ctx, [name, x, y, w, h, t]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-        
+            : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError('No canvas');
+        
         return this.success(
             `[${canvas.getPixels(x, y, w, h, t)
                 .map(x => typeof x === 'string' ? `"${x}"` : x)

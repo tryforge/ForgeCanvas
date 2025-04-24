@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context, BarData, BarOptions, CanvasUtil } from '../..';
+import { BarData, BarOptions, CanvasUtil } from '../..';
 
 export default new NativeFunction({
     name: '$drawProgressBar',
@@ -51,19 +51,17 @@ export default new NativeFunction({
             rest: false
         },
     ],
-    async execute(ctx: Context, [name, x, y, width, height]) {
+    async execute(ctx, [name, x, y, width, height]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-
+            : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError('No canvas');
 
         const data: BarData[] = (ctx.getEnvironmentKey('progressBarData') ?? []) as BarData[]; 
         const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {}) as BarOptions;
         const type = options.type ?? 'normal';
 
-        let res;
+        let res: any;
         if (type === 'normal') {
             const progress = data[0];
             res = canvas.drawProgressBar(

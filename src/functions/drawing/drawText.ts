@@ -1,9 +1,9 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil, Context, FillOrStroke } from '../..';
+import { CanvasUtil, FillOrStroke } from '../..';
 
 export default new NativeFunction({
     name: '$drawText',
-    aliases: ['$placeText', '$text', '$writeText'],
+    aliases: ['$placeText', '$text', '$writeText', '$addText'],
     description: 'Draws a filled/stroked text on a canvas.',
     version: '1.0.0',
     brackets: true,
@@ -33,7 +33,7 @@ export default new NativeFunction({
         },
         {
             name: 'font',
-            description: 'The font text. ({size}px {font name})',
+            description: 'The text font. ({size}px {font name})',
             type: ArgType.String,
             check: (i: string) => CanvasUtil.isValidFont(i),
             required: true,
@@ -87,16 +87,13 @@ export default new NativeFunction({
             type: ArgType.Number,
             required: false,
             rest: false
-        },
+        }
     ],
-    async execute (ctx: Context, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset]) {
+    async execute (ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
-                : !name && ctx.canvasManager?.current?.length !== 0 
-                    ? ctx.canvasManager?.current?.[ctx.canvasManager?.current?.length - 1] : null;
-        
-        if (!canvas)
-            return this.customError('No canvas');
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas) return this.customError('No canvas');
 
         const styleT = t === FillOrStroke.fill ? 'fillStyle' : 'strokeStyle',
               oldstyle = canvas.ctx[styleT];

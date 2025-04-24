@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../../';
 
 export default new NativeFunction({
     name: '$deleteEncoder',
@@ -17,7 +16,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name]) {
+    async execute (ctx, [name]) {
         ctx.gifManager?.removeEncoder(name);
         return this.success();
     }

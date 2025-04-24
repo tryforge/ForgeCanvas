@@ -1,8 +1,8 @@
 import { GlobalFonts, loadImage, Image, createCanvas } from '@napi-rs/canvas';
-import chalk from 'chalk';
-import { Context, RectAlign, RectBaseline } from '..';
-import { CanvasBuilder } from './builder';
+import { Context } from '@tryforge/forgescript';
 import { Frame, rgbaToHex } from '@gifsx/gifsx';
+import { RectAlign, RectBaseline } from '..';
+import { CanvasBuilder } from './builder';
 
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i
 export const rgbaRegex = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
@@ -40,32 +40,23 @@ export const Colors: Record<string, string> = {
     NotQuiteBlack: '#23272a'
 };
 
-export class CanvasUtil {
-    public static isValidFont(font: string) {
-        if (!font)
-            return false;
-      
-        if (fontRegex.test(font)) {
-            const res = fontRegex.exec(font)
-          
-            if (res && res[0]) {
-                const families = res[6].split(',').map(x => x?.trim());
+export const CanvasUtil = {
+    isValidFont: (font: string) => {
+        if (!font) return false;
+        if (!fontRegex.test(font)) return false;
+        
+        const res = fontRegex.exec(font)
+        if (!res?.[0]) return false;
 
-                if (families) {
-                    for (const family of families) {
-                        if (!GlobalFonts.has(family.replace(/['',]/g, '')))
-                            return false;
-                    };
-                };
+        const families = res[6].split(',').map(x => x?.trim());
+        for (const family of families) {
+            if (!GlobalFonts.has(family.replace(/['',]/g, '')))
+                return false;
+        }
+        return true;
+    },
 
-                return true;
-            };
-            return false;
-        };
-        return false;
-    };
-
-    public static async parseStyle(self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) {
+    parseStyle: async(self: any, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => {
         if (!style) return '#000000';
         let s: string[] | string | CanvasGradient | CanvasPattern = style.split('://');
 
@@ -87,7 +78,7 @@ export class CanvasUtil {
                     return self.customError('No canvas with provided name found.');
         
                 image = canvas_2.getImageData(0, 0, canvas_2.canvas.width, canvas_2.canvas.height);
-            } else if (type === 'image') {
+            } else {
                 if (splits?.join(':')?.startsWith('images://')) {
                     const img = ctx?.imageManager?.get(splits.join(':').slice(9));
                     
@@ -96,7 +87,7 @@ export class CanvasUtil {
 
                     image = img;
                 } else image = await loadImage(repeat ? splits.join(':') : splits.join());
-            } else return self.customError('Invalid pattern type.');
+            }
 
             s = canvas.ctx.createPattern(image, repeat as any);
         } else {
@@ -104,59 +95,40 @@ export class CanvasUtil {
                 : (rgbaRegex.test(style) ? (() => {
                     const match = style.match(rgbaRegex) as RegExpMatchArray;
                     return rgbaToHex(Uint8Array.from([
-                        parseInt(match[1], 10),
-                        parseInt(match[2], 10),
-                        parseInt(match[3], 10),
-                        match[5] ? parseFloat(match[5]) : 255
+                        Number.parseInt(match[1], 10),
+                        Number.parseInt(match[2], 10),
+                        Number.parseInt(match[3], 10),
+                        match[5] ? Number.parseFloat(match[5]) : 255
                     ]), false, true);
                 })() : Colors[style])) ?? '#000000';
-        };
-
+        }
         return s;
-    };
+    },
 
-    public static calculateRectAlignOrBaseline(
+    calculateRectAlignOrBaseline: (
         XorY: number,
         WorH: number,
         AorB: RectAlign | RectBaseline 
-    ) {
+    ) => {
         AorB = typeof AorB === 'string' ? RectAlign[AorB as keyof typeof RectAlign] : AorB;
         return AorB === RectAlign.center
                 ? XorY - WorH / 2
             : AorB === RectAlign.right || AorB === RectBaseline.top
                 ? XorY - WorH
             : XorY;
-    };
+    },
 
-    public static parseFilters(filters: string) {
+    parseFilters: (filters: string) => {
         const result = [];
-      
         const regex = /([a-zA-Z-]+)\(([^)]+)\)/g;
-        let match;
-      
+
+        let match: RegExpExecArray | null;
         while ((match = regex.exec(filters)) !== null) {
             const [raw, filter, value] = match;
             result.push({ filter, value, raw });
         }
       
         return result;
-    };
-};
-
-export const Logger = {
-    DateColor: chalk.green.bold,
-    Colors: {
-        INFO: chalk.cyan.bold,
-        WARN: chalk.yellow.bold,
-        ERROR: chalk.red.bold,
-        MESSAGE: chalk.cyan.bold
-    },
-    log(type: 'INFO' | 'WARN' | 'ERROR' | 'MESSAGE', message: string) {
-        console.log(
-            this.DateColor(`[${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}]`),
-            this.Colors[type](`[${type}]`),
-            this.Colors.MESSAGE(message)
-        );
     }
 };
 
@@ -178,12 +150,12 @@ export async function loadFrame(
         ).data),
         speed
     );
-};
+}
 
 export function parseArgs(str: string, prefix: string | number, length: number, rest?: boolean) {
     const args = str.slice(typeof prefix === 'string' ? prefix.length : prefix).split(':');
     if (!rest ? args.length !== length : args.length < length)
-        throw new Error(`${prefix} frame expects ${length} arguments.`);
+        throw new Error(`${prefix} expects ${length} arguments.`);
 
     return args;
-};
+}

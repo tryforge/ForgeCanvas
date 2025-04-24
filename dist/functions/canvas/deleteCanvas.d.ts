@@ -7,4 +7,3 @@ declare const _default: NativeFunction<[{
     rest: false;
 }], true>;
 export default _default;
-//# sourceMappingURL=deleteCanvas.d.ts.map

@@ -1,1 +1,40 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),__1=require("../..");exports.default=new forgescript_1.NativeFunction({name:"$textAlign",aliases:["$alignText"],description:"Sets or returns the text align.",version:"1.0.0",brackets:!1,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"align",description:"The new align.",type:forgescript_1.ArgType.Enum,enum:__1.TextAlign,required:!1,rest:!1}],async execute(t,[n,r]){const e=n?t.canvasManager?.get(n)?.ctx:!n&&t.canvasManager?.current?.length!==0?t.canvasManager?.current?.[t.canvasManager?.current?.length-1]?.ctx:null;return e?this.success(r!==null?(e.textAlign=typeof r=="number"?__1.TextAlign[r]:r,void 0):typeof e.textAlign=="number"?__1.TextAlign[e.textAlign]:e.textAlign??"start"):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$textAlign',
+    aliases: ['$alignText'],
+    description: 'Sets or returns the text align.',
+    version: '1.0.0',
+    brackets: false,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'align',
+            description: 'The new align.',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.TextAlign,
+            required: false,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, align]) {
+        const canvas = (name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent)?.ctx;
+        if (!canvas)
+            return this.customError('No canvas');
+        return this.success(align !== null
+            ? (canvas.textAlign = (typeof align === 'number' ? __1.TextAlign[align] : align), undefined) : typeof canvas.textAlign === 'number'
+            ? __1.TextAlign[canvas.textAlign]
+            : canvas.textAlign ?? 'start');
+    }
+});

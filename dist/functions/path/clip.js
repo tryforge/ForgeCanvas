@@ -1,1 +1,38 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const forgescript_1=require("@tryforge/forgescript"),__1=require("../..");exports.default=new forgescript_1.NativeFunction({name:"$clip",aliases:["$clipCanvas","$canvasClip"],description:"Turns the current path into the current clipping region.",version:"1.0.0",brackets:!1,unwrap:!0,args:[{name:"canvas",description:"Name of the canvas.",type:forgescript_1.ArgType.String,required:!1,rest:!1},{name:"fillRule",description:"The fill rule",type:forgescript_1.ArgType.Enum,enum:__1.FillRule,required:!1,rest:!1}],async execute(e,[r,n]){const a=r?e.canvasManager?.get(r):!r&&e.canvasManager?.current?.length!==0?e.canvasManager?.current?.[e.canvasManager?.current?.length-1]:null;return a?(a.ctx.clip(typeof n=="number"?__1.FillRule[n]:n),this.success()):this.customError("No canvas")}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$clip',
+    aliases: ['$clipCanvas', '$canvasClip'],
+    description: 'Turns the current path into the current clipping region.',
+    version: '1.0.0',
+    brackets: false,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'fillRule',
+            description: 'The fill rule',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.FillRule,
+            required: false,
+            rest: false
+        }
+    ],
+    async execute(ctx, [name, rule]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError('No canvas');
+        canvas.ctx.clip((typeof rule === 'number' ? __1.FillRule[rule] : rule));
+        return this.success();
+    }
+});

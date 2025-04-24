@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
+import { CanvasBuilder, CanvasManager } from '../../classes';
 
 export default new NativeFunction({
     name: '$createCanvas',
@@ -7,7 +7,7 @@ export default new NativeFunction({
     description: 'Creates a new canvas.',
     version: '1.0.0',
     brackets: true,
-    unwrap: true,
+    unwrap: false,
     args: [
         {
             name: 'canvas',
@@ -17,6 +17,20 @@ export default new NativeFunction({
             rest: false
         },
         {
+            name: 'width',
+            description: 'Width of the canvas.',
+            type: ArgType.Number,
+            required: true,
+            rest: false,
+        },
+        {
+            name: 'height',
+            description: 'Height of the canvas.',
+            type: ArgType.Number,
+            required: true,
+            rest: false,
+        },
+        {
             name: 'functions',
             description: 'Functions.',
             type: ArgType.Unknown,
@@ -24,14 +38,36 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx: Context, [name]) {
+    async execute (ctx) {
+        if (!this.data.fields) this.data.fields = [];
+
+        const name = (await this['resolveCode'](ctx, this.data.fields[0]))?.value;
+
+        if (this.data.fields.length >= 3) {
+            const width = Number((await this['resolveCode'](ctx, this.data.fields?.[1]))?.value);
+            const height = Number((await this['resolveCode'](ctx, this.data.fields?.[2]))?.value);
+
+            if (!Number.isNaN(width) && !Number.isNaN(height)) {
+                if (!ctx.canvasManager || !(ctx.canvasManager instanceof CanvasManager))
+                    ctx.canvasManager = new CanvasManager();
+
+                ctx.canvasManager.current.push(new CanvasBuilder(
+                    width, height
+                ));
+            }
+        }
+
+        for (let i = (this.data.fields.length >= 3 ? 3 : 0); i < this.data.fields.length; i++) {
+            await this['resolveCode'](ctx, this.data.fields[i]);
+        }
+
         if (!ctx.canvasManager || ctx.canvasManager.current.length === 0)
             return this.customError('No size has been set');
 
-        const i = ctx.canvasManager.current.length - 1;
-
-        ctx.canvasManager.set(name, ctx.canvasManager.current[i]);
-        ctx.canvasManager.current = ctx.canvasManager.current.slice(0, i);
+        ctx.canvasManager.set(name, ctx.canvasManager.lastCurrent);
+        ctx.canvasManager.current = ctx.canvasManager.current.slice(
+            0, ctx.canvasManager.current.length - 1
+        );
 
         return this.success();
     }

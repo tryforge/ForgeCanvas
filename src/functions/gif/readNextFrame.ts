@@ -1,5 +1,4 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Context } from '../..';
 
 export default new NativeFunction({
     name: '$readNextFrame',
@@ -23,7 +22,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx: Context, [name, f]) {
+    async execute (ctx, [name, f]) {
         const gif = ctx.gifManager?.getDecoder(name);
         if (!gif) return this.customError('No gif');
 
