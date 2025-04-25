@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 const gifsx_1 = require("@gifsx/gifsx");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$decodeOptions',
     aliases: ['$decoderOptions'],
@@ -26,7 +26,7 @@ exports.default = new forgescript_1.NativeFunction({
             rest: true
         }
     ],
-    async execute(ctx, [name]) {
+    execute(ctx, [name]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof __1.GIFManager))
             ctx.gifManager = new __1.GIFManager();
         if (ctx.gifManager.currentOptions) {

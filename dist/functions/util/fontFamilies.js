@@ -16,7 +16,9 @@ exports.default = new forgescript_1.NativeFunction({
             required: false,
             rest: false
         }],
-    async execute(_, [sep]) {
-        return this.success(canvas_1.GlobalFonts.families.map(x => x?.family).join(sep ?? ', '));
+    execute(_, [sep]) {
+        return this.success(canvas_1.GlobalFonts.families
+            .map(x => x?.family)
+            .join(sep ?? ', '));
     }
 });

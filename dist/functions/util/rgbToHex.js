@@ -25,7 +25,7 @@ exports.default = new forgescript_1.NativeFunction({
             rest: true
         }
     ],
-    async execute(_, [a_s, rgb]) {
+    execute(_, [a_s, rgb]) {
         try {
             const res = (0, gifsx_1.rgbToHex)(Uint8Array.from(rgb), a_s ?? false);
             return this.success(`[${res.map(x => `"${x}"`).join(', ')}]`);

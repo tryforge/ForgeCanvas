@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$ellipse',
     aliases: ['$elArc'],
@@ -73,12 +74,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, x, y, rX, rY, rotation, sAngle, eAngle, ccw]) {
+    execute(ctx, [name, x, y, rX, rY, rotation, sAngle, eAngle, ccw]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(classes_1.FCError.NoCanvas);
         canvas.ctx.ellipse(x, y, rX, rY, rotation, sAngle, eAngle, ccw ?? false);
         return this.success();
     }

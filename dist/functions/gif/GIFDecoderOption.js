@@ -26,10 +26,10 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, option]) {
+    execute(ctx, [name, option]) {
         const gif = ctx.gifManager?.getDecoder(name);
         if (!gif)
-            return this.customError('No frame');
+            return this.customError(__1.FCError.NoDecoder);
         const opt = gif?.[(typeof option === 'number'
             ? __1.DecoderOption[option] : option)];
         if (opt instanceof Uint8ClampedArray || opt instanceof ArrayBuffer) {

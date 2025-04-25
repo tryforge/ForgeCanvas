@@ -9,6 +9,7 @@ exports.default = new forgescript_1.NativeFunction({
     description: 'Sets the size and global palette for the new GIF encoder.',
     version: '1.2.0',
     brackets: true,
+    deprecated: true,
     unwrap: true,
     args: [
         {
@@ -33,12 +34,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [w, h, palette]) {
+    execute(ctx, [width, height, palette]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof __1.GIFManager))
             ctx.gifManager = new __1.GIFManager();
         if (palette !== null && !Array.isArray(palette))
-            return this.customError('The global palette must be an array');
-        ctx.gifManager.currentEncoder.push(new gifsx_1.Encoder(w, h, Uint8Array.from(palette ?? [])));
+            return this.customError(__1.FCError.ArrayExpected);
+        ctx.gifManager.currentEncoder.push(new gifsx_1.Encoder(width, height, Uint8Array.from(palette ?? [])));
         return this.success();
     }
 });

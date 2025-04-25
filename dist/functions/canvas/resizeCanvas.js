@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$resizeCanvas',
     aliases: ['$canvasResize'],
@@ -31,12 +32,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         },
     ],
-    async execute(ctx, [name, w, h]) {
+    execute(ctx, [name, w, h]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(classes_1.FCError.NoCanvas);
         canvas.resize(w, h);
         return this.success();
     }

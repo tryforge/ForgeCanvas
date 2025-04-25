@@ -32,7 +32,7 @@ exports.default = new forgescript_1.NativeFunction({
             rest: true
         }
     ],
-    async execute(_, [aia, a_s, rgba]) {
+    execute(_, [aia, a_s, rgba]) {
         try {
             const res = (0, gifsx_1.rgbaToHex)(Uint8Array.from(rgba), aia ?? false, a_s ?? false);
             return this.success(`[${res.map(x => `"${x}"`).join(', ')}]`);

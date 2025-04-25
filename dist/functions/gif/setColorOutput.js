@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 const gifsx_1 = require("@gifsx/gifsx");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$setColorOutput',
     aliases: ['$setOutputColor'],
@@ -27,7 +27,7 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, output]) {
+    execute(ctx, [name, output]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof __1.GIFManager))
             ctx.gifManager = new __1.GIFManager();
         if (!name && !ctx.gifManager.currentOptions)
@@ -36,7 +36,7 @@ exports.default = new forgescript_1.NativeFunction({
             ? ctx.gifManager.getDecodeOptions(name)
             : ctx.gifManager.currentOptions;
         if (!options)
-            return this.customError('No decode options');
+            return this.customError(__1.FCError.NoDecodeOptions);
         options.setColorOutput(output);
         return this.success();
     }

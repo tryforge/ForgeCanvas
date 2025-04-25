@@ -26,12 +26,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, align]) {
+    execute(ctx, [name, align]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         return this.success(align !== null
             ? (canvas.customProperties.rectAlign = (typeof align === 'number' ? __1.RectAlign[align] : align), undefined) : typeof canvas.customProperties?.rectAlign === 'number'
             ? __1.RectAlign[canvas.customProperties.rectAlign]

@@ -61,14 +61,23 @@ exports.default = new forgescript_1.NativeFunction({
         const data = (ctx.getEnvironmentKey('progressBarData') ?? []);
         const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {});
         const type = options.type ?? 'normal';
+        const background = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, options['background-style'] ?? '#000000');
+        if (background instanceof forgescript_1.Return)
+            return background;
         let res;
         if (type === 'normal') {
             const progress = data[0];
+            if (!progress)
+                return this.customError(__1.FCError.NoBarData);
+            const style = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, progress.style ?? '#000');
+            if (style instanceof forgescript_1.Return)
+                return style;
             res = canvas.drawProgressBar(x, y, width, height, progress.value, {
-                style: await __1.CanvasUtil.parseStyle(this, ctx, canvas, progress.style) ?? '#000000',
+                style: style,
                 background: {
-                    enabled: Object.keys(options).find(x => x.startsWith('background')) !== undefined,
-                    style: await __1.CanvasUtil.parseStyle(this, ctx, canvas, options['background-style']) ?? '#000000',
+                    enabled: Object.keys(options)
+                        .find(x => x.startsWith('background')) !== undefined,
+                    style: background,
                     radius: options['background-radius'],
                     padding: options['background-padding'],
                     type: options['background-type']
@@ -84,8 +93,9 @@ exports.default = new forgescript_1.NativeFunction({
             res = canvas.drawPieChart(x, y, width, height, data, {
                 type: options['draw-type'] === 'clear' ? 'fill' : options['draw-type'],
                 background: {
-                    enabled: Object.keys(options).find(x => x.startsWith('background')) !== undefined,
-                    style: await __1.CanvasUtil.parseStyle(this, ctx, canvas, options['background-style']) ?? '#000000',
+                    enabled: Object.keys(options)
+                        .find(x => x.startsWith('background')) !== undefined,
+                    style: background,
                     radius: options['background-radius'],
                     padding: options['background-padding'],
                     type: options['background-type']

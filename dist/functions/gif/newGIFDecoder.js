@@ -48,7 +48,7 @@ exports.default = new forgescript_1.NativeFunction({
         else if (path.startsWith('encoder://')) {
             const encoder = ctx.gifManager.getEncoder(path.slice(10));
             if (!encoder)
-                return this.customError('No encoder');
+                return this.customError(__1.FCError.NoEncoder);
             gif = encoder.getBuffer();
         }
         else

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$readNextFrame',
     description: 'Reads and saves the next frame (including the buffer) of the GIF Decoder into an env.',
@@ -23,10 +24,10 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, f]) {
+    execute(ctx, [name, f]) {
         const gif = ctx.gifManager?.getDecoder(name);
         if (!gif)
-            return this.customError('No gif');
+            return this.customError(classes_1.FCError.NoDecoder);
         const frame = gif.readNextFrame();
         if (frame) {
             ctx.gifManager?.setFrame(f, frame);

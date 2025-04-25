@@ -38,9 +38,11 @@ exports.default = new forgescript_1.NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
-        const oldstyle = canvas.ctx.fillStyle;
-        canvas.ctx.fillStyle = await __1.CanvasUtil.parseStyle(this, ctx, canvas, style);
+            return this.customError(__1.FCError.NoCanvas);
+        const oldstyle = canvas.ctx.fillStyle, s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        if (s instanceof forgescript_1.Return)
+            return s;
+        canvas.ctx.fillStyle = s;
         canvas.ctx.fill((typeof rule === 'number' ? __1.FillRule[rule] : rule));
         canvas.ctx.fillStyle = oldstyle;
         return this.success();

@@ -4,7 +4,10 @@ export declare class CanvasBuilder {
     ctx: SKRSContext2D;
     util: {
         isValidFont: (font: string) => boolean;
-        parseStyle: (self: any, ctx: import("@tryforge/forgescript").Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<any>;
+        resolveStyle: (self: import("@tryforge/forgescript").CompiledFunction, ctx: import("@tryforge/forgescript").Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<string | CanvasGradient | CanvasPattern | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
+        resolveImage: (self: import("@tryforge/forgescript").CompiledFunction, ctx: import("@tryforge/forgescript").Context, src: string) => Promise<Image | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
+        rgbaStringToHex: (rgba: string) => string;
+        resolveFrame: (self: import("@tryforge/forgescript").CompiledFunction, ctx: import("@tryforge/forgescript").Context, frame: string, speed: number | undefined | null) => Promise<import("@gifsx/gifsx").Frame | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
         calculateRectAlignOrBaseline: (XorY: number, WorH: number, AorB: import("..").RectAlign | import("..").RectBaseline) => number;
         parseFilters: (filters: string) => {
             filter: string;

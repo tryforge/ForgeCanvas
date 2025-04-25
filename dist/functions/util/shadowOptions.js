@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$shadowOptions',
     aliases: ['$shadowConfig'],
@@ -18,18 +19,18 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'options',
-            description: 'The options.',
+            description: 'The options. (color, blur, offsetX, offsetY)',
             type: forgescript_1.ArgType.Json,
             required: true,
             rest: false
         }
     ],
-    async execute(ctx, [name, options]) {
+    execute(ctx, [name, options]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(classes_1.FCError.NoCanvas);
         if (typeof options === 'string')
             options = JSON.parse(options);
         const shadowOptions = {
@@ -46,6 +47,7 @@ exports.default = new forgescript_1.NativeFunction({
         else
             for (const option in options)
                 res.push(canvas[shadowOptions[option]]);
-        return this.success(Array.isArray(options) ? JSON.stringify(res) : undefined);
+        return this.success(Array.isArray(options)
+            ? JSON.stringify(res) : undefined);
     }
 });
