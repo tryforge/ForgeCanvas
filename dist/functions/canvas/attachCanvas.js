@@ -34,15 +34,13 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, filename, f]) {
+    execute(ctx, [name, filename, f]) {
         const canvas = ctx.canvasManager?.get(name);
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         ctx.container.files.push(new discord_js_1.AttachmentBuilder(canvas.buffer((f !== null
             ? 'image/' + (typeof f === 'number' ? __1.ImageFormat[f] : f)
-            : 'image/png')), {
-            name: filename ?? `${name}.png`
-        }));
+            : 'image/png')), { name: filename ?? `${name}.png` }));
         return this.success();
     }
 });

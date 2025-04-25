@@ -16,7 +16,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name]) {
+    execute (ctx, [name]) {
         ctx.gifManager?.removeFrame(name);
         return this.success();
     }

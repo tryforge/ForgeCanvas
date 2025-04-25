@@ -40,12 +40,12 @@ exports.default = new forgescript_1.NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         const format = (f !== null
             ? 'image/' + (typeof f === 'number' ? __1.ImageFormat[f] : f)
             : 'image/png');
         if (!path)
-            return this.customError('No path provided');
+            return this.customError(__1.FCError.NoPath);
         if (path.startsWith('images://')) {
             if (!ctx.imageManager)
                 ctx.imageManager = new __1.ImageManager();

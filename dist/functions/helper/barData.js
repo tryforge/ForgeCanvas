@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$barData',
     description: 'Adds data for progress bars.',
@@ -26,7 +27,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [value, style]) {
         const numericValue = Number.parseFloat(value);
         if (Number.isNaN(numericValue) || numericValue < 0)
-            return this.customError('Invalid value for bar data.');
+            return this.customError(__1.FCError.InvalidBarData);
         const barData = (ctx.getEnvironmentKey('progressBarData') || []);
         barData.push({ value: numericValue, style });
         ctx.setEnvironmentKey('progressBarData', barData);

@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { ImageFormat } from '../..';
+import { FCError, ImageFormat } from '../..';
 
 export default new NativeFunction({
     name: '$canvasDataUrl',
@@ -24,11 +24,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, f]) {
+    execute (ctx, [name, f]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         return this.success(canvas.dataUrl((f !== null 
             ? 'image/' + (typeof f === 'number' ? ImageFormat[f] : f)

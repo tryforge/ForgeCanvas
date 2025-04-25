@@ -40,13 +40,14 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, method, filter, value]) {
+    execute(ctx, [name, method, filter, value]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         const res = canvas.filter(method, filter, value);
-        return this.success(typeof res === 'object' ? JSON.stringify(res) : res);
+        return this.success(typeof res === 'object'
+            ? JSON.stringify(res) : res);
     }
 });

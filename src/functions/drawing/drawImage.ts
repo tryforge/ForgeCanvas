@@ -1,6 +1,5 @@
-import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { createCanvas, Image } from '@napi-rs/canvas';
-import { indexedToRgba } from '@gifsx/gifsx';
+import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
+import { CanvasUtil, FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$drawImage',
@@ -18,8 +17,8 @@ export default new NativeFunction({
             rest: false
         },
         {
-            name: 'path',
-            description: 'The image path.',
+            name: 'src',
+            description: 'The image source.',
             type: ArgType.String,
             required: true,
             rest: false
@@ -60,40 +59,21 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx, [name, path, x, y, w, h, r]) {
+    async execute (ctx, [name, src, x, y, width, height, radius]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
-        let img: string | Image | undefined | Buffer = path;
-        if (path.startsWith('frame://')) {
-            const frame = ctx.gifManager?.getFrame(path.slice(8));
-            if (!frame) return this.customError('No frame');
-            const { width, height, buffer } = frame;
+        const img = await CanvasUtil.resolveImage(this, ctx, src);
+        if (img instanceof Return) return img;
 
-            const canvas = createCanvas(width, height);
-            const context = canvas.getContext('2d');
-            const imageData = context.createImageData(width, height);
-
-            imageData.data.set(buffer.length === width * height * 4
-                ? buffer : indexedToRgba(
-                    Uint8Array.from(buffer),
-                    frame.palette ?? Uint8Array.from([]),
-                    frame.transparent
-                )
-            );
-            context.putImageData(imageData, 0, 0);
-            
-            img = canvas.toBuffer('image/png');
-        } else if (path.startsWith('images://') && ctx.imageManager)
-            img = ctx.imageManager.get(path.slice(9));
-        else if (path.startsWith('canvas://'))
-            img = ctx.canvasManager?.get(path.slice(9))?.buffer('image/png');
-
-        if (!img) return this.customError('Failed to load an image.');
-
-        await canvas.drawImage(img, x, y, w, h, r.length === 1 ? r[0] : r);
+        await canvas.drawImage(
+            img, x, y,
+            width, height,
+            radius.length === 1
+                ? radius[0] : radius
+        );
         return this.success();
     }
 });

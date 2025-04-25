@@ -46,12 +46,13 @@ exports.default = new forgescript_1.NativeFunction({
             rest: true
         }
     ],
-    async execute(ctx, [name, sAngle, x, y]) {
+    execute(ctx, [name, sAngle, x, y]) {
         if (!ctx.gradientManager || !(ctx.gradientManager instanceof __1.GradientManager))
             ctx.gradientManager = new __1.GradientManager();
         ctx.gradientManager.set(name, __1.GradientType.conic, sAngle, x, y);
         for (const stop of ctx.gradientManager.stops)
             ctx.gradientManager?.get(name)?.addColorStop(...stop);
+        ctx.gradientManager.stops = [];
         return this.success();
     }
 });

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$arcTo',
     description: 'Adds a circular arc in the current path.',
@@ -51,12 +52,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, x1, y1, x2, y2, r]) {
+    execute(ctx, [name, x1, y1, x2, y2, r]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(classes_1.FCError.NoCanvas);
         canvas.ctx.arcTo(x1, y1, x2, y2, r);
         return this.success();
     }

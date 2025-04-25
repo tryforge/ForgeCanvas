@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const discord_js_1 = require("discord.js");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$attachImage',
     aliases: ['$sendImage', '$renderImage', '$imageRender'],
@@ -28,10 +29,8 @@ exports.default = new forgescript_1.NativeFunction({
     async execute(ctx, [name, filename]) {
         const img = await ctx.imageManager?.get(name)?.getBuffer();
         if (!img)
-            return this.customError('No image');
-        ctx.container.files.push(new discord_js_1.AttachmentBuilder(img, {
-            name: filename ?? `${name}.png`
-        }));
+            return this.customError(classes_1.FCError.NoImage);
+        ctx.container.files.push(new discord_js_1.AttachmentBuilder(img, { name: filename ?? `${name}.png` }));
         return this.success();
     }
 });

@@ -68,17 +68,20 @@ exports.default = new forgescript_1.NativeFunction({
             rest: true
         }
     ],
-    async execute(ctx, [name, t, style, x, y, w, h, r]) {
+    async execute(ctx, [name, t, style, x, y, width, height, radius]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         if (!style && (t === __1.FillOrStrokeOrClear.fill || t === __1.FillOrStrokeOrClear.stroke))
-            return this.customError('No style provided.');
-        const styleT = t === __1.FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle', oldstyle = canvas.ctx[styleT];
-        canvas.ctx[styleT] = await __1.CanvasUtil.parseStyle(this, ctx, canvas, style) ?? '#000000';
-        canvas.rect(t, x, y, w, h, r.length === 1 ? r[0] : r);
+            return this.customError(__1.FCError.NoStyle);
+        const styleT = t === __1.FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle', oldstyle = canvas.ctx[styleT], s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        if (s instanceof forgescript_1.Return)
+            return s;
+        canvas.ctx[styleT] = s;
+        canvas.rect(t, x, y, width, height, radius.length === 1
+            ? radius[0] : radius);
         canvas.ctx[styleT] = oldstyle;
         return this.success();
     }

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
-const gifsx_1 = require("@gifsx/gifsx");
 exports.default = new forgescript_1.NativeFunction({
     name: '$addFrame',
     description: 'Adds a frame to the GIF.',
@@ -45,50 +44,10 @@ exports.default = new forgescript_1.NativeFunction({
             ? ctx.gifManager?.getEncoder(name)
             : ctx.gifManager?.lastCurrentEncoder;
         if (!gif)
-            return this.customError('No gif');
-        let f;
-        if (frame.startsWith('rgba://')) {
-            const [size, data] = (0, __1.parseArgs)(frame, 'rgba://', 2);
-            const [width, height] = size.split('x').map(Number);
-            f = gifsx_1.Frame.fromRgba(width, height, Uint8Array.from(data.split(',').map(Number)), speed);
-        }
-        else if (frame.startsWith('hex://')) {
-            const [size, data] = (0, __1.parseArgs)(frame, 'hex://', 2);
-            const [width, height] = size.split('x').map(Number);
-            f = gifsx_1.Frame.fromHex(width, height, data.split(',').map(x => x.trim()), speed);
-        }
-        else if (frame.startsWith('rgb://')) {
-            const [size, data] = (0, __1.parseArgs)(frame, 'rgb://', 2);
-            const [width, height] = size.split('x').map(Number);
-            f = gifsx_1.Frame.fromRgb(width, height, Uint8Array.from(data.split(',').map(Number)), speed);
-        }
-        else if (frame.startsWith('indexed://')) {
-            const [size, data] = (0, __1.parseArgs)(frame, 'indexed://', 2);
-            const [width, height] = size.split('x').map(Number);
-            f = gifsx_1.Frame.fromIndexedPixels(width, height, Uint8Array.from(data.split(',').map(Number)));
-        }
-        else if (frame.startsWith('images://')) {
-            const img = ctx.imageManager?.get(frame.slice(9));
-            if (!img)
-                return this.customError('No image');
-            f = await (0, __1.loadFrame)(img, speed);
-        }
-        else if (frame.startsWith('frame://')) {
-            const fr = ctx.gifManager?.getFrame(frame.slice(8));
-            if (!fr)
-                return this.customError('No frame');
-            f = fr;
-        }
-        else if (frame.startsWith('canvas://')) {
-            const canvas = ctx.canvasManager?.get(frame.slice(9));
-            if (!canvas)
-                return this.customError('No canvas');
-            f = gifsx_1.Frame.fromRgba(canvas.width, canvas.height, Uint8Array.from(canvas.ctx.getImageData(0, 0, canvas.width, canvas.height).data), speed);
-        }
-        else
-            f = await (0, __1.loadFrame)(frame);
-        if (!f)
-            return this.customError('Invalid frame');
+            return this.customError(__1.FCError.NoEncoder);
+        const f = await __1.CanvasUtil.resolveFrame(this, ctx, frame, speed);
+        if (f instanceof forgescript_1.Return)
+            return f;
         if (options) {
             if (typeof options.delay === 'number')
                 f.delay = options.delay;

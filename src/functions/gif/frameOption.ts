@@ -1,6 +1,6 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { FrameOption } from '../..';
 import { Frame } from '@gifsx/gifsx';
+import { FrameOption } from '../..';
 
 export default new NativeFunction({
     name: '$frameOption',
@@ -26,7 +26,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, option]) {
+    execute (ctx, [name, option]) {
         const frame = ctx.gifManager?.getFrame(name);
         if (!frame) return this.success();
 
@@ -40,7 +40,12 @@ export default new NativeFunction({
             if (opt instanceof Uint8ClampedArray)
                 return this.success(`[${Array.from(opt).join(', ')}]`);
             if (Array.isArray(opt))
-                return this.success(`[${opt.map(x => typeof x === 'string' ? `"${x}"` : x).join(', ')}]`);
+                return this.success(
+                    `[${opt.map(x =>
+                        typeof x === 'string'
+                            ? `"${x}"` : x
+                    ).join(', ')}]`
+                );
             
             return this.success(`[${Array.from(new Uint8Array(opt)).join(', ')}]`);
         };

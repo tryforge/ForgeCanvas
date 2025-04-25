@@ -1,6 +1,6 @@
-import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { GIFManager, parseArgs, loadFrame } from '../..';
-import { DisposalMethod, Frame } from '@gifsx/gifsx';
+import { ArgType, NativeFunction, Return } from '@tryforge/forgescript';
+import { DisposalMethod } from '@gifsx/gifsx';
+import { GIFManager, CanvasUtil } from '../..';
 
 export default new NativeFunction({
     name: '$createFrame',
@@ -44,38 +44,9 @@ export default new NativeFunction({
         if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
         
-        let f: Frame | null = null;
-        if (frame.startsWith('rgba://')) {
-            const [size, data] = parseArgs(frame, 'rgba://', 2);
-            const [width, height] = size.split('x').map(Number);
-            f = Frame.fromRgba(width, height, Uint8Array.from(data.split(',').map(Number)), speed);
-        } else if (frame.startsWith('hex://')) {
-            const [size, data] = parseArgs(frame, 'hex://', 2);
-            const [width, height] = size.split('x').map(Number);
-            f = Frame.fromHex(width, height, data.split(',').map(x => x.trim()), speed);
-        } else if (frame.startsWith('rgb://')) {
-            const [size, data] = parseArgs(frame, 'rgb://', 2);
-            const [width, height] = size.split('x').map(Number);
-            f = Frame.fromRgb(width, height, Uint8Array.from(data.split(',').map(Number)), speed);
-        } else if (frame.startsWith('indexed://')) {
-            const [size, data] = parseArgs(frame, 'indexed://', 2);
-            const [width, height] = size.split('x').map(Number);
-            f = Frame.fromIndexedPixels(width, height, Uint8Array.from(data.split(',').map(Number)));
-        } else if (frame.startsWith('images://')) {
-            const img = ctx.imageManager?.get(frame.slice(9));
-            if (!img) return this.customError('No image');
-            f = await loadFrame(img, speed);
-        } else if (frame.startsWith('canvas://')) {
-            const canvas = ctx.canvasManager?.get(frame.slice(9));
-            if (!canvas) return this.customError('No canvas');
-            f = Frame.fromRgba(
-                canvas.width, canvas.height,
-                Uint8Array.from(canvas.ctx.getImageData(0, 0, canvas.width, canvas.height).data),
-                speed
-            );
-        } else f = await loadFrame(frame, speed);
+        const f = await CanvasUtil.resolveFrame(this, ctx, frame, speed);
+        if (f instanceof Return) return f;
 
-        if (!f) return this.customError('Invalid frame');
         if (options) {
             if (typeof options.delay === 'number') f.delay = options.delay;
 

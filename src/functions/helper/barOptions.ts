@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { BarOptions } from '../..';
+import { BarOptions, FCError } from '../..';
 
 export default new NativeFunction({
     name: '$barOptions',
@@ -28,14 +28,14 @@ export default new NativeFunction({
             switch (option) {
                 case 'type':
                     if (![ 'normal', 'pie', 'none' ].includes(value[0]))
-                        return this.customError('Invalid type');
+                        return this.customError(FCError.InvalidBarType);
 
                     barOptions.type = value[0] !== 'none'
                         ? value[0] as any : undefined;
                     break;
                 case 'draw-type':
                     if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
-                        return this.customError('Invalid draw type');
+                        return this.customError(FCError.InvalidRectType);
 
                     barOptions['draw-type'] = value[0] !== 'none'
                         ? value[0] as any : undefined;
@@ -57,7 +57,7 @@ export default new NativeFunction({
                     break;
                 case 'background-type':
                     if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
-                        return this.customError('Invalid background type');
+                        return this.customError(FCError.InvalidRectType);
 
                     barOptions['background-type'] = value[0] !== 'none'
                         ? value[0] as any : undefined;
@@ -71,7 +71,7 @@ export default new NativeFunction({
                 }
                 case 'direction': 
                     if (!['horizontal', 'vertical', 'none'].includes(value[0]))
-                        return this.customError('Invalid direction');
+                        return this.customError(FCError.InvalidBarDirection);
 
                     barOptions.direction = value[0] !== 'none'
                         ? value[0] as any : undefined;

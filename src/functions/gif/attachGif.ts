@@ -1,5 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { AttachmentBuilder } from 'discord.js';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$attachGIF',
@@ -24,15 +25,16 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, filename]) {
+    execute (ctx, [name, filename]) {
         const gif = ctx.gifManager?.getEncoder(name);
         filename = `${filename ?? name}.gif`;
         
-        if (!gif) return this.customError('No GIF');
+        if (!gif) return this.customError(FCError.NoEncoder);
 
-        ctx.container.files.push(new AttachmentBuilder(Buffer.from(gif.getBuffer()), {
-            name: filename
-        }));
+        ctx.container.files.push(new AttachmentBuilder(
+            Buffer.from(gif.getBuffer()),
+            { name: filename }
+        ));
         return this.success();
     }
 });

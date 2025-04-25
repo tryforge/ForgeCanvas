@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$arc',
@@ -57,11 +58,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, x, y, r, start, end, ccw]) {
+    execute (ctx, [name, x, y, r, start, end, ccw]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         canvas.ctx.arc(x, y, r, start, end, ccw ?? false);
         return this.success();

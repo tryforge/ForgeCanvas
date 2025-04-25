@@ -46,7 +46,7 @@ exports.default = new forgescript_1.NativeFunction({
             rest: true
         }
     ],
-    async execute(_, [palette, transparent, aua, a_s, pixels]) {
+    execute(_, [palette, transparent, aua, a_s, pixels]) {
         try {
             const res = (0, gifsx_1.indexedToHex)(Uint8Array.from(pixels), Uint8Array.from(palette), transparent, aua ?? false, a_s ?? false);
             return this.success(`[${res.map(x => `"${x}"`).join(', ')}]`);

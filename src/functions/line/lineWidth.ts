@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$lineWidth',
@@ -23,12 +24,12 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, width]) {
+    execute (ctx, [name, width]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
 
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
         if (!width) return this.success(canvas.ctx.lineWidth);
 
         canvas.ctx.lineWidth = width;

@@ -1,5 +1,5 @@
-import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil, FillOrStrokeOrClear } from '../..';
+import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
+import { CanvasUtil, FCError, FillOrStrokeOrClear } from '../..';
 
 export default new NativeFunction({
     name: '$drawRect',
@@ -67,20 +67,27 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx, [name, t, style, x, y, w, h, r]) {
+    async execute (ctx, [name, t, style, x, y, width, height, radius]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         if (!style && (t === FillOrStrokeOrClear.fill || t === FillOrStrokeOrClear.stroke))
-            return this.customError('No style provided.');
+            return this.customError(FCError.NoStyle);
 
         const styleT = t === FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle',
-              oldstyle = canvas.ctx[styleT];
+              oldstyle = canvas.ctx[styleT],
+              s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        if (s instanceof Return) return s;
 
-        canvas.ctx[styleT] = await CanvasUtil.parseStyle(this, ctx, canvas, style) ?? '#000000';
-        canvas.rect(t, x, y, w, h, r.length === 1 ? r[0] : r);
+        canvas.ctx[styleT] = s;
+        canvas.rect(
+            t, x, y,
+            width, height,
+            radius.length === 1
+                ? radius[0] : radius
+        );
         canvas.ctx[styleT] = oldstyle;
 
         return this.success();

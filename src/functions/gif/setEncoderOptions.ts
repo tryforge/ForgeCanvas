@@ -1,13 +1,14 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
 import { Encoder } from '@gifsx/gifsx';
-import { GIFManager } from '../..';
+import { FCError, GIFManager } from '../..';
 
 export default new NativeFunction({
     name: '$setEncoderOptions',
     aliases: ['$setGIFOptions', '$setEncoderConfig', '$setGIFConfig'],
     description: 'Sets the size and global palette for the new GIF encoder.',
     version: '1.2.0',
-    brackets: true,
+    brackets: true, 
+    deprecated: true,
     unwrap: true,
     args: [
         {
@@ -32,14 +33,17 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [w, h, palette]) {
+    execute (ctx, [width, height, palette]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
 
         if (palette !== null && !Array.isArray(palette))
-            return this.customError('The global palette must be an array');
+            return this.customError(FCError.ArrayExpected);
 
-        ctx.gifManager.currentEncoder.push(new Encoder(w, h, Uint8Array.from(palette ?? [])));
+        ctx.gifManager.currentEncoder.push(new Encoder(
+            width, height,
+            Uint8Array.from(palette ?? [])
+        ));
         return this.success();
     }
 });

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$barOptions',
     description: 'Sets options for progress bars.',
@@ -27,13 +28,13 @@ exports.default = new forgescript_1.NativeFunction({
             switch (option) {
                 case 'type':
                     if (!['normal', 'pie', 'none'].includes(value[0]))
-                        return this.customError('Invalid type');
+                        return this.customError(__1.FCError.InvalidBarType);
                     barOptions.type = value[0] !== 'none'
                         ? value[0] : undefined;
                     break;
                 case 'draw-type':
                     if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
-                        return this.customError('Invalid draw type');
+                        return this.customError(__1.FCError.InvalidRectType);
                     barOptions['draw-type'] = value[0] !== 'none'
                         ? value[0] : undefined;
                     break;
@@ -54,7 +55,7 @@ exports.default = new forgescript_1.NativeFunction({
                     break;
                 case 'background-type':
                     if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
-                        return this.customError('Invalid background type');
+                        return this.customError(__1.FCError.InvalidRectType);
                     barOptions['background-type'] = value[0] !== 'none'
                         ? value[0] : undefined;
                     break;
@@ -67,7 +68,7 @@ exports.default = new forgescript_1.NativeFunction({
                 }
                 case 'direction':
                     if (!['horizontal', 'vertical', 'none'].includes(value[0]))
-                        return this.customError('Invalid direction');
+                        return this.customError(__1.FCError.InvalidBarDirection);
                     barOptions.direction = value[0] !== 'none'
                         ? value[0] : undefined;
                     break;

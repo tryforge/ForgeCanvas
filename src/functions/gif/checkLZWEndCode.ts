@@ -1,6 +1,6 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { GIFManager } from '../..';
 import { DecodeOptions } from '@gifsx/gifsx';
+import { GIFManager } from '../..';
 
 export default new NativeFunction({
     name: '$checkLZWEndCode',
@@ -24,7 +24,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, bool]) {
+    execute (ctx, [name, bool]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
         if (!name && !ctx.gifManager.currentOptions)

@@ -1,6 +1,6 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
 import { Decoder } from '@gifsx/gifsx';
-import { DecoderOption } from '../..';
+import { DecoderOption, FCError } from '../..';
 
 export default new NativeFunction({
     name: '$GIFDecoderOption',
@@ -26,9 +26,9 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, option]) {
+    execute (ctx, [name, option]) {
         const gif = ctx.gifManager?.getDecoder(name);
-        if (!gif) return this.customError('No frame');
+        if (!gif) return this.customError(FCError.NoDecoder);
 
         const opt = gif?.[
             (typeof option === 'number'

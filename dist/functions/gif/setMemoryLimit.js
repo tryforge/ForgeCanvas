@@ -26,7 +26,7 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, limit]) {
+    execute(ctx, [name, limit]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof __1.GIFManager))
             ctx.gifManager = new __1.GIFManager();
         if (!name && !ctx.gifManager.currentOptions)

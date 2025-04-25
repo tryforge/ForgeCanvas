@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$lineDash',
     description: 'Sets or returns the line dash segments in a canvas.',
@@ -23,14 +24,14 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, segments]) {
+    execute(ctx, [name, segments]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(classes_1.FCError.NoCanvas);
         if (segments && (!Array.isArray(segments) || !segments.every(x => typeof x === 'number')))
-            return this.customError('Invalid segments.');
+            return this.customError(classes_1.FCError.InvalidLineDashSegments);
         return this.success(segments
             ? (canvas.setLineDash(segments), undefined)
             : canvas.getLineDash());

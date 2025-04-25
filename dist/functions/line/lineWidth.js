@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$lineWidth',
     aliases: ['$strokeWidth'],
@@ -24,12 +25,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, width]) {
+    execute(ctx, [name, width]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(classes_1.FCError.NoCanvas);
         if (!width)
             return this.success(canvas.ctx.lineWidth);
         canvas.ctx.lineWidth = width;

@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FilterMethod, Filters } from '../..';
+import { FCError, FilterMethod, Filters } from '../..';
 
 export default new NativeFunction({
     name: '$filter',
@@ -39,13 +39,15 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, method, filter, value]) {
+    execute (ctx, [name, method, filter, value]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         const res = canvas.filter(method, filter, value);
-        return this.success(typeof res === 'object' ? JSON.stringify(res) : res);
+        return this.success(typeof res === 'object'
+            ? JSON.stringify(res) : res
+        );
     }
 });

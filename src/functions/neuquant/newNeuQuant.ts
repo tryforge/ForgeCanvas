@@ -39,7 +39,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, sample, maxColors, pixels]) {
+    execute (ctx, [name, sample, maxColors, pixels]) {
         if (!ctx.neuquantManager || !(ctx.neuquantManager instanceof NeuQuantManager))
             ctx.neuquantManager = new NeuQuantManager();
 

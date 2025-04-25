@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$resizeCanvas',
@@ -30,11 +31,11 @@ export default new NativeFunction({
             rest: false
         },
     ],
-    async execute (ctx, [name, w, h]) {
+    execute (ctx, [name, w, h]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         canvas.resize(w,h);
         return this.success();

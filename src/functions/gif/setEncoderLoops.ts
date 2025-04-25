@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$setEncoderLoops',
@@ -29,11 +30,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, loops]) {
+    execute (ctx, [name, loops]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
             : ctx.gifManager?.lastCurrentEncoder;
-        if (!gif) return this.customError('No gif');
+        if (!gif) return this.customError(FCError.NoEncoder);
 
         gif.setRepeat(loops);
         return this.success();

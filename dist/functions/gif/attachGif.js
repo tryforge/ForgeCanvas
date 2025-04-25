@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const discord_js_1 = require("discord.js");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$attachGIF',
     aliases: ['$sendGIF', '$renderGIF', '$gifRender'],
@@ -25,14 +26,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, filename]) {
+    execute(ctx, [name, filename]) {
         const gif = ctx.gifManager?.getEncoder(name);
         filename = `${filename ?? name}.gif`;
         if (!gif)
-            return this.customError('No GIF');
-        ctx.container.files.push(new discord_js_1.AttachmentBuilder(Buffer.from(gif.getBuffer()), {
-            name: filename
-        }));
+            return this.customError(classes_1.FCError.NoEncoder);
+        ctx.container.files.push(new discord_js_1.AttachmentBuilder(Buffer.from(gif.getBuffer()), { name: filename }));
         return this.success();
     }
 });

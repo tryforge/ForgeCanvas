@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$transform',
@@ -57,11 +58,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, ...matrix]) {
+    execute (ctx, [name, ...matrix]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         canvas.ctx.transform(...matrix);
         return this.success();

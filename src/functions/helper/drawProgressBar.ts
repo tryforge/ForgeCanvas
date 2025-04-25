@@ -1,5 +1,5 @@
-import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { BarData, BarOptions, CanvasUtil } from '../..';
+import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
+import { BarData, BarOptions, CanvasUtil, FCError } from '../..';
 
 export default new NativeFunction({
     name: '$drawProgressBar',
@@ -61,23 +61,32 @@ export default new NativeFunction({
         const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {}) as BarOptions;
         const type = options.type ?? 'normal';
 
+        const background = await CanvasUtil.resolveStyle(
+            this, ctx, canvas,
+            options['background-style'] ?? '#000000'
+        );
+        if (background instanceof Return) return background;
+
         let res: any;
         if (type === 'normal') {
             const progress = data[0];
+            if (!progress) return this.customError(FCError.NoBarData);
+
+            const style = await CanvasUtil.resolveStyle(
+                this, ctx, canvas,
+                progress.style as string ?? '#000'
+            );
+            if (style instanceof Return) return style;
+
             res = canvas.drawProgressBar(
                 x, y, width, height,
                 progress.value,
                 {
-                    style: await CanvasUtil.parseStyle(
-                        this, ctx, canvas,
-                        progress.style as any
-                    ) ?? '#000000',
+                    style: style,
                     background: {
-                        enabled: Object.keys(options).find(x => x.startsWith('background')) !== undefined,
-                        style: await CanvasUtil.parseStyle(
-                            this, ctx, canvas,
-                            options['background-style'] as any
-                        ) ?? '#000000',
+                        enabled: Object.keys(options)
+                            .find(x => x.startsWith('background')) !== undefined,
+                        style: background,
                         radius: options['background-radius'],
                         padding: options['background-padding'],
                         type: options['background-type']
@@ -96,11 +105,9 @@ export default new NativeFunction({
                 {
                     type: options['draw-type'] === 'clear' ? 'fill' : options['draw-type'],
                     background: {
-                        enabled: Object.keys(options).find(x => x.startsWith('background')) !== undefined,
-                        style: await CanvasUtil.parseStyle(
-                            this, ctx, canvas,
-                            options['background-style'] as any
-                        ) ?? '#000000',
+                        enabled: Object.keys(options)
+                            .find(x => x.startsWith('background')) !== undefined,
+                        style: background,
                         radius: options['background-radius'],
                         padding: options['background-padding'],
                         type: options['background-type']

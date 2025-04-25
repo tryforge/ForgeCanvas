@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$rotate',
@@ -23,11 +24,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, angle]) {
+    execute (ctx, [name, angle]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         canvas.rotate(angle);
         return this.success();

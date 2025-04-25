@@ -95,9 +95,11 @@ exports.default = new forgescript_1.NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
-        const styleT = t === __1.FillOrStroke.fill ? 'fillStyle' : 'strokeStyle', oldstyle = canvas.ctx[styleT];
-        canvas.ctx[styleT] = await __1.CanvasUtil.parseStyle(this, ctx, canvas, style);
+            return this.customError(__1.FCError.NoCanvas);
+        const styleT = t === __1.FillOrStroke.fill ? 'fillStyle' : 'strokeStyle', oldstyle = canvas.ctx[styleT], s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        if (s instanceof forgescript_1.Return)
+            return s;
+        canvas.ctx[styleT] = s;
         canvas.text(t, text, x, y, font, maxWidth, multiline, wrap, lineOffset);
         canvas.ctx[styleT] = oldstyle;
         return this.success();

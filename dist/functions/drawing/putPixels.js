@@ -61,14 +61,14 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, pixels, x, y, w, h, t]) {
+    execute(ctx, [name, pixels, x, y, w, h, t]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         if (!Array.isArray(pixels))
-            return this.customError('Invalid pixels');
+            return this.customError(__1.FCError.ArrayExpected);
         canvas.setPixels(x, y, w, h, pixels, t);
         return this.success();
     }

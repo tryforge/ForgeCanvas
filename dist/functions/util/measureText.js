@@ -44,7 +44,7 @@ exports.default = new forgescript_1.NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         const res = canvas.measureText(text, font);
         return this.success(property !== null
             ? res[__1.MeasureTextProperty[(typeof property === 'string' ? __1.MeasureTextProperty[property] : property)]]

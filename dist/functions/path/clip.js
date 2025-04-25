@@ -26,12 +26,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, rule]) {
+    execute(ctx, [name, rule]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         canvas.ctx.clip((typeof rule === 'number' ? __1.FillRule[rule] : rule));
         return this.success();
     }

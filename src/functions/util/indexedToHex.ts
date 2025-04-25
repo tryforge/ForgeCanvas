@@ -45,9 +45,14 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (_, [palette, transparent, aua, a_s, pixels]) {
+    execute (_, [palette, transparent, aua, a_s, pixels]) {
         try {
-            const res = indexedToHex(Uint8Array.from(pixels), Uint8Array.from(palette as unknown as number[]), transparent, aua ?? false, a_s ?? false);
+            const res = indexedToHex(
+                Uint8Array.from(pixels),
+                Uint8Array.from(palette as unknown as number[]),
+                transparent, aua ?? false,
+                a_s ?? false
+            );
             return this.success(`[${res.map(x => `"${x}"`).join(', ')}]`);
         } catch(e) {
             return this.customError((e as any).toString());

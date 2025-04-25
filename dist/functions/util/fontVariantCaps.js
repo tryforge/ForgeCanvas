@@ -26,12 +26,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, t]) {
+    execute(ctx, [name, t]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         return this.success(t !== null
             ? (canvas.fontVariantCaps = (typeof t === 'number'
                 ? __1.FontVariantCaps[t]

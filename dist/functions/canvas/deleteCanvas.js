@@ -17,7 +17,7 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name]) {
+    execute(ctx, [name]) {
         ctx.canvasManager?.remove(name);
         return this.success();
     }

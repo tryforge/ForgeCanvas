@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$closePath',
     aliases: ['$endPath'],
@@ -16,13 +17,13 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name]) {
+    execute(ctx, [name]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
-        canvas.ctx.beginPath();
+            return this.customError(classes_1.FCError.NoCanvas);
+        canvas.ctx.closePath();
         return this.success();
     }
 });

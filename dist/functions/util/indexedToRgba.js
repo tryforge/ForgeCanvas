@@ -32,7 +32,7 @@ exports.default = new forgescript_1.NativeFunction({
             rest: true
         }
     ],
-    async execute(_, [palette, transparent, pixels]) {
+    execute(_, [palette, transparent, pixels]) {
         try {
             const res = (0, gifsx_1.indexedToRgba)(Uint8Array.from(pixels), Uint8Array.from(palette), transparent);
             return this.success(`[${res.join(', ')}]`);

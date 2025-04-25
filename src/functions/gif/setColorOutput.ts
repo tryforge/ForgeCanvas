@@ -1,6 +1,6 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { GIFManager, ColorOutput } from '../..';
 import { DecodeOptions } from '@gifsx/gifsx';
+import { GIFManager, ColorOutput, FCError } from '../..';
 
 export default new NativeFunction({
     name: '$setColorOutput',
@@ -26,7 +26,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, output]) {
+    execute (ctx, [name, output]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
         if (!name && !ctx.gifManager.currentOptions)
@@ -35,7 +35,7 @@ export default new NativeFunction({
         const options = name
             ? ctx.gifManager.getDecodeOptions(name)
             : ctx.gifManager.currentOptions;
-        if (!options) return this.customError('No decode options');
+        if (!options) return this.customError(FCError.NoDecodeOptions);
 
         options.setColorOutput(output as unknown as import('@gifsx/gifsx').ColorOutput);
         return this.success();

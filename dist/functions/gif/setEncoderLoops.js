@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$setEncoderLoops',
     aliases: [
@@ -30,12 +31,12 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, loops]) {
+    execute(ctx, [name, loops]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
             : ctx.gifManager?.lastCurrentEncoder;
         if (!gif)
-            return this.customError('No gif');
+            return this.customError(classes_1.FCError.NoEncoder);
         gif.setRepeat(loops);
         return this.success();
     }

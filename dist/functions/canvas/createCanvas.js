@@ -52,11 +52,11 @@ exports.default = new forgescript_1.NativeFunction({
                 ctx.canvasManager.current.push(new classes_1.CanvasBuilder(width, height));
             }
         }
-        for (let i = (this.data.fields.length >= 3 ? 3 : 0); i < this.data.fields.length; i++) {
+        for (let i = (this.data.fields.length >= 3 ? 3 : 1); i < this.data.fields.length; i++) {
             await this['resolveCode'](ctx, this.data.fields[i]);
         }
         if (!ctx.canvasManager || ctx.canvasManager.current.length === 0)
-            return this.customError('No size has been set');
+            return this.customError(classes_1.FCError.NoSize);
         ctx.canvasManager.set(name, ctx.canvasManager.lastCurrent);
         ctx.canvasManager.current = ctx.canvasManager.current.slice(0, ctx.canvasManager.current.length - 1);
         return this.success();

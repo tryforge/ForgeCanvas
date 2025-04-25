@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { TextBaseline } from '../..';
+import { FCError, TextBaseline } from '../..';
 
 export default new NativeFunction({
     name: '$textBaseline',
@@ -24,11 +24,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, baseline]) {
+    execute (ctx, [name, baseline]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
  
         return this.success(baseline !== null
             ? (

@@ -30,9 +30,11 @@ exports.default = new forgescript_1.NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
-        const oldstyle = canvas.ctx.strokeStyle;
-        canvas.ctx.strokeStyle = await __1.CanvasUtil.parseStyle(this, ctx, canvas, style);
+            return this.customError(__1.FCError.NoCanvas);
+        const oldstyle = canvas.ctx.strokeStyle, s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        if (s instanceof forgescript_1.Return)
+            return s;
+        canvas.ctx.strokeStyle = s;
         canvas.ctx.stroke();
         canvas.ctx.strokeStyle = oldstyle;
         return this.success();

@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { ColorDataType } from '../..';
+import { ColorDataType, FCError } from '../..';
 
 export default new NativeFunction({
     name: '$putPixels',
@@ -60,13 +60,13 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, pixels, x, y, w, h, t]) {
+    execute (ctx, [name, pixels, x, y, w, h, t]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         
-        if (!canvas) return this.customError('No canvas');
-        if (!Array.isArray(pixels)) return this.customError('Invalid pixels');
+        if (!canvas) return this.customError(FCError.NoCanvas);
+        if (!Array.isArray(pixels)) return this.customError(FCError.ArrayExpected);
 
         canvas.setPixels(x, y, w, h, pixels, t);
         return this.success();

@@ -1,5 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { Image, loadImage } from '@napi-rs/canvas';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$imageBuffer',
@@ -22,7 +23,7 @@ export default new NativeFunction({
         if (path.startsWith('images://') && ctx.imageManager)
             image = ctx.imageManager.get(path.slice(9));
         else image = await loadImage(path);
-        if (!image) return this.customError('Invalid image');
+        if (!image) return this.customError(FCError.NoImage);
         
         return this.success(`[${Array.from(
             await image.getBuffer() ?? []

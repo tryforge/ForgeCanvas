@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CompositingOperation } from '../..';
+import { CompositingOperation, FCError } from '../..';
 
 export default new NativeFunction({
     name: '$compositeOperation',
@@ -25,11 +25,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, operation]) {
+    execute (ctx, [name, operation]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         return this.success(operation !== null
             ? (canvas.globalCompositeOperation = (typeof operation === 'number' 

@@ -15,7 +15,11 @@ export default new NativeFunction({
         required: false,
         rest: false
     }],
-    async execute (_, [sep]) {
-        return this.success(GlobalFonts.families.map(x => x?.family).join(sep ?? ', '));
+    execute (_, [sep]) {
+        return this.success(
+            GlobalFonts.families
+                .map(x => x?.family)
+                .join(sep ?? ', ')
+        );
     }
 });

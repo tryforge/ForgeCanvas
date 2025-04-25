@@ -26,10 +26,10 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [name, property]) {
+    execute(ctx, [name, property]) {
         const gif = ctx.gifManager?.getDecoder(name);
         if (!gif)
-            return this.customError('No gif');
+            return this.customError(__1.FCError.NoDecoder);
         return this.success(property !== null // @ts-ignore
             ? gif[__1.WidthOrHeight[(typeof property === 'string' ? __1.WidthOrHeight[property] : property)]]
             : JSON.stringify({ width: gif.width, height: gif.height }));

@@ -16,7 +16,7 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (_, [hex]) {
+    execute (_, [hex]) {
         try {
             const res = hexToRgba(hex);
             return this.success(`[${res.join(', ')}]`);
