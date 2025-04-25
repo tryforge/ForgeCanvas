@@ -31,9 +31,13 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (_, [aia, a_s, rgba]) {
+    execute (_, [aia, a_s, rgba]) {
         try {
-            const res = rgbaToHex(Uint8Array.from(rgba), aia ?? false, a_s ?? false);
+            const res = rgbaToHex(
+                Uint8Array.from(rgba),
+                aia ?? false,
+                a_s ?? false
+            );
             return this.success(`[${res.map(x => `"${x}"`).join(', ')}]`);
         } catch(e) {
             return this.customError((e as any).toString());

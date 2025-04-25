@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$shadowOptions',
@@ -17,18 +18,18 @@ export default new NativeFunction({
         },
         {
             name: 'options',
-            description: 'The options.',
+            description: 'The options. (color, blur, offsetX, offsetY)',
             type: ArgType.Json,
             required: true,
             rest: false
         }
     ],
-    async execute (ctx, [name, options]) {
+    execute (ctx, [name, options]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
 
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
         if (typeof options === 'string') options = JSON.parse(options);
 
         const shadowOptions: Record<string, 'shadowColor' | 'shadowBlur' | 'shadowOffsetX' | 'shadowOffsetY'> = {
@@ -45,6 +46,8 @@ export default new NativeFunction({
         } else for (const option in options)
             res.push(canvas[shadowOptions[option]]);
 
-        return this.success(Array.isArray(options) ? JSON.stringify(res) : undefined);
+        return this.success(Array.isArray(options)
+            ? JSON.stringify(res) : undefined
+        );
     }
 });

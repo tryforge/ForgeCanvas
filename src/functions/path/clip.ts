@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FillRule } from '../..';
+import { FCError, FillRule } from '../..';
 
 export default new NativeFunction({
     name: '$clip',
@@ -25,11 +25,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, rule]) {
+    execute (ctx, [name, rule]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         canvas.ctx.clip((typeof rule === 'number' ? FillRule[rule] : rule) as CanvasFillRule);
         return this.success();

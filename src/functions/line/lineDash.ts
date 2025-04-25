@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$lineDash',
@@ -22,14 +23,14 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, segments]) {
+    execute (ctx, [name, segments]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         if (segments && (!Array.isArray(segments) || !segments.every(x => typeof x === 'number')))
-            return this.customError('Invalid segments.');
+            return this.customError(FCError.InvalidLineDashSegments);
 
         return this.success(segments 
             ? (canvas.setLineDash(segments), undefined)

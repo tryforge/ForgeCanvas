@@ -1,9 +1,18 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { writeFileSync } from 'node:fs';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$saveEncoder',
-    aliases: ['$downloadEncoder', '$downloadGIF', '$saveGIF', '$encoderSave', '$encoderDownload', '$gifDownload', '$gifSave'],
+    aliases: [
+        '$downloadEncoder',
+        '$downloadGIF',
+        '$saveGIF',
+        '$encoderSave',
+        '$encoderDownload',
+        '$gifDownload',
+        '$gifSave'
+    ],
     description: 'Saves an Encoder GIF to a file.',
     version: '1.1.0',
     brackets: true,
@@ -24,13 +33,13 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, path]) {
+    execute (ctx, [name, path]) {
         const gif = name
             ? ctx.gifManager?.getEncoder(name)
             : ctx.gifManager?.lastCurrentEncoder;
 
-        if (!gif) return this.customError('No gif');
-        if (!path) return this.customError('No path provided');
+        if (!gif) return this.customError(FCError.NoEncoder);
+        if (!path) return this.customError(FCError.NoPath);
 
         writeFileSync(path, gif.getBuffer());
         return this.success();

@@ -1,5 +1,5 @@
-import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil } from '../..';
+import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
+import { CanvasUtil, FCError } from '../..';
 
 export default new NativeFunction({
     name: '$stroke',
@@ -28,11 +28,13 @@ export default new NativeFunction({
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
-        const oldstyle = canvas.ctx.strokeStyle;
+        const oldstyle = canvas.ctx.strokeStyle,
+              s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        if (s instanceof Return) return s;
 
-        canvas.ctx.strokeStyle = await CanvasUtil.parseStyle(this, ctx, canvas, style);
+        canvas.ctx.strokeStyle = s;
         canvas.ctx.stroke();
         canvas.ctx.strokeStyle = oldstyle;
 

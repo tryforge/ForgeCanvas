@@ -1,6 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { GIFManager } from '../..';
 import { DecodeOptions } from '@gifsx/gifsx';
+import { GIFManager } from '../..';
 
 export default new NativeFunction({
     name: '$decodeOptions',
@@ -25,7 +25,7 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx, [name]) {
+    execute (ctx, [name]) {
         if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
 

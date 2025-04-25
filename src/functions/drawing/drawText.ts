@@ -1,5 +1,5 @@
-import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil, FillOrStroke } from '../..';
+import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
+import { CanvasUtil, FCError, FillOrStroke } from '../..';
 
 export default new NativeFunction({
     name: '$drawText',
@@ -93,17 +93,18 @@ export default new NativeFunction({
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         const styleT = t === FillOrStroke.fill ? 'fillStyle' : 'strokeStyle',
-              oldstyle = canvas.ctx[styleT];
-
-        canvas.ctx[styleT] = await CanvasUtil.parseStyle(this, ctx, canvas, style);
+              oldstyle = canvas.ctx[styleT],
+              s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        if (s instanceof Return) return s;
+        
+        canvas.ctx[styleT] = s;
         canvas.text(
             t,
             text,
-            x,
-            y,
+            x, y,
             font,
             maxWidth,
             multiline,

@@ -31,9 +31,13 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (_, [palette, transparent, pixels]) {
+    execute (_, [palette, transparent, pixels]) {
         try {
-            const res = indexedToRgba(Uint8Array.from(pixels), Uint8Array.from(palette as unknown as number[]), transparent);
+            const res = indexedToRgba(
+                Uint8Array.from(pixels),
+                Uint8Array.from(palette as unknown as number[]),
+                transparent
+            );
             return this.success(`[${res.join(', ')}]`);
         } catch(e) {
             return this.customError((e as any).toString());

@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { LineJoinShape } from '../..';
+import { FCError, LineJoinShape } from '../..';
 
 export default new NativeFunction({
     name: '$lineJoin',
@@ -24,11 +24,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, shape]) {
+    execute (ctx, [name, shape]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         return this.success(shape
             ? (canvas.lineJoin = (typeof shape === 'number' 

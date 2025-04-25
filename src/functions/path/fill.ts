@@ -1,5 +1,5 @@
-import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasUtil, FillRule } from '../..';
+import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
+import { CanvasUtil, FCError, FillRule } from '../..';
 
 export default new NativeFunction({
     name: '$fill',
@@ -36,11 +36,13 @@ export default new NativeFunction({
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
-        const oldstyle = canvas.ctx.fillStyle;
+        const oldstyle = canvas.ctx.fillStyle,
+              s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        if (s instanceof Return) return s;
 
-        canvas.ctx.fillStyle = await CanvasUtil.parseStyle(this, ctx, canvas, style);
+        canvas.ctx.fillStyle = s;
         canvas.ctx.fill((typeof rule === 'number' ? FillRule[rule] : rule) as CanvasFillRule);
         canvas.ctx.fillStyle = oldstyle;
 

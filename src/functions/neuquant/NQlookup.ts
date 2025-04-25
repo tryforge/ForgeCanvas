@@ -1,4 +1,5 @@
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$NQlookup',
@@ -22,9 +23,9 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, idx]) {
+    execute (ctx, [name, idx]) {
         const nq = ctx.neuquantManager?.get(name);
-        if (!nq) return this.customError('No NeuQuant instance');
+        if (!nq) return this.customError(FCError.NoNeuQuant);
 
         return this.success(nq.lookup(idx));
     }

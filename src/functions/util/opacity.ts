@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$opacity',
@@ -23,11 +24,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, opacity]) {
+    execute (ctx, [name, opacity]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         return this.success(opacity
             ? (canvas.globalAlpha = opacity / 100, undefined)

@@ -52,7 +52,7 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (ctx, [name, x1, y1, x2, y2]) {
+    execute (ctx, [name, x1, y1, x2, y2]) {
         if (!ctx.gradientManager || !(ctx.gradientManager instanceof GradientManager))
             ctx.gradientManager = new GradientManager();
 
@@ -60,6 +60,7 @@ export default new NativeFunction({
         for (const stop of ctx.gradientManager.stops)
             ctx.gradientManager?.get(name)?.addColorStop(...stop);
         
+        ctx.gradientManager.stops = [];
         return this.success();
     }
 });

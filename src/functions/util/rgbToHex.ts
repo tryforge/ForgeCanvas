@@ -24,7 +24,7 @@ export default new NativeFunction({
             rest: true
         }
     ],
-    async execute (_, [a_s, rgb]) {
+    execute (_, [a_s, rgb]) {
         try {
             const res = rgbToHex(Uint8Array.from(rgb), a_s ?? false);
             return this.success(`[${res.map(x => `"${x}"`).join(', ')}]`);

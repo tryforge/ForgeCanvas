@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { BarData } from '../..';
+import { BarData, FCError } from '../..';
 
 export default new NativeFunction({
     name: '$barData',
@@ -27,7 +27,7 @@ export default new NativeFunction({
         const numericValue = Number.parseFloat(value);
 
         if (Number.isNaN(numericValue) || numericValue < 0)
-            return this.customError('Invalid value for bar data.');
+            return this.customError(FCError.InvalidBarData);
 
         const barData = (ctx.getEnvironmentKey('progressBarData') || []) as BarData[];
         barData.push({ value: numericValue, style });

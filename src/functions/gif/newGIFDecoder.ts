@@ -2,7 +2,7 @@ import { ArgType, NativeFunction } from '@tryforge/forgescript';
 import { Decoder } from '@gifsx/gifsx';
 import { fetch } from 'undici';
 import { readFile } from 'node:fs/promises';
-import { GIFManager } from '../..';
+import { FCError, GIFManager } from '../..';
 
 export default new NativeFunction({
     name: '$newGIFDecoder',
@@ -46,13 +46,14 @@ export default new NativeFunction({
             gif = await response.arrayBuffer();
         } else if (path.startsWith('encoder://')) {
             const encoder = ctx.gifManager.getEncoder(path.slice(10));
-            if (!encoder) return this.customError('No encoder');
+            if (!encoder) return this.customError(FCError.NoEncoder);
 
             gif = encoder.getBuffer();
         } else gif = await readFile(path, null);
 
         ctx.gifManager.setDecoder(
-            name, new Decoder(
+            name,
+            new Decoder(
                 Buffer.from(gif),
                 options ? ctx.gifManager.getDecodeOptions(options) : undefined
             )

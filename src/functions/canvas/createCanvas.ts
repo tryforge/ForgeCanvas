@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasBuilder, CanvasManager } from '../../classes';
+import { CanvasBuilder, CanvasManager, FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$createCanvas',
@@ -40,7 +40,6 @@ export default new NativeFunction({
     ],
     async execute (ctx) {
         if (!this.data.fields) this.data.fields = [];
-
         const name = (await this['resolveCode'](ctx, this.data.fields[0]))?.value;
 
         if (this.data.fields.length >= 3) {
@@ -57,12 +56,12 @@ export default new NativeFunction({
             }
         }
 
-        for (let i = (this.data.fields.length >= 3 ? 3 : 0); i < this.data.fields.length; i++) {
+        for (let i = (this.data.fields.length >= 3 ? 3 : 1); i < this.data.fields.length; i++) {
             await this['resolveCode'](ctx, this.data.fields[i]);
         }
 
         if (!ctx.canvasManager || ctx.canvasManager.current.length === 0)
-            return this.customError('No size has been set');
+            return this.customError(FCError.NoSize);
 
         ctx.canvasManager.set(name, ctx.canvasManager.lastCurrent);
         ctx.canvasManager.current = ctx.canvasManager.current.slice(

@@ -1,5 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { AttachmentBuilder } from 'discord.js';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$attachImage',
@@ -26,11 +27,11 @@ export default new NativeFunction({
     ],
     async execute (ctx, [name, filename]) {
         const img = await ctx.imageManager?.get(name)?.getBuffer();
-        if (!img) return this.customError('No image');
+        if (!img) return this.customError(FCError.NoImage);
         
-        ctx.container.files.push(new AttachmentBuilder(img, {
-            name: filename ?? `${name}.png`
-        }));
+        ctx.container.files.push(new AttachmentBuilder(
+            img, { name: filename ?? `${name}.png` }
+        ));
         return this.success();
     }
 });

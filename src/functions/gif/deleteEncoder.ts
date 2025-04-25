@@ -16,7 +16,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name]) {
+    execute (ctx, [name]) {
         ctx.gifManager?.removeEncoder(name);
         return this.success();
     }

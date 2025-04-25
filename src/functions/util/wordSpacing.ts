@@ -1,4 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$wordSpacing',
@@ -23,11 +24,11 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [name, spacing]) {
+    execute (ctx, [name, spacing]) {
         const canvas = (name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
  
         return this.success(spacing
             ? (canvas.wordSpacing = `${spacing}px`, undefined) 

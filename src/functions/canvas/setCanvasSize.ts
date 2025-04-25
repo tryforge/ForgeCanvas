@@ -25,7 +25,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [w, h]) {
+    execute (ctx, [w, h]) {
         if (!ctx.canvasManager || !(ctx.canvasManager instanceof CanvasManager))
             ctx.canvasManager = new CanvasManager();
 

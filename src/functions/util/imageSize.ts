@@ -1,6 +1,6 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { Image, loadImage } from '@napi-rs/canvas';
-import { WidthOrHeight } from '../..';
+import { FCError, WidthOrHeight } from '../..';
 
 export default new NativeFunction({
     name: '$imageSize',
@@ -32,7 +32,7 @@ export default new NativeFunction({
         if (path.startsWith('images://') && ctx.imageManager)
             image = ctx.imageManager.get(path.slice(9));
         else image = await loadImage(path);
-        if (!image) return this.customError('Failed to load image.');
+        if (!image) return this.customError(FCError.ImageFail);
 
         return this.success(property !== null // @ts-ignore
             ? image[WidthOrHeight[
