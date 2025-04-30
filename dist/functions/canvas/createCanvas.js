@@ -42,21 +42,19 @@ exports.default = new forgescript_1.NativeFunction({
     async execute(ctx) {
         if (!this.data.fields)
             this.data.fields = [];
-        const name = (await this['resolveCode'](ctx, this.data.fields[0]))?.value;
-        if (this.data.fields.length >= 3) {
-            const width = Number((await this['resolveCode'](ctx, this.data.fields?.[1]))?.value);
-            const height = Number((await this['resolveCode'](ctx, this.data.fields?.[2]))?.value);
-            if (!Number.isNaN(width) && !Number.isNaN(height)) {
-                if (!ctx.canvasManager || !(ctx.canvasManager instanceof classes_1.CanvasManager))
-                    ctx.canvasManager = new classes_1.CanvasManager();
-                ctx.canvasManager.current.push(new classes_1.CanvasBuilder(width, height));
-            }
+        if (!ctx.canvasManager || !(ctx.canvasManager instanceof classes_1.CanvasManager))
+            ctx.canvasManager = new classes_1.CanvasManager();
+        const options = await this['resolveMultipleArgs'](ctx, 0, 1, 2);
+        const [name, width, height] = options.args;
+        const r = options.return;
+        if (!r?.success)
+            return r;
+        ctx.canvasManager.current.push(new classes_1.CanvasBuilder(width, height));
+        for (let i = 3; i < this.data.fields.length; i++) {
+            const r = await this['resolveCode'](ctx, this.data.fields[i]);
+            if (!r?.success)
+                return r;
         }
-        for (let i = (this.data.fields.length >= 3 ? 3 : 1); i < this.data.fields.length; i++) {
-            await this['resolveCode'](ctx, this.data.fields[i]);
-        }
-        if (!ctx.canvasManager || ctx.canvasManager.current.length === 0)
-            return this.customError(classes_1.FCError.NoSize);
         ctx.canvasManager.set(name, ctx.canvasManager.lastCurrent);
         ctx.canvasManager.current = ctx.canvasManager.current.slice(0, ctx.canvasManager.current.length - 1);
         return this.success();

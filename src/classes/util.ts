@@ -1,10 +1,13 @@
-import { GlobalFonts, loadImage, Image, createCanvas } from '@napi-rs/canvas';
-import { CompiledFunction, Context } from '@tryforge/forgescript';
+import { GlobalFonts, loadImage, createCanvas } from '@napi-rs/canvas';
 import { Frame, hexToRgba, indexedToRgba, rgbaToHex } from '@gifsx/gifsx';
 import { RectAlign, RectBaseline } from '..';
-import { CanvasBuilder } from './builder';
+
+import type { Image, ImageData } from '@napi-rs/canvas';
+import type { CompiledFunction, Context } from '@tryforge/forgescript';
+import type { CanvasBuilder } from './builder';
 
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i
+export const filterRegex = /([a-zA-Z-]+)\(([^)]+)\)/g;
 export const rgbaRegex = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
 export const hexRegex = /^#?([0-9A-Fa-f]{3,4}){1,2}$/;
 export const Colors: Record<string, string> = {
@@ -139,7 +142,8 @@ export const CanvasUtil = {
             imageData.data.set(
                 buffer.length === width * height * 4
                     ? buffer : indexedToRgba(
-                        Uint8Array.from(buffer), frame.palette ?? Uint8Array.from([]),
+                        Uint8Array.from(buffer),
+                        frame.palette ?? Uint8Array.from([]),
                         frame.transparent
                     )
             );
@@ -170,7 +174,7 @@ export const CanvasUtil = {
     },
 
     resolveFrame: async (self: CompiledFunction, ctx: Context, frame: string, speed: number | undefined | null) => {
-        switch (frame.split('://')[0]) {
+        switch (frame.substring(0, frame.indexOf(':'))) {
             case 'rgba': {
                 const [size, data] = parseArgs(frame, 'rgba://', 2);
                 const [width, height] = size.split('x').map(Number);
@@ -239,7 +243,10 @@ export const CanvasUtil = {
         WorH: number,
         AorB: RectAlign | RectBaseline 
     ) => {
-        AorB = typeof AorB === 'string' ? RectAlign[AorB as keyof typeof RectAlign] : AorB;
+        AorB = typeof AorB === 'string'
+            ? RectAlign[AorB as keyof typeof RectAlign]
+            : AorB;
+
         return AorB === RectAlign.center
                 ? XorY - WorH / 2
             : AorB === RectAlign.right || AorB === RectBaseline.top
@@ -249,10 +256,9 @@ export const CanvasUtil = {
 
     parseFilters: (filters: string) => {
         const result = [];
-        const regex = /([a-zA-Z-]+)\(([^)]+)\)/g;
 
         let match: RegExpExecArray | null;
-        while ((match = regex.exec(filters)) !== null) {
+        while ((match = filterRegex.exec(filters)) !== null) {
             const [raw, filter, value] = match;
             result.push({ filter, value, raw });
         }
@@ -290,29 +296,30 @@ export function parseArgs(str: string, prefix: string | number, length: number, 
 }
 
 export enum FCError {
-    NoCanvas = 'No canvas with provided name found',
-    NoImage = 'No image with provided name found',
-    NoGradient = 'No gradient with provided name found',
-    NoStyle = 'No style provided',
-    ImageFail = 'Failed to load an image',
-    InvalidOffset = 'Offset must be between 0 and 100',
-    InvalidRectType = 'Invalid rect type provided (Expected fill/stroke/clear)',
+    NoCanvas                = 'No canvas with provided name found',
+    NoImage                 = 'No image with provided name found',
+    NoGradient              = 'No gradient with provided name found',
+    NoStyle                 = 'No style provided',
+    ImageFail               = 'Failed to load an image',
+    InvalidOffset           = 'Offset must be between 0 and 100',
+    InvalidRectType         = 'Invalid rect type provided (Expected fill/stroke/clear)',
     InvalidLineDashSegments = 'Invalid line dash segments provided (Expected array of numbers)',
 
-    NoEncoder = 'No GIF encoder with provided name found',
-    NoDecoder = 'No GIF decoder with provided name found',
-    NoDecodeOptions = 'No decode options with provided name found',
-    NoNeuQuant = 'No NeuQuant Instance with provided name found',
-    NoFrame = 'No frame with provided name found',
-    NoSizeAndPalette = 'No size and palette has been set',
-    FrameFail = 'Failed to load a frame',
+    NoEncoder               = 'No GIF encoder with provided name found',
+    NoDecoder               = 'No GIF decoder with provided name found',
+    NoDecodeOptions         = 'No decode options with provided name found',
+    NoNeuQuant              = 'No NeuQuant Instance with provided name found',
+    NoFrame                 = 'No frame with provided name found',
+    NoSizeAndPalette        = 'No size and palette has been set',
+    FrameFail               = 'Failed to load a frame',
 
-    NoBarData = 'No bar data provided',
-    InvalidBarData = 'Invalid bar data provided',
-    InvalidBarType = 'Invalid bar type provided (Expected normal/pie)',
-    InvalidBarDirection = 'Invalid bar direction provided (Expected horizontal/vertical)',
-    
-    NoSize = 'No size has been set',
-    NoPath = 'No path provided',
-    ArrayExpected = 'Array expected',
+    NoBarData               = 'No bar data provided',
+    InvalidBarData          = 'Invalid bar data provided',
+    InvalidBarType          = 'Invalid bar type provided (Expected normal/pie)',
+    InvalidBarDirection     = 'Invalid bar direction provided (Expected horizontal/vertical)',
+
+    NoSize                  = 'No size has been set',
+    NoPath                  = 'No path provided',
+    ArrayExpected           = 'Array expected',
+    InvalidWidthOrHeight    = 'Invalid width or height provided',
 }

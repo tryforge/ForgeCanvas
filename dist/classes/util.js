@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FCError = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.fontRegex = void 0;
+exports.FCError = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.filterRegex = exports.fontRegex = void 0;
 exports.loadFrame = loadFrame;
 exports.parseArgs = parseArgs;
 const canvas_1 = require("@napi-rs/canvas");
 const gifsx_1 = require("@gifsx/gifsx");
 const __1 = require("..");
 exports.fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z]+?)\s*$/i;
+exports.filterRegex = /([a-zA-Z-]+)\(([^)]+)\)/g;
 exports.rgbaRegex = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
 exports.hexRegex = /^#?([0-9A-Fa-f]{3,4}){1,2}$/;
 exports.Colors = {
@@ -151,7 +152,7 @@ exports.CanvasUtil = {
         ]), false, true)[0];
     },
     resolveFrame: async (self, ctx, frame, speed) => {
-        switch (frame.split('://')[0]) {
+        switch (frame.substring(0, frame.indexOf(':'))) {
             case 'rgba': {
                 const [size, data] = parseArgs(frame, 'rgba://', 2);
                 const [width, height] = size.split('x').map(Number);
@@ -188,7 +189,9 @@ exports.CanvasUtil = {
         }
     },
     calculateRectAlignOrBaseline: (XorY, WorH, AorB) => {
-        AorB = typeof AorB === 'string' ? __1.RectAlign[AorB] : AorB;
+        AorB = typeof AorB === 'string'
+            ? __1.RectAlign[AorB]
+            : AorB;
         return AorB === __1.RectAlign.center
             ? XorY - WorH / 2
             : AorB === __1.RectAlign.right || AorB === __1.RectBaseline.top
@@ -197,9 +200,8 @@ exports.CanvasUtil = {
     },
     parseFilters: (filters) => {
         const result = [];
-        const regex = /([a-zA-Z-]+)\(([^)]+)\)/g;
         let match;
-        while ((match = regex.exec(filters)) !== null) {
+        while ((match = exports.filterRegex.exec(filters)) !== null) {
             const [raw, filter, value] = match;
             result.push({ filter, value, raw });
         }
@@ -243,4 +245,5 @@ var FCError;
     FCError["NoSize"] = "No size has been set";
     FCError["NoPath"] = "No path provided";
     FCError["ArrayExpected"] = "Array expected";
+    FCError["InvalidWidthOrHeight"] = "Invalid width or height provided";
 })(FCError || (exports.FCError = FCError = {}));

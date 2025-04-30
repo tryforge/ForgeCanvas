@@ -28,10 +28,10 @@
   },
   "homepage": "https://github.com/tryforge/ForgeCanvas#readme",
   "devDependencies": {
-    "@tryforge/forgescript": "^2.2.0",
+    "@tryforge/forgescript": "^2.3.0",
     "@types/node": "^22.13.5",
-    "typedoc": "^0.26.11",
-    "typescript": "^5.7.3"
+    "typedoc": "^0.28.3",
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "@gifsx/gifsx": "^1.0.15",

@@ -1,15 +1,16 @@
-import { Image } from '@napi-rs/canvas';
-import { CompiledFunction, Context } from '@tryforge/forgescript';
 import { Frame } from '@gifsx/gifsx';
 import { RectAlign, RectBaseline } from '..';
-import { CanvasBuilder } from './builder';
+import type { Image } from '@napi-rs/canvas';
+import type { CompiledFunction, Context } from '@tryforge/forgescript';
+import type { CanvasBuilder } from './builder';
 export declare const fontRegex: RegExp;
+export declare const filterRegex: RegExp;
 export declare const rgbaRegex: RegExp;
 export declare const hexRegex: RegExp;
 export declare const Colors: Record<string, string>;
 export declare const CanvasUtil: {
     isValidFont: (font: string) => boolean;
-    resolveStyle: (self: CompiledFunction, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<string | CanvasGradient | CanvasPattern | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
+    resolveStyle: (self: CompiledFunction, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<string | CanvasGradient | import("@napi-rs/canvas").CanvasPattern | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
     resolveImage: (self: CompiledFunction, ctx: Context, src: string) => Promise<Image | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
     rgbaStringToHex: (rgba: string) => string;
     resolveFrame: (self: CompiledFunction, ctx: Context, frame: string, speed: number | undefined | null) => Promise<Frame | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
@@ -44,5 +45,6 @@ export declare enum FCError {
     InvalidBarDirection = "Invalid bar direction provided (Expected horizontal/vertical)",
     NoSize = "No size has been set",
     NoPath = "No path provided",
-    ArrayExpected = "Array expected"
+    ArrayExpected = "Array expected",
+    InvalidWidthOrHeight = "Invalid width or height provided"
 }

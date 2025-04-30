@@ -64,7 +64,7 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        canvas.ctx.setTransform(matrix as DOMMatrix2DInit);
+        canvas.ctx.setTransform(...matrix);
         return this.success();
     }
 });

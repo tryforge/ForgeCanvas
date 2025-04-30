@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError, GIFManager } from '../../classes';
+import { GIFManager } from '../../classes';
 import { Encoder } from '@gifsx/gifsx';
 
 export default new NativeFunction({
@@ -48,31 +48,27 @@ export default new NativeFunction({
     ],
     async execute(ctx) {
         if (!this.data.fields) this.data.fields = [];
-        const name = (await this['resolveCode'](ctx, this.data.fields[0]))?.value;
-        
-        if (this.data.fields.length >= 4) {
-            const width = Number((await this['resolveCode'](ctx, this.data.fields[1]))?.value);
-            const height = Number((await this['resolveCode'](ctx, this.data.fields[2]))?.value);
-            let palette = (await this['resolveCode'](ctx, this.data.fields[2]))?.value;
+        if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
+            ctx.gifManager = new GIFManager();
 
-            try { palette = JSON.parse(palette) } catch(_){};
-            if (!Number.isNaN(width) && !Number.isNaN(height)) {
-                if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
-                    ctx.gifManager = new GIFManager();
+        const options = await this['resolveMultipleArgs'](ctx, 0,1,2,3);
+        let [name, width, height, palette] = options.args;
 
-                ctx.gifManager.currentEncoder.push(new Encoder(
-                    width, height,
-                    Array.isArray(palette) ? Uint8Array.from(palette) : undefined
-                ));
-            }
-        }
+        const r = options.return;
+        if (!r?.success) return r;
+
+        try { palette = JSON.parse(palette) } catch(_){};
+        ctx.gifManager.currentEncoder.push(new Encoder(
+            width, height,
+            Array.isArray(palette)
+                ? Uint8Array.from(palette)
+                : undefined
+        ));
         
-        for (let i = (this.data.fields.length >= 4 ? 4 : 1); i < this.data.fields.length; i++) {
-            await this['resolveCode'](ctx, this.data.fields[i]);
+        for (let i = 4; i < this.data.fields.length; i++) {
+            const r = await this['resolveCode'](ctx, this.data.fields[i]);
+            if (!r?.success) return r;
         }
-        
-        if (!ctx.gifManager || ctx.gifManager.currentEncoder.length === 0)
-            return this.customError(FCError.NoSizeAndPalette);
             
         ctx.gifManager.setEncoder(name, ctx.gifManager.lastCurrentEncoder);
         ctx.gifManager.currentEncoder = ctx.gifManager.currentEncoder.slice(

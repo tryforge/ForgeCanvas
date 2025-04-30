@@ -65,7 +65,7 @@ exports.default = new forgescript_1.NativeFunction({
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
             return this.customError(classes_1.FCError.NoCanvas);
-        canvas.ctx.setTransform(matrix);
+        canvas.ctx.setTransform(...matrix);
         return this.success();
     }
 });

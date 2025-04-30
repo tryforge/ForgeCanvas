@@ -4,7 +4,7 @@ export declare class CanvasBuilder {
     ctx: SKRSContext2D;
     util: {
         isValidFont: (font: string) => boolean;
-        resolveStyle: (self: import("@tryforge/forgescript").CompiledFunction, ctx: import("@tryforge/forgescript").Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<string | CanvasGradient | CanvasPattern | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
+        resolveStyle: (self: import("@tryforge/forgescript").CompiledFunction, ctx: import("@tryforge/forgescript").Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<string | CanvasGradient | import("@napi-rs/canvas").CanvasPattern | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
         resolveImage: (self: import("@tryforge/forgescript").CompiledFunction, ctx: import("@tryforge/forgescript").Context, src: string) => Promise<Image | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
         rgbaStringToHex: (rgba: string) => string;
         resolveFrame: (self: import("@tryforge/forgescript").CompiledFunction, ctx: import("@tryforge/forgescript").Context, frame: string, speed: number | undefined | null) => Promise<import("@gifsx/gifsx").Frame | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
@@ -26,7 +26,7 @@ export declare class CanvasBuilder {
     drawImage(image: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL, x: number, y: number, width?: number | null, height?: number | null, radius?: number | number[] | null): Promise<void>;
     drawProgressBar(x: number, y: number, width: number, height: number, progress: number, config?: ProgressBarOptions): number[];
     drawPieChart(x: number, y: number, width: number, height: number, data: BarData[], config?: PieChartOptions): void;
-    measureText(text: string, font: string): TextMetrics;
+    measureText(text: string, font: string): import("@napi-rs/canvas").TextMetrics;
     filter<T extends FilterMethod>(method: T, filter?: Filters | null, value?: string | null): T extends FilterMethod.get ? string : T extends FilterMethod.json ? {
         filter: string;
         value: string;
@@ -38,5 +38,5 @@ export declare class CanvasBuilder {
     setPixels<T extends ColorDataType>(x: number, y: number, width: number, height: number, colors: T extends ColorDataType.Rgba ? number[] : string[], t?: T | null): void;
     resize(width: number, height: number): void;
     dataUrl(mime?: 'image/png' | 'image/jpeg' | 'image/webp'): string;
-    buffer(mime?: 'image/png' | 'image/jpeg' | 'image/webp'): Buffer<ArrayBufferLike>;
+    buffer(mime?: 'image/png' | 'image/jpeg' | 'image/webp'): Buffer;
 }

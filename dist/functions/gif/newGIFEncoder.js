@@ -50,27 +50,26 @@ exports.default = new forgescript_1.NativeFunction({
     async execute(ctx) {
         if (!this.data.fields)
             this.data.fields = [];
-        const name = (await this['resolveCode'](ctx, this.data.fields[0]))?.value;
-        if (this.data.fields.length >= 4) {
-            const width = Number((await this['resolveCode'](ctx, this.data.fields[1]))?.value);
-            const height = Number((await this['resolveCode'](ctx, this.data.fields[2]))?.value);
-            let palette = (await this['resolveCode'](ctx, this.data.fields[2]))?.value;
-            try {
-                palette = JSON.parse(palette);
-            }
-            catch (_) { }
-            ;
-            if (!Number.isNaN(width) && !Number.isNaN(height)) {
-                if (!ctx.gifManager || !(ctx.gifManager instanceof classes_1.GIFManager))
-                    ctx.gifManager = new classes_1.GIFManager();
-                ctx.gifManager.currentEncoder.push(new gifsx_1.Encoder(width, height, Array.isArray(palette) ? Uint8Array.from(palette) : undefined));
-            }
+        if (!ctx.gifManager || !(ctx.gifManager instanceof classes_1.GIFManager))
+            ctx.gifManager = new classes_1.GIFManager();
+        const options = await this['resolveMultipleArgs'](ctx, 0, 1, 2, 3);
+        let [name, width, height, palette] = options.args;
+        const r = options.return;
+        if (!r?.success)
+            return r;
+        try {
+            palette = JSON.parse(palette);
         }
-        for (let i = (this.data.fields.length >= 4 ? 4 : 1); i < this.data.fields.length; i++) {
-            await this['resolveCode'](ctx, this.data.fields[i]);
+        catch (_) { }
+        ;
+        ctx.gifManager.currentEncoder.push(new gifsx_1.Encoder(width, height, Array.isArray(palette)
+            ? Uint8Array.from(palette)
+            : undefined));
+        for (let i = 4; i < this.data.fields.length; i++) {
+            const r = await this['resolveCode'](ctx, this.data.fields[i]);
+            if (!r?.success)
+                return r;
         }
-        if (!ctx.gifManager || ctx.gifManager.currentEncoder.length === 0)
-            return this.customError(classes_1.FCError.NoSizeAndPalette);
         ctx.gifManager.setEncoder(name, ctx.gifManager.lastCurrentEncoder);
         ctx.gifManager.currentEncoder = ctx.gifManager.currentEncoder.slice(0, ctx.gifManager.currentEncoder.length - 1);
         return this.success();
