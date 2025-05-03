@@ -16,7 +16,8 @@ import {
     ProgressBarOptions,
     ColorDataType,
     PieChartOptions,
-    BarData
+    BarData,
+    FCError
 } from '..';
 
 export class CanvasBuilder {
@@ -187,12 +188,12 @@ export class CanvasBuilder {
         if (options.background.enabled) {
             if (options.background.type !== 'clear') {
                 ctx.save();
-                ctx[`${options.background.type}Style` as 'fillStyle' | 'strokeStyle'] = options.background.style;
+                ctx[`${options.background.type}Style`] = options.background.style;
 
                 ctx.beginPath();
                 ctx.roundRect(x, y, width, height, options.background.radius);
 
-                ctx[options.background.type as 'fill' | 'stroke']();
+                ctx[options.background.type]();
                 ctx.restore();
             } else this.rect(FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
         }
@@ -360,16 +361,16 @@ export class CanvasBuilder {
                 (filter === Filters.blur ? 'px' : '');
 
         if (method === FilterMethod.add) {
-            if (!filter || !value) throw new Error('No filter or value provided');
+            if (!filter || !value) throw new Error(FCError.NoFilterOrValue);
             const result = CanvasUtil.parseFilters(
                 (ctx.filter === 'none' ? '' : ctx.filter)
                  + `${Filters[filter]}(${value + PxOrPerc})`);
             ctx.filter = result?.map(x => x?.raw)?.join(' ')?.trim() || 'none';
         } else if (method === FilterMethod.set) {
-            if (!filter || !value) throw new Error('No filter or value provided');
+            if (!filter || !value) throw new Error(FCError.NoFilterOrValue);
             ctx.filter = `${Filters[filter]}(${value + PxOrPerc})`;
         } else if (method === FilterMethod.remove) {
-            if (!filter) throw new Error('No filter provided');
+            if (!filter) throw new Error(FCError.NoFilter);
         
             const filters = CanvasUtil.parseFilters(ctx.filter);
             const index = filters.findIndex((obj) => obj?.filter === Filters[filter]);
@@ -377,7 +378,9 @@ export class CanvasBuilder {
             if (index !== -1)
                 filters.splice(index, 1);
     
-            ctx.filter = filters.length > 0 ? filters?.map(x => x?.raw)?.join(' ')?.trim() : 'none';
+            ctx.filter = filters.length > 0
+                ? filters?.map(x => x?.raw)?.join(' ')?.trim()
+                : 'none';
         } else if (method === FilterMethod.clear)
             ctx.filter = 'none';
         else if (method === FilterMethod.get)
