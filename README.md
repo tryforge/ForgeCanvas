@@ -55,7 +55,7 @@ This package was made with ♥️ by [Aggelos](https://discord.com/users/6376484
 
 Contributor|Contribution|Contact
 -|-|-
-Aggelos|Owner of the package|[Discord](https://discord.com/users/637648484979441706) [GitHub](https://github.com/aggelos-007)
+Aggelos|Founder|[Discord](https://discord.com/users/637648484979441706) [GitHub](https://github.com/aggelos-007)
 LordDuck|Developer|[Discord](https://discord.com/users/1096717977304453160) [GitHub](https://github.com/devlordduck)
 Econome|Ducks Helper/Middleman|[Discord](https://discord.com/users/838105973985771520) [GitHub](https://github.com/project-econome)
 Aurea|Readme|[Discord](https://discord.com/users/976413539076026388) [GitHub](https://github.com/aurea6)
