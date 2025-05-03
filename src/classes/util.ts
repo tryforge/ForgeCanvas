@@ -2,7 +2,7 @@ import { GlobalFonts, loadImage, createCanvas } from '@napi-rs/canvas';
 import { Frame, hexToRgba, indexedToRgba, rgbaToHex } from '@gifsx/gifsx';
 import { RectAlign, RectBaseline } from '..';
 
-import type { Image, ImageData } from '@napi-rs/canvas';
+import type { Canvas, Image, ImageData } from '@napi-rs/canvas';
 import type { CompiledFunction, Context } from '@tryforge/forgescript';
 import type { CanvasBuilder } from './builder';
 
@@ -78,13 +78,13 @@ export const CanvasUtil = {
                     ].includes(splits[splits.length - 1])
                         ? splits.pop() : null;
             
-            let image: Image | ImageData;
+            let image: Image | ImageData | Canvas;
             
             if (type === 'canvas') {
-                const canvas_2 = ctx.canvasManager?.get(repeat ? splits.join(':') : splits.join())?.ctx;
+                const canvas_2 = ctx.canvasManager?.get(repeat ? splits.join(':') : splits.join());
                 if (!canvas_2) return self.customError(FCError.NoCanvas);
         
-                image = canvas_2.getImageData(0, 0, canvas_2.canvas.width, canvas_2.canvas.height);
+                image = canvas_2.ctx.canvas;
             } else if (type === 'images' && splits[0]?.startsWith('//')) {
                 const img = ctx?.imageManager?.get(splits.join(':').slice(2));
                 if (!img) return self.customError(FCError.NoImage);
@@ -158,9 +158,11 @@ export const CanvasUtil = {
             const canvas = ctx.canvasManager?.get(splitted.slice(1).join('//'));
             if (!canvas) return self.customError(FCError.NoCanvas);
             img = canvas.buffer('image/png');
-        }
+        } else if (src?.includes('<svg'))
+            img = `data:image/svg+xml;base64,${Buffer.from(src)?.toString('base64')}`;
 
-        return await loadImage(img);
+        return await loadImage(img)
+            .catch((e: any) => self.customError(e.toString()));
     },
 
     rgbaStringToHex: (rgba: string) => {
@@ -300,6 +302,8 @@ export enum FCError {
     NoImage                 = 'No image with provided name found',
     NoGradient              = 'No gradient with provided name found',
     NoStyle                 = 'No style provided',
+    NoFilter                = 'No filter provided',
+    NoFilterOrValue         = 'No filter or value provided',
     ImageFail               = 'Failed to load an image',
     InvalidOffset           = 'Offset must be between 0 and 100',
     InvalidRectType         = 'Invalid rect type provided (Expected fill/stroke/clear)',
