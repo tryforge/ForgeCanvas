@@ -1,6 +1,6 @@
 {
   "name": "@tryforge/forge.canvas",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A ForgeScript extension that allows you to create and edit images with ease.",
   "main": "dist/index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "gif"
   ],
   "author": "lordex",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/tryforge/ForgeCanvas/issues"
   },
