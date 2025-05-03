@@ -74,10 +74,10 @@ exports.CanvasUtil = {
                 ? splits.pop() : null;
             let image;
             if (type === 'canvas') {
-                const canvas_2 = ctx.canvasManager?.get(repeat ? splits.join(':') : splits.join())?.ctx;
+                const canvas_2 = ctx.canvasManager?.get(repeat ? splits.join(':') : splits.join());
                 if (!canvas_2)
                     return self.customError(FCError.NoCanvas);
-                image = canvas_2.getImageData(0, 0, canvas_2.canvas.width, canvas_2.canvas.height);
+                image = canvas_2.ctx.canvas;
             }
             else if (type === 'images' && splits[0]?.startsWith('//')) {
                 const img = ctx?.imageManager?.get(splits.join(':').slice(2));
@@ -140,7 +140,10 @@ exports.CanvasUtil = {
                 return self.customError(FCError.NoCanvas);
             img = canvas.buffer('image/png');
         }
-        return await (0, canvas_1.loadImage)(img);
+        else if (src?.includes('<svg'))
+            img = `data:image/svg+xml;base64,${Buffer.from(src)?.toString('base64')}`;
+        return await (0, canvas_1.loadImage)(img)
+            .catch((e) => self.customError(e.toString()));
     },
     rgbaStringToHex: (rgba) => {
         const match = rgba.match(exports.rgbaRegex);
@@ -227,6 +230,8 @@ var FCError;
     FCError["NoImage"] = "No image with provided name found";
     FCError["NoGradient"] = "No gradient with provided name found";
     FCError["NoStyle"] = "No style provided";
+    FCError["NoFilter"] = "No filter provided";
+    FCError["NoFilterOrValue"] = "No filter or value provided";
     FCError["ImageFail"] = "Failed to load an image";
     FCError["InvalidOffset"] = "Offset must be between 0 and 100";
     FCError["InvalidRectType"] = "Invalid rect type provided (Expected fill/stroke/clear)";

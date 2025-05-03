@@ -234,24 +234,26 @@ class CanvasBuilder {
             (filter === __1.Filters.blur ? 'px' : '');
         if (method === __1.FilterMethod.add) {
             if (!filter || !value)
-                throw new Error('No filter or value provided');
+                throw new Error(__1.FCError.NoFilterOrValue);
             const result = __1.CanvasUtil.parseFilters((ctx.filter === 'none' ? '' : ctx.filter)
                 + `${__1.Filters[filter]}(${value + PxOrPerc})`);
             ctx.filter = result?.map(x => x?.raw)?.join(' ')?.trim() || 'none';
         }
         else if (method === __1.FilterMethod.set) {
             if (!filter || !value)
-                throw new Error('No filter or value provided');
+                throw new Error(__1.FCError.NoFilterOrValue);
             ctx.filter = `${__1.Filters[filter]}(${value + PxOrPerc})`;
         }
         else if (method === __1.FilterMethod.remove) {
             if (!filter)
-                throw new Error('No filter provided');
+                throw new Error(__1.FCError.NoFilter);
             const filters = __1.CanvasUtil.parseFilters(ctx.filter);
             const index = filters.findIndex((obj) => obj?.filter === __1.Filters[filter]);
             if (index !== -1)
                 filters.splice(index, 1);
-            ctx.filter = filters.length > 0 ? filters?.map(x => x?.raw)?.join(' ')?.trim() : 'none';
+            ctx.filter = filters.length > 0
+                ? filters?.map(x => x?.raw)?.join(' ')?.trim()
+                : 'none';
         }
         else if (method === __1.FilterMethod.clear)
             ctx.filter = 'none';

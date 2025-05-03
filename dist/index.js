@@ -25,7 +25,7 @@ const package_json_1 = require("../package.json");
 async function registerFonts(fonts, log) {
     for (const font of fonts) {
         if (!(0, node_fs_1.existsSync)(font.src))
-            throw forgescript_1.Logger.error(`Invalid font source. (${font.src})`);
+            throw new Error(`Invalid font source. (${font.src})`);
         if ((0, node_fs_1.statSync)(font.src).isFile()) {
             let filename = (0, node_path_1.basename)(font.src);
             if (!['ttf', 'otf', 'woff', 'woff2'].find(x => filename.endsWith(`.${x}`)))
@@ -33,9 +33,9 @@ async function registerFonts(fonts, log) {
             filename = font.name ?? filename.split('.').slice(0, -1).join('.');
             if (log && canvas_1.GlobalFonts.has(filename))
                 forgescript_1.Logger.warn(`Font with name '${filename}' already exists.`);
-            canvas_1.GlobalFonts.registerFromPath(font.src, filename);
-            if (log)
-                forgescript_1.Logger.info(`Successfully registered '${filename}'.`);
+            if (!canvas_1.GlobalFonts.register((0, node_fs_1.readFileSync)(font.src), filename) && log)
+                return forgescript_1.Logger.warn(`Failed to register font: ${filename} (${font.src})`);
+            forgescript_1.Logger.info(`Registered a font: ${filename} (${font.src})`);
         }
         else
             return registerFonts((0, node_fs_1.readdirSync)(font.src).map(x => ({ src: (0, node_path_1.join)(font.src, x) })), log);
@@ -69,7 +69,7 @@ canvas_1.Image.prototype.getBuffer = async function () {
             buffer = (0, node_fs_1.readFileSync)(this.src);
     }
     else
-        throw new Error('Invalid image source.');
+        throw new Error('Invalid image source');
     return buffer;
 };
 __exportStar(require("./classes"), exports);

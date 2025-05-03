@@ -28,6 +28,8 @@ export declare enum FCError {
     NoImage = "No image with provided name found",
     NoGradient = "No gradient with provided name found",
     NoStyle = "No style provided",
+    NoFilter = "No filter provided",
+    NoFilterOrValue = "No filter or value provided",
     ImageFail = "Failed to load an image",
     InvalidOffset = "Offset must be between 0 and 100",
     InvalidRectType = "Invalid rect type provided (Expected fill/stroke/clear)",
