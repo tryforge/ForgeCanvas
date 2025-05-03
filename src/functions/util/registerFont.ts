@@ -3,6 +3,7 @@ import { registerFonts } from '../..';
 
 export default new NativeFunction({
     name: '$registerFont',
+    aliases: ['$registerFonts'],
     description: 'Registers a font.',
     version: '1.0.0',
     brackets: true,
@@ -31,7 +32,13 @@ export default new NativeFunction({
         }
     ],
     async execute (_, [src, name, log]) {
-        await registerFonts([{ src: src, name }], log ?? false);
-        return this.success();
+        try {
+            return this.success(await registerFonts(
+                [{ src: src, name }],
+                log ?? false
+            ));
+        } catch(e: any) {
+            return this.customError(e);
+        }
     }
 });
