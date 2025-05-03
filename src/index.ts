@@ -15,7 +15,7 @@ import {
 export async function registerFonts(fonts: { src: string, name?: string | null }[], log: boolean) {
     for (const font of fonts) {
         if (!existsSync(font.src))
-            throw Logger.error(`Invalid font source. (${font.src})`);
+            throw new Error(`Invalid font source. (${font.src})`);
 
         if (statSync(font.src).isFile()) {
             let filename = basename(font.src);
@@ -26,8 +26,9 @@ export async function registerFonts(fonts: { src: string, name?: string | null }
             if (log && GlobalFonts.has(filename))
                 Logger.warn(`Font with name '${filename}' already exists.`);
 
-            GlobalFonts.registerFromPath(font.src, filename);
-            if (log) Logger.info(`Successfully registered '${filename}'.`);
+            if (!GlobalFonts.register(readFileSync(font.src), filename) && log)
+                return Logger.warn(`Failed to register font: ${filename} (${font.src})`);
+            Logger.info(`Registered a font: ${filename} (${font.src})`);
         } else return registerFonts(readdirSync(font.src).map(x => ({ src: join(font.src, x) })), log);
     }
 }
@@ -56,7 +57,7 @@ Image.prototype.getBuffer = async function () {
             if (!response.ok) throw new Error(`Failed to fetch image from ${this.src}`);
             buffer = Buffer.from(await response.arrayBuffer());
         } else buffer = readFileSync(this.src);
-    } else throw new Error('Invalid image source.');
+    } else throw new Error('Invalid image source');
 
     return buffer;
 }
