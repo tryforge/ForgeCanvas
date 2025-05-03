@@ -1,6 +1,5 @@
 import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
 import { CanvasUtil, ImageManager } from '../..';
-import { loadImage } from '@napi-rs/canvas';
 
 export default new NativeFunction({
     name: '$loadImage',
