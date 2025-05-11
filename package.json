@@ -19,7 +19,8 @@
     "png",
     "jpeg",
     "botforge",
-    "gif"
+    "gif",
+    "svg"
   ],
   "author": "lordex",
   "license": "GPL-3.0",
