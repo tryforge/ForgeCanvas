@@ -32,7 +32,7 @@ declare const _default: NativeFunction<[{
 }, {
     name: string;
     description: string;
-    type: ArgType.Json;
+    type: ArgType.String;
     required: true;
     rest: false;
 }], true>;
