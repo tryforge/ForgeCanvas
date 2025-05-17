@@ -47,7 +47,7 @@ exports.default = new forgescript_1.NativeFunction({
         {
             name: 'config',
             description: 'The progress bar configuration.',
-            type: forgescript_1.ArgType.Json,
+            type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },

@@ -46,7 +46,7 @@ export default new NativeFunction({
         {
             name: 'config',
             description: 'The progress bar configuration.',
-            type: ArgType.Json,
+            type: ArgType.String,
             required: true,
             rest: false
         },
