@@ -19,6 +19,7 @@ import {
     BarData,
     FCError
 } from '..';
+import { unknown_option_0_you_may_have_meant_1 } from 'typedoc/dist/lib/internationalization/locales/en.cjs';
 
 export class CanvasBuilder {
     public ctx: SKRSContext2D;
@@ -67,11 +68,9 @@ export class CanvasBuilder {
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
 
-        ({
-            [FillOrStrokeOrClear.clear]: () => (ctx.clip(), ctx.clearRect(x, y, width, height)),
-            [FillOrStrokeOrClear.fill]: () => ctx.fill(),
-            [FillOrStrokeOrClear.stroke]: () => ctx.stroke()
-        })[type]();
+        if (type === FillOrStrokeOrClear.fill) ctx.fillRect(x, y, width, height);
+        if (type === FillOrStrokeOrClear.stroke) ctx.strokeRect(x, y, width, height);
+        if (type === FillOrStrokeOrClear.clear) ctx.clearRect(x, y, width, height);
 
         ctx.restore();
     };
@@ -95,7 +94,6 @@ export class CanvasBuilder {
                 type === FillOrStroke.fill 
                 ? ctx.fillText(text, x, y, maxWidth)
                 : ctx.strokeText(text, x, y, maxWidth);
-        let offset = y;
         maxWidth??= undefined;
         lineOffset??= 0;
 
@@ -105,20 +103,23 @@ export class CanvasBuilder {
                 if (wrap) {
                     let line = '';
                     
-                    t.split(' ').forEach((word, i) => {
-                        if (word?.trim() === '') return;
+                    const words = t.split(' ');
+                    for (let i = 0; i < words.length; i++) {
+                        const word = words[i];
+                        if (!word?.trim()?.length) return;
+
                         if (maxWidth && ctx.measureText(line + word + ' ').width > maxWidth && i > 0) {
-                            func(line, x, offset, maxWidth);
+                            func(line, x, y, maxWidth);
                             line = word + ' ';
-                            offset += fontsize + lineOffset;
+                            y += fontsize + lineOffset;
                         } else line += word + ' ';
-                    });
+                    }
                 
-                    func(line, x, offset, maxWidth);
-                    offset += fontsize + lineOffset;
+                    func(line, x, y, maxWidth);
+                    y += fontsize + lineOffset;
                 } else {
-                    func(t, x, offset, maxWidth);
-                    offset += fontsize + lineOffset;
+                    func(t, x, y, maxWidth);
+                    y += fontsize + lineOffset;
                 }
             }
         } else func(text, x, y, maxWidth);

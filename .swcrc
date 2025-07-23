@@ -1,0 +1,28 @@
+{
+    "$schema": "https://swc.rs/schema.json",
+    "jsc": {
+        "parser": {
+            "syntax": "typescript",
+            "tsx": false,
+            "decorators": true,
+            "dynamicImport": true
+        },
+        "transform": {
+            "optimizer": {
+                "simplify": true
+            }
+        },
+        "target": "esnext",
+        "loose": true,
+        "externalHelpers": false,
+        "keepClassNames": true
+    },
+    "module": {
+        "type": "commonjs",
+        "strict": true,
+        "strictMode": true,
+        "noInterop": false,
+        "lazy": false
+    },
+    "minify": true
+}

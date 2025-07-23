@@ -6,3 +6,4 @@ src
 TODO.meow
 assets
 tsconfig.json
+gen-dts.js

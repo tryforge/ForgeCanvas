@@ -7,6 +7,7 @@ export default new NativeFunction({
     description: 'Adds a straight line from the current point to the start of the current path.',
     version: '1.0.0',
     unwrap: true,
+    brackets: false,
     args: [
         {
             name: 'canvas',

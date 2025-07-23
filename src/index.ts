@@ -14,17 +14,24 @@ import {
 
 export async function registerFonts(fonts: { src: string, name?: string | null }[], log: boolean) {
     for (const font of fonts) {
-        if (!existsSync(font.src))
-            throw new Error(`Invalid font source. (${font.src})`);
+        if (!existsSync(font.src)) {
+            if (log) throw new Error(`Invalid font source: ${font.src}`);
+            return;
+        }
 
         if (statSync(font.src).isFile()) {
             let filename = basename(font.src);
             if (!['ttf', 'otf', 'woff', 'woff2'].find(x => filename.endsWith(`.${x}`))) 
                 return;
 
-            filename = font.name ?? filename.split('.').slice(0, -1).join('.');
+            filename = font.name ?? filename.slice(0, filename.lastIndexOf('.'));
             if (log && GlobalFonts.has(filename))
-                Logger.warn(`Font with name '${filename}' already exists.`);
+                Logger.warn(`Font with name '${filename}' already exists`);
+
+            if (!filename?.length)
+                throw new Error(`Font name cannot be empty: ${font.src}`);
+            if (filename.includes(','))
+                throw new Error(`Font name cannot contain commas: ${filename}`);
 
             if (!GlobalFonts.register(readFileSync(font.src), filename) && log)
                 return Logger.warn(`Failed to register font: ${filename} (${font.src})`);
