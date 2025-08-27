@@ -19,7 +19,6 @@ import {
     BarData,
     FCError
 } from '..';
-import { unknown_option_0_you_may_have_meant_1 } from 'typedoc/dist/lib/internationalization/locales/en.cjs';
 
 export class CanvasBuilder {
     public ctx: SKRSContext2D;
@@ -69,8 +68,8 @@ export class CanvasBuilder {
         ctx.roundRect(x, y, width, height, radius);
 
         if (type === FillOrStrokeOrClear.fill) ctx.fillRect(x, y, width, height);
-        if (type === FillOrStrokeOrClear.stroke) ctx.strokeRect(x, y, width, height);
-        if (type === FillOrStrokeOrClear.clear) ctx.clearRect(x, y, width, height);
+        else if (type === FillOrStrokeOrClear.stroke) ctx.strokeRect(x, y, width, height);
+        else (ctx.clip(), ctx.clearRect(x, y, width, height));
 
         ctx.restore();
     };
@@ -87,7 +86,6 @@ export class CanvasBuilder {
         lineOffset?: number | null
     ) {
         const ctx = this.ctx,
-            oldfont = ctx.font,
             fontsize = Number.parseFloat((fontRegex.exec(font) as RegExpExecArray)[4]),
             lines = multiline ? text.split('\n') : [text],
             func = (text: string, x: number, y: number, maxWidth?: number) =>
@@ -123,7 +121,6 @@ export class CanvasBuilder {
                 }
             }
         } else func(text, x, y, maxWidth);
-        ctx.font = oldfont;
     }
 
     public async drawImage(
@@ -330,19 +327,12 @@ export class CanvasBuilder {
     }
 
     public measureText(text: string, font: string) {
-        const ctx = this.ctx,
-              oldcolor = ctx.fillStyle,
-              oldfont = ctx.font;
+        const ctx = this.ctx;
         
         ctx.fillStyle = '#000000';
         ctx.font = font;
         
-        const metrics = ctx.measureText(text);
-    
-        ctx.fillStyle = oldcolor;
-        ctx.font = oldfont;
-    
-        return metrics;
+        return ctx.measureText(text);
     }
 
     public filter<T extends FilterMethod>(

@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "compile": "swc src -d dist --strip-leading-paths",
-    "gen-types": "npm run gen-dts.js",
-    "docgen": "npm run compile && typedoc src/index.ts && node dist/docgen",
+    "gen-types": "node gen-dts.js",
+    "docgen": "npm run compile && npm run gen-types && typedoc src/index.ts && node dist/docgen",
     "test": "npm run compile && node dist/__tests__/index.js"
   },
   "repository": {
@@ -23,7 +23,7 @@
     "botforge",
     "gif"
   ],
-  "author": "lordex",
+  "author": "lordduck",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/tryforge/ForgeCanvas/issues"
@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "@gifsx/gifsx": "^1.0.15",
-    "@napi-rs/canvas": "^0.1.74"
+    "@napi-rs/canvas": "^0.1.77"
   }
 }

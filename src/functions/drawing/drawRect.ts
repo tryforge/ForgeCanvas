@@ -77,7 +77,6 @@ export default new NativeFunction({
             return this.customError(FCError.NoStyle);
 
         const styleT = t === FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle',
-              oldstyle = canvas.ctx[styleT],
               s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
         if (s instanceof Return) return s;
 
@@ -88,7 +87,6 @@ export default new NativeFunction({
             radius.length === 1
                 ? radius[0] : radius
         );
-        canvas.ctx[styleT] = oldstyle;
 
         return this.success();
     }

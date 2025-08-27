@@ -96,7 +96,6 @@ export default new NativeFunction({
         if (!canvas) return this.customError(FCError.NoCanvas);
 
         const styleT = t === FillOrStroke.fill ? 'fillStyle' : 'strokeStyle',
-              oldstyle = canvas.ctx[styleT],
               s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
         if (s instanceof Return) return s;
         
@@ -111,7 +110,6 @@ export default new NativeFunction({
             wrap,
             lineOffset
         );
-        canvas.ctx[styleT] = oldstyle;
         
         return this.success();
     }

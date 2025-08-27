@@ -3,7 +3,7 @@ import { FCError, ImageFormat } from '../..';
 
 export default new NativeFunction({
     name: '$canvasBuffer',
-    description: 'Returns buffer of a canvas.',
+    description: 'Stores the current canvas buffer.',
     version: '1.2.0',
     brackets: false,
     unwrap: true,
@@ -16,6 +16,13 @@ export default new NativeFunction({
             rest: false
         },
         {
+            name: 'variable name',
+            description: 'The variable to load it to, accessed with $env[name]',
+            type: ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
             name: 'format',
             description: 'The image format.',
             type: ArgType.Enum,
@@ -24,16 +31,17 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    execute (ctx, [name, f]) {
+    execute (ctx, [name, vname, f]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        return this.success(`[${Array.from(canvas.buffer(
+        ctx.setEnvironmentKey(vname, canvas.buffer(
             (f !== null 
                 ? 'image/' + (typeof f === 'number' ? ImageFormat[f] : f)
             : 'image/png') as any
-        )).join(', ')}]`);
+        ));
+        return this.success();
     }
 });
