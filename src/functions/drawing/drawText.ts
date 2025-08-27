@@ -3,7 +3,7 @@ import { CanvasUtil, FCError, FillOrStroke } from '../..';
 
 export default new NativeFunction({
     name: '$drawText',
-    aliases: ['$placeText', '$text', '$writeText', '$addText'],
+    aliases: ['$placeText', '$text', '$writeText'],
     description: 'Draws a filled/stroked text on a canvas.',
     version: '1.0.0',
     brackets: true,
