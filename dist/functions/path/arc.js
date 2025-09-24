@@ -1,1 +1,71 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});Object.defineProperty(exports,"default",{enumerable:true,get:function(){return _default}});const _forgescript=require("@tryforge/forgescript");const _classes=require("../../classes");const _default=new _forgescript.NativeFunction({name:"$arc",description:"Draws a circular arc in the current path.",version:"1.0.0",brackets:true,unwrap:true,args:[{name:"canvas",description:"Name of the canvas.",type:_forgescript.ArgType.String,required:false,rest:false},{name:"x",description:"The X coordinate of the arc's center.",type:_forgescript.ArgType.Number,required:true,rest:false},{name:"y",description:"The Y coordinate of the arc's center.",type:_forgescript.ArgType.Number,required:true,rest:false},{name:"radius",description:"The arc's radius. Must be positive.",type:_forgescript.ArgType.Number,required:true,rest:false},{name:"startAngle",description:"The angle at which the arc starts in radians.",type:_forgescript.ArgType.Number,required:true,rest:false},{name:"endAngle",description:"The angle at which the arc ends in radians.",type:_forgescript.ArgType.Number,required:true,rest:false},{name:"counterclockwise",description:"An optional boolean value. If true, draws the arc counter-clockwise between the start and end angles.",type:_forgescript.ArgType.Boolean,required:false,rest:false}],execute(ctx,[name,x,y,r,start,end,ccw]){const canvas=name?ctx.canvasManager?.get(name):ctx.canvasManager?.lastCurrent;if(!canvas)return this.customError(_classes.FCError.NoCanvas);canvas.ctx.arc(x,y,r,start,end,ccw??false);return this.success()}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const classes_1 = require("../../classes");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$arc',
+    description: 'Draws a circular arc in the current path.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'x',
+            description: 'The X coordinate of the arc\'s center.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'y',
+            description: 'The Y coordinate of the arc\'s center.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'radius',
+            description: 'The arc\'s radius. Must be positive.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'startAngle',
+            description: 'The angle at which the arc starts in radians.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'endAngle',
+            description: 'The angle at which the arc ends in radians.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'counterclockwise',
+            description: 'An optional boolean value. If true, draws the arc counter-clockwise between the start and end angles.',
+            type: forgescript_1.ArgType.Boolean,
+            required: false,
+            rest: false
+        }
+    ],
+    execute(ctx, [name, x, y, r, start, end, ccw]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError(classes_1.FCError.NoCanvas);
+        canvas.ctx.arc(x, y, r, start, end, ccw ?? false);
+        return this.success();
+    }
+});

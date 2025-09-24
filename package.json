@@ -4,10 +4,8 @@
   "description": "A ForgeScript extension that allows you to create and edit images with ease.",
   "main": "dist/index.js",
   "scripts": {
-    "compile": "swc src -d dist --strip-leading-paths",
-    "gen-types": "node gen-dts.js",
-    "docgen": "npm run compile && npm run gen-types && typedoc src/index.ts && node dist/docgen",
-    "test": "npm run compile && node dist/__tests__/index.js"
+    "docgen": "tsc && typedoc src/index.ts && node dist/docgen",
+    "test": "swc src -d dist --strip-leading-paths && node dist/__tests__/index.js"
   },
   "repository": {
     "type": "git",

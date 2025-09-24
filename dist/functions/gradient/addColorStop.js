@@ -1,1 +1,49 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});Object.defineProperty(exports,"default",{enumerable:true,get:function(){return _default}});const _forgescript=require("@tryforge/forgescript");const _=require("../..");const _default=new _forgescript.NativeFunction({name:"$addColorStop",aliases:["$colorStop"],description:"Adds a color stop to the gradient.",version:"1.0.0",brackets:true,unwrap:true,args:[{name:"name",description:"Name of the gradient.",type:_forgescript.ArgType.String,required:false,rest:false},{name:"offset",description:"The color stop offset.",type:_forgescript.ArgType.Number,required:true,rest:false},{name:"color",description:"Color of the stop.",type:_forgescript.ArgType.String,required:true,rest:false}],execute(ctx,[name,offset,color]){if(!(offset/100>=0&&offset/100<=1))return this.customError(_.FCError.InvalidOffset);if(!ctx.gradientManager||!(ctx.gradientManager instanceof _.GradientManager))ctx.gradientManager=new _.GradientManager;const gradient=ctx.gradientManager?.get(name);if(name&&!gradient)return this.customError(_.FCError.NoGradient);if(gradient)gradient.addColorStop(offset,color);else ctx.gradientManager.stops.push([offset,color]);return this.success()}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$addColorStop',
+    aliases: ['$colorStop'],
+    description: 'Adds a color stop to the gradient.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'name',
+            description: 'Name of the gradient.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'offset',
+            description: 'The color stop offset.',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'color',
+            description: 'Color of the stop.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        }
+    ],
+    execute(ctx, [name, offset, color]) {
+        if (!(offset / 100 >= 0 && offset / 100 <= 1))
+            return this.customError(__1.FCError.InvalidOffset);
+        if (!ctx.gradientManager || !(ctx.gradientManager instanceof __1.GradientManager))
+            ctx.gradientManager = new __1.GradientManager();
+        const gradient = ctx.gradientManager?.get(name);
+        if (name && !gradient)
+            return this.customError(__1.FCError.NoGradient);
+        if (gradient)
+            gradient.addColorStop(offset, color);
+        else
+            ctx.gradientManager.stops.push([offset, color]);
+        return this.success();
+    }
+});

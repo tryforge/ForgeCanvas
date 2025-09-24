@@ -1,1 +1,24 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});Object.defineProperty(exports,"default",{enumerable:true,get:function(){return _default}});const _forgescript=require("@tryforge/forgescript");const _default=new _forgescript.NativeFunction({name:"$deleteEncoder",aliases:["$removeEncoder"],description:"Deletes the Encoder.",version:"1.2.0",brackets:true,unwrap:true,args:[{name:"name",description:"Name of the Encoder.",type:_forgescript.ArgType.String,required:true,rest:false}],execute(ctx,[name]){ctx.gifManager?.removeEncoder(name);return this.success()}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$deleteEncoder',
+    aliases: ['$removeEncoder'],
+    description: 'Deletes the Encoder.',
+    version: '1.2.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'name',
+            description: 'Name of the Encoder.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        }
+    ],
+    execute(ctx, [name]) {
+        ctx.gifManager?.removeEncoder(name);
+        return this.success();
+    }
+});

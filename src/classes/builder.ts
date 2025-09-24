@@ -58,8 +58,8 @@ export class CanvasBuilder {
 
         if (!radius) {
             if (type === FillOrStrokeOrClear.fill) ctx.fillRect(x, y, width, height);
-            if (type === FillOrStrokeOrClear.stroke) ctx.strokeRect(x, y, width, height);
-            if (type === FillOrStrokeOrClear.clear) ctx.clearRect(x, y, width, height);
+            else if (type === FillOrStrokeOrClear.stroke) ctx.strokeRect(x, y, width, height);
+            else ctx.clearRect(x, y, width, height);
             return;
         }
 
@@ -67,8 +67,8 @@ export class CanvasBuilder {
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
 
-        if (type === FillOrStrokeOrClear.fill) ctx.fillRect(x, y, width, height);
-        else if (type === FillOrStrokeOrClear.stroke) ctx.strokeRect(x, y, width, height);
+        if (type === FillOrStrokeOrClear.fill) ctx.fill();
+        else if (type === FillOrStrokeOrClear.stroke) ctx.stroke();
         else (ctx.clip(), ctx.clearRect(x, y, width, height));
 
         ctx.restore();

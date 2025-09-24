@@ -1,1 +1,46 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});Object.defineProperty(exports,"default",{enumerable:true,get:function(){return _default}});const _forgescript=require("@tryforge/forgescript");const _discord=require("discord.js");const _=require("../..");const _default=new _forgescript.NativeFunction({name:"$attachCanvas",aliases:["$sendCanvas","$renderCanvas","$canvasRender"],description:"Attaches the canvas.",version:"1.0.0",brackets:true,unwrap:true,args:[{name:"canvas",description:"Name of the canvas.",type:_forgescript.ArgType.String,required:true,rest:false},{name:"filename",description:"The name with the extension of the image to be attached as.",type:_forgescript.ArgType.String,required:false,rest:false},{name:"format",description:"The image format.",type:_forgescript.ArgType.Enum,enum:_.ImageFormat,required:false,rest:false}],execute(ctx,[name,filename,f]){const canvas=ctx.canvasManager?.get(name);if(!canvas)return this.customError(_.FCError.NoCanvas);ctx.container.files.push(new _discord.AttachmentBuilder(canvas.buffer(f!==null?"image/"+(typeof f==="number"?_.ImageFormat[f]:f):"image/png"),{name:filename??`${name}.png`}));return this.success()}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const discord_js_1 = require("discord.js");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$attachCanvas',
+    aliases: ['$sendCanvas', '$renderCanvas', '$canvasRender'],
+    description: 'Attaches the canvas.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'filename',
+            description: 'The name with the extension of the image to be attached as.',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'format',
+            description: 'The image format.',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.ImageFormat,
+            required: false,
+            rest: false
+        }
+    ],
+    execute(ctx, [name, filename, f]) {
+        const canvas = ctx.canvasManager?.get(name);
+        if (!canvas)
+            return this.customError(__1.FCError.NoCanvas);
+        ctx.container.files.push(new discord_js_1.AttachmentBuilder(canvas.buffer((f !== null
+            ? 'image/' + (typeof f === 'number' ? __1.ImageFormat[f] : f)
+            : 'image/png')), { name: filename ?? `${name}.png` }));
+        return this.success();
+    }
+});

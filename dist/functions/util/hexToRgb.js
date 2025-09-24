@@ -1,1 +1,29 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});Object.defineProperty(exports,"default",{enumerable:true,get:function(){return _default}});const _forgescript=require("@tryforge/forgescript");const _gifsx=require("@gifsx/gifsx");const _default=new _forgescript.NativeFunction({name:"$hexToRgb",description:"Converts HEX into RGB.",version:"1.2.1",brackets:true,unwrap:true,args:[{name:"hex",description:"The hex to convert into RGB.",type:_forgescript.ArgType.String,required:true,rest:true}],execute(_,[hex]){try{const res=(0,_gifsx.hexToRgb)(hex);return this.success(`[${res.join(", ")}]`)}catch(e){return this.customError(e.toString())}}});
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const gifsx_1 = require("@gifsx/gifsx");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$hexToRgb',
+    description: 'Converts HEX into RGB.',
+    version: '1.2.1',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'hex',
+            description: 'The hex to convert into RGB.',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: true
+        }
+    ],
+    execute(_, [hex]) {
+        try {
+            const res = (0, gifsx_1.hexToRgb)(hex);
+            return this.success(`[${res.join(', ')}]`);
+        }
+        catch (e) {
+            return this.customError(e.toString());
+        }
+    }
+});
