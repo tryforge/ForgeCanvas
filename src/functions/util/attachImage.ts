@@ -26,7 +26,13 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx, [name, filename]) {
-        const img = await ctx.imageManager?.get(name)?.getBuffer();
+        let manager = ctx.imageManager;
+        if (name.startsWith('preload://')) {
+            name = name.slice(10);
+            manager = ctx.client.preloadImages;
+        }
+        
+        const img = await manager?.get(name)?.getBuffer();
         if (!img) return this.customError(FCError.NoImage);
         
         ctx.container.files.push(new AttachmentBuilder(

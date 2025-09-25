@@ -1,4 +1,4 @@
-import { ForgeExtension, Logger } from '@tryforge/forgescript';
+import { ForgeClient, ForgeExtension, Logger } from '@tryforge/forgescript';
 import { GlobalFonts, Image } from '@napi-rs/canvas';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, join } from 'node:path';
@@ -45,8 +45,9 @@ export class ForgeCanvas extends ForgeExtension {
     description = description;
     version = version;
 
-    public init() {
+    public init(client: ForgeClient) {
         this.load(__dirname + '/functions');
+        client.preloadImages = new ImageManager();
     }
 }
 
@@ -70,6 +71,10 @@ Image.prototype.getBuffer = async function () {
 }
 
 declare module '@tryforge/forgescript' {
+    interface ForgeClient {
+        preloadImages: ImageManager;
+    }
+
     interface Context {
         canvasManager?: CanvasManager;
         gradientManager?: GradientManager;

@@ -17,7 +17,13 @@ export default new NativeFunction({
         }
     ],
     execute (ctx, [name]) {
-        ctx.imageManager?.remove(name);
+        let manager = ctx.imageManager;
+        if (name.startsWith('preload://')) {
+            name = name.slice(10);
+            manager = ctx.client.preloadImages;
+        }
+
+        manager?.remove(name);
         return this.success();
     }
 });

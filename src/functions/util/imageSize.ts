@@ -29,9 +29,17 @@ export default new NativeFunction({
     async execute (ctx, [path, property]) {
         let image: Image | undefined;
 
-        if (path.startsWith('images://') && ctx.imageManager)
-            image = ctx.imageManager.get(path.slice(9));
-        else image = await loadImage(path);
+        if (path.startsWith('images://')) {
+            path = path.slice(9);
+
+            let manager = ctx.imageManager;
+            if (path.startsWith('preload://')) {
+                path = path.slice(10);
+                manager = ctx.client.preloadImages;
+            }
+
+            image = manager?.get(path);
+        } else image = await loadImage(path);
         if (!image) return this.customError(FCError.ImageFail);
 
         return this.success(property !== null // @ts-ignore

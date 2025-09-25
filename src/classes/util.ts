@@ -1,10 +1,9 @@
-import { GlobalFonts, loadImage, createCanvas } from '@napi-rs/canvas';
+import { GlobalFonts, loadImage, createCanvas, Canvas, Image, ImageData } from '@napi-rs/canvas';
 import { Frame, hexToRgba, indexedToRgba, rgbaToHex } from '@gifsx/gifsx';
-import { RectAlign, RectBaseline } from '..';
+import { CompiledFunction, Context } from '@tryforge/forgescript';
 
-import type { Canvas, Image, ImageData } from '@napi-rs/canvas';
-import type { CompiledFunction, Context } from '@tryforge/forgescript';
-import type { CanvasBuilder } from './builder';
+import { RectAlign, RectBaseline } from '..';
+import { CanvasBuilder } from './builder';
 
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z_.0-9]+?)\s*$/i;
 export const filterRegex = /([a-zA-Z-]+)\(([^)]+)\)/g;
@@ -48,7 +47,7 @@ export const CanvasUtil = {
         if (!font || !fontRegex.test(font))
             return false;
         
-        const res = fontRegex.exec(font)
+        const res = fontRegex.exec(font);
         if (!res?.[0]) return false;
 
         const families = res[6].split(',').map(x => x?.trim());
@@ -86,7 +85,11 @@ export const CanvasUtil = {
         
                 image = canvas_2.ctx.canvas;
             } else if (type === 'images' && splits[0]?.startsWith('//')) {
-                const img = ctx?.imageManager?.get(splits.join(':').slice(2));
+                const source = splits.join(':').slice(2);
+                const meow = source.startsWith('preload://');
+                const img = (meow ? ctx.client.preloadImages : ctx.imageManager)
+                    ?.get(meow ? source.slice(10) : source);
+
                 if (!img) return self.customError(FCError.NoImage);
 
                 image = img;
@@ -150,6 +153,10 @@ export const CanvasUtil = {
             context.putImageData(imageData, 0, 0);
             
             img = canvas.toBuffer('image/png');
+        } else if (protocol === 'preload') {
+            const image = ctx.client.preloadImages?.get(splitted.slice(1).join('//'));
+            if (!image) return self.customError(FCError.NoImage);
+            img = image;
         } else if (protocol === 'images') {
             const image = ctx.imageManager?.get(splitted.slice(1).join('//'));
             if (!image) return self.customError(FCError.NoImage);
@@ -217,7 +224,11 @@ export const CanvasUtil = {
             }
             
             case 'images': {
-                const img = ctx.imageManager?.get(frame.slice(9));
+                const source = frame.slice(9);
+                const meow = frame.startsWith('preload://');
+                const img = (meow ? ctx.client.preloadImages : ctx.imageManager)
+                    ?.get(meow ? source.slice(10) : source);
+                    
                 if (!img) return self.customError(FCError.NoImage);
                 return await loadFrame(img, speed);
             }

@@ -1,4 +1,4 @@
-import { ForgeExtension } from '@tryforge/forgescript';
+import { ForgeClient, ForgeExtension } from '@tryforge/forgescript';
 import { CanvasManager, GradientManager, ImageManager, GIFManager, NeuQuantManager } from './classes';
 export declare function registerFonts(fonts: {
     src: string;
@@ -8,9 +8,12 @@ export declare class ForgeCanvas extends ForgeExtension {
     name: string;
     description: string;
     version: string;
-    init(): void;
+    init(client: ForgeClient): void;
 }
 declare module '@tryforge/forgescript' {
+    interface ForgeClient {
+        preloadImages: ImageManager;
+    }
     interface Context {
         canvasManager?: CanvasManager;
         gradientManager?: GradientManager;

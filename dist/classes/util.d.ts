@@ -1,7 +1,7 @@
 import { Frame } from '@gifsx/gifsx';
 import { RectAlign, RectBaseline } from '..';
 import type { Image } from '@napi-rs/canvas';
-import type { CompiledFunction, Context } from '@tryforge/forgescript';
+import { Return, type CompiledFunction, type Context } from '@tryforge/forgescript';
 import type { CanvasBuilder } from './builder';
 export declare const fontRegex: RegExp;
 export declare const filterRegex: RegExp;
@@ -10,10 +10,10 @@ export declare const hexRegex: RegExp;
 export declare const Colors: Record<string, string>;
 export declare const CanvasUtil: {
     isValidFont: (font: string) => boolean;
-    resolveStyle: (self: CompiledFunction, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<string | CanvasGradient | import("@napi-rs/canvas").CanvasPattern | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
-    resolveImage: (self: CompiledFunction, ctx: Context, src: string) => Promise<Image | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
+    resolveStyle: (self: CompiledFunction, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => Promise<string | CanvasGradient | import("@napi-rs/canvas").CanvasPattern | Return<import("@tryforge/forgescript").ReturnType.Error>>;
+    resolveImage: (self: CompiledFunction, ctx: Context, src: string) => Promise<Image | Return<import("@tryforge/forgescript").ReturnType.Error>>;
     rgbaStringToHex: (rgba: string) => string;
-    resolveFrame: (self: CompiledFunction, ctx: Context, frame: string, speed: number | undefined | null) => Promise<Frame | import("@tryforge/forgescript").Return<import("@tryforge/forgescript").ReturnType.Error>>;
+    resolveFrame: (self: CompiledFunction, ctx: Context, frame: string, speed: number | undefined | null) => Promise<Frame | Return<import("@tryforge/forgescript").ReturnType.Error>>;
     calculateRectAlignOrBaseline: (XorY: number, WorH: number, AorB: RectAlign | RectBaseline) => number;
     parseFilters: (filters: string) => {
         filter: string;
