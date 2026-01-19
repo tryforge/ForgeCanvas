@@ -1,3 +1,2 @@
 node_modules
-src/__tests__
-dist/__tests__
+.env

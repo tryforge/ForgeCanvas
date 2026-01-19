@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:true});const _forgescript=require("@tryforge/forgescript");(0,_forgescript.generateMetadata)(`${__dirname}/functions`,"functions");
