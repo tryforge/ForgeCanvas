@@ -51,13 +51,13 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    execute (ctx, [name, x1, y1, x2, y2, r]) {
+    execute (ctx, [name, ...args]) {
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        canvas.ctx.arcTo(x1, y1, x2, y2, r);
+        canvas.ctx.arcTo(...args);
         return this.success();
     }
 });

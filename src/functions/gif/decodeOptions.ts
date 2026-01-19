@@ -26,7 +26,7 @@ export default new NativeFunction({
         }
     ],
     execute (ctx, [name]) {
-        if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
+        if (!(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
 
         if (ctx.gifManager.currentOptions) {

@@ -69,7 +69,7 @@ export default new NativeFunction({
                         : undefined;
                     break;
                 }
-                case 'direction': 
+                case 'direction':
                     if (!['horizontal', 'vertical', 'none'].includes(value[0]))
                         return this.customError(FCError.InvalidBarDirection);
 
@@ -86,6 +86,13 @@ export default new NativeFunction({
                 case 'left':
                     barOptions.left = value[0] !== 'none'
                         ? value.join(':') : undefined;
+                    break;
+                case 'left-type':
+                    if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
+                        return this.customError(FCError.InvalidRectType);
+
+                    barOptions['left-type'] = value[0] !== 'none'
+                        ? value[0] as any : undefined;
                     break;
                 default: return this.customError(`Unknown bar option: ${option}`);
             };

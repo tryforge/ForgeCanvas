@@ -1,5 +1,5 @@
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError, MeasureTextProperty } from '../..';
+import { CanvasUtil, FCError, MeasureTextProperty } from '../..';
 
 export default new NativeFunction({
     name: '$measureText',
@@ -39,12 +39,16 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx, [name, text, font, property]) {
-        const canvas = name
+        const canvas = (name
             ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
+            : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        const res = canvas.measureText(text, font) as Record<string, any>;
+        const valid = CanvasUtil.validateFont(font);
+        if (!valid || typeof valid === 'string') return this.customError(valid);
+
+        canvas.font = font;
+        const res = canvas.measureText(text) as Record<string, any>;
         return this.success(property !== null
             ? res[MeasureTextProperty[
                 (typeof property === 'string' ? MeasureTextProperty[property] : property) as any

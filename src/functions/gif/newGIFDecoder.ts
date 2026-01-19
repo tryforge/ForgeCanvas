@@ -35,7 +35,7 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx, [name, path, options]) {
-        if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
+        if (!(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
 
         let gif: ArrayBuffer | Uint8ClampedArray | undefined;

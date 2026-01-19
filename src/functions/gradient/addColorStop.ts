@@ -34,17 +34,15 @@ export default new NativeFunction({
     execute (ctx, [name, offset, color]) {
         if (!(offset / 100 >= 0 && offset / 100 <= 1))
             return this.customError(FCError.InvalidOffset);
-        
-        if (!ctx.gradientManager || !(ctx.gradientManager instanceof GradientManager))
+
+        if (!(ctx.gradientManager instanceof GradientManager))
             ctx.gradientManager = new GradientManager();
 
         const gradient = ctx.gradientManager?.get(name as string);
         if (name && !gradient) return this.customError(FCError.NoGradient);
 
-        if (gradient)
-            gradient.addColorStop(offset, color);
-        else
-            ctx.gradientManager.stops.push([offset, color]);
+        if (gradient) gradient.addColorStop(offset, color);
+        else ctx.gradientManager.stops.push([offset, color]);
 
         return this.success();
     }

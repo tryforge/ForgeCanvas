@@ -40,9 +40,7 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        const format = (f !== null 
-            ? 'image/' + (typeof f === 'number' ? ImageFormat[f] : f)
-        : 'image/png') as any;
+        const format: any = `image/${(typeof f === 'number' ? ImageFormat[f] : f) ?? 'png'}`;
 
         if (!path) return this.customError(FCError.NoPath);
 

@@ -1,10 +1,12 @@
-import { GlobalFonts, loadImage, createCanvas, Canvas, Image, ImageData } from '@napi-rs/canvas';
 import { Frame, hexToRgba, indexedToRgba, rgbaToHex } from '@gifsx/gifsx';
-import { CompiledFunction, Context } from '@tryforge/forgescript';
+import { Canvas, createCanvas, GlobalFonts, Image, ImageData, loadImage } from '@napi-rs/canvas';
+import { CompiledFunction, Context, ForgeClient } from '@tryforge/forgescript';
 
-import { RectAlign, RectBaseline } from '..';
+import { Spans } from '../typings';
 import { CanvasBuilder } from './builder';
 
+export const emojiRegex = /<(a?):(\w+):(\d+)>/;
+export const httpsRegex = /https?:\/\//;
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z_.0-9]+?)\s*$/i;
 export const filterRegex = /([a-zA-Z-]+)\(([^)]+)\)/g;
 export const rgbaRegex = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
@@ -43,46 +45,44 @@ export const Colors: Record<string, string> = {
 };
 
 export const CanvasUtil = {
-    isValidFont: (font: string) => {
-        if (!font || !fontRegex.test(font))
-            return false;
-        
-        const res = fontRegex.exec(font);
-        if (!res?.[0]) return false;
+    validateFont: (font: string) => {
+        const match = fontRegex.exec(font);
+        if (!match?.[0]) return FCError.InvalidFontFormat;
 
-        const families = res[6].split(',').map(x => x?.trim());
+        const families = match[6].split(',').map(x => x?.trim());
         for (const family of families) {
             if (!GlobalFonts.has(family.replace(/['',]/g, '')))
-                return false;
+                return `${FCError.InvalidFont} (${family})`;
         }
-        return true;
+        return match;
     },
 
     resolveStyle: async (self: CompiledFunction, ctx: Context, canvas: CanvasBuilder, style: string | undefined | null) => {
-        if (!style) return '#000000';
+        if (!style) return '#0';
         const s = style.split('://');
+        const args = style.slice(style.indexOf('://') + 3);
 
         if (s[0] === 'gradient') {
-            const gradient = ctx.gradientManager?.get(s.slice(1).join('://'));
+            const gradient = ctx.gradientManager?.get(args);
             if (!gradient) return self.customError(FCError.NoGradient);
             return gradient;
         }
 
         if (s[0] === 'pattern') {
-            const splits = s.slice(1).join('://').split(':'),
+            const splits = args.split(':'),
                 type = splits.shift()?.toLowerCase(),
                 repeat = splits.length > 0 && [
-                        'repeat', 'repeat-x',
-                        'repeat-y', 'no-repeat'
-                    ].includes(splits[splits.length - 1])
-                        ? splits.pop() : null;
-            
+                    'repeat', 'repeat-x',
+                    'repeat-y', 'no-repeat'
+                ].includes(splits[splits.length - 1])
+                    ? splits.pop() : null;
+
             let image: Image | ImageData | Canvas;
-            
+
             if (type === 'canvas') {
                 const canvas_2 = ctx.canvasManager?.get(repeat ? splits.join(':') : splits.join());
                 if (!canvas_2) return self.customError(FCError.NoCanvas);
-        
+
                 image = canvas_2.ctx.canvas;
             } else if (type === 'images' && splits[0]?.startsWith('//')) {
                 const source = splits.join(':').slice(2);
@@ -100,9 +100,9 @@ export const CanvasUtil = {
 
         return (
             hexRegex.test(style) ? style :
-            rgbaRegex.test(style) ? CanvasUtil.rgbaStringToHex(style) :
-            Colors[style]
-        ) ?? '#000000';
+                rgbaRegex.test(style) ? CanvasUtil.rgbaStringToHex(style) :
+                    Colors[style]
+        ) ?? '#0';
     },
 
     resolveImage: async (self: CompiledFunction, ctx: Context, src: string) => {
@@ -113,7 +113,7 @@ export const CanvasUtil = {
         if (['rgba', 'rgb', 'hex'].includes(protocol)) {
             const [size, data] = parseArgs(src, splitted[0].length + 2, 2);
             const [width, height] = size.split('x').map(Number);
-            
+
             const canvas = createCanvas(width, height);
             const context = canvas.getContext('2d');
             const imageData = context.createImageData(width, height);
@@ -121,13 +121,13 @@ export const CanvasUtil = {
             imageData.data.set(new Uint8ClampedArray(
                 protocol === 'hex'
                     ? hexToRgba(data.split(',').map(x => x.trim()))
-                : protocol === 'rgb'
-                    ? data.split(',').map(Number).flatMap((v, i) => {
-                        if ((i + 1) % 3 === 0)
-                            return [v, 255];
-                        return [v];
-                    })
-                : data.split(',').map(Number)
+                    : protocol === 'rgb'
+                        ? data.split(',').map(Number).flatMap((v, i) => {
+                            if ((i + 1) % 3 === 0)
+                                return [v, 255];
+                            return [v];
+                        })
+                        : data.split(',').map(Number)
             ));
 
             context.putImageData(imageData, 0, 0);
@@ -151,7 +151,7 @@ export const CanvasUtil = {
                     )
             );
             context.putImageData(imageData, 0, 0);
-            
+
             img = canvas.toBuffer('image/png');
         } else if (protocol === 'preload') {
             const image = ctx.client.preloadImages?.get(splitted.slice(1).join('//'));
@@ -193,7 +193,7 @@ export const CanvasUtil = {
                     speed
                 );
             }
-            
+
             case 'hex': {
                 const [size, data] = parseArgs(frame, 'hex://', 2);
                 const [width, height] = size.split('x').map(Number);
@@ -203,7 +203,7 @@ export const CanvasUtil = {
                     speed
                 );
             }
-            
+
             case 'rgb': {
                 const [size, data] = parseArgs(frame, 'rgb://', 2);
                 const [width, height] = size.split('x').map(Number);
@@ -213,7 +213,7 @@ export const CanvasUtil = {
                     speed
                 );
             }
-            
+
             case 'indexed': {
                 const [size, data] = parseArgs(frame, 'indexed://', 2);
                 const [width, height] = size.split('x').map(Number);
@@ -222,13 +222,13 @@ export const CanvasUtil = {
                     Uint8Array.from(data.split(',').map(Number))
                 );
             }
-            
+
             case 'images': {
                 const source = frame.slice(9);
                 const meow = frame.startsWith('preload://');
                 const img = (meow ? ctx.client.preloadImages : ctx.imageManager)
                     ?.get(meow ? source.slice(10) : source);
-                    
+
                 if (!img) return self.customError(FCError.NoImage);
                 return await loadFrame(img, speed);
             }
@@ -238,33 +238,13 @@ export const CanvasUtil = {
                 if (!canvas) return self.customError(FCError.NoCanvas);
                 return Frame.fromRgba(
                     canvas.width, canvas.height,
-                    Uint8Array.from(canvas.ctx.getImageData(
-                        0, 0,
-                        canvas.width,
-                        canvas.height
-                    ).data),
+                    Uint8Array.from(canvas.canvas.data()),
                     speed
                 );
             }
 
             default: return await loadFrame(frame, speed);
         }
-    },
-
-    calculateRectAlignOrBaseline: (
-        XorY: number,
-        WorH: number,
-        AorB: RectAlign | RectBaseline 
-    ) => {
-        AorB = typeof AorB === 'string'
-            ? RectAlign[AorB as keyof typeof RectAlign]
-            : AorB;
-
-        return AorB === RectAlign.center
-                ? XorY - WorH / 2
-            : AorB === RectAlign.right || AorB === RectBaseline.top
-                ? XorY - WorH
-            : XorY;
     },
 
     parseFilters: (filters: string) => {
@@ -275,27 +255,73 @@ export const CanvasUtil = {
             const [raw, filter, value] = match;
             result.push({ filter, value, raw });
         }
-      
+
         return result;
-    }
+    },
+
+    parseText: async (client: ForgeClient, text: string, parseNL?: boolean | null, parseEmoji?: boolean | null): Promise<Spans> => {
+        if (!text?.trim()?.length) return [];
+        if (!parseNL && !parseEmoji) return [text];
+        // note: null is for new lines
+        const spans: Spans = new Array(0);
+        let cur = '';
+        let esc = false;
+
+        let i = 0;
+        while (i < text.length) {
+            const c = text[i];
+            if (esc) esc = false;
+            else if (c === '\\') {
+                esc = true;
+                i++;
+                continue;
+            } else if (parseNL && c === '\n') {
+                if (cur.length) spans.push(cur);
+
+                spans.push(null);
+                cur = '';
+                i++;
+                continue;
+            } else if (parseEmoji && c === '<') {
+                const match = text.slice(i).match(emojiRegex);
+                if (match) {
+                    const id = match[3];
+                    let emoji = client.preloadImages.get(`emoji_${id}`);
+
+                    if (!emoji) {
+                        emoji = await loadImage(`https://cdn.discordapp.com/emojis/${id}.png`);
+                        client.preloadImages.set(`emoji_${id}`, emoji);
+                    }
+
+                    if (cur.length)
+                        spans.push(cur);
+
+                    spans.push(emoji);
+                    cur = '';
+                    i += match[0].length;
+                    continue;
+                }
+            }
+            cur += c;
+            i++;
+        }
+
+        if (cur.length) spans.push(cur);
+        return spans;
+    },
 };
 
 export async function loadFrame(
-    src: string | URL | Buffer | ArrayBufferLike | Uint8Array | Image | import("stream").Readable,
+    src: string | URL | Buffer | ArrayBufferLike | Uint8Array | Image | import('node:stream').Readable,
     speed?: number | null
 ) {
     const img = await loadImage(src);
     const canvas = createCanvas(img.width, img.height);
-    const ctx = canvas.getContext('2d');
 
-    ctx.drawImage(img, 0, 0);
+    canvas.getContext('2d').drawImage(img, 0, 0);
     return Frame.fromRgba(
         canvas.width, canvas.height,
-        Uint8Array.from(ctx.getImageData(
-            0, 0,
-            canvas.width,
-            canvas.height
-        ).data),
+        Uint8Array.from(canvas.data()),
         speed
     );
 }
@@ -319,6 +345,8 @@ export enum FCError {
     InvalidOffset           = 'Offset must be between 0 and 100',
     InvalidRectType         = 'Invalid rect type provided (Expected fill/stroke/clear)',
     InvalidLineDashSegments = 'Invalid line dash segments provided (Expected array of numbers)',
+    InvalidFontFormat       = 'Invalid font format provided',
+    InvalidFont             = 'Provided font does not exist',
 
     NoEncoder               = 'No GIF encoder with provided name found',
     NoDecoder               = 'No GIF decoder with provided name found',
@@ -329,7 +357,6 @@ export enum FCError {
     FrameFail               = 'Failed to load a frame',
 
     NoBarData               = 'No bar data provided',
-    InvalidBarData          = 'Invalid bar data provided',
     InvalidBarType          = 'Invalid bar type provided (Expected normal/pie)',
     InvalidBarDirection     = 'Invalid bar direction provided (Expected horizontal/vertical)',
 

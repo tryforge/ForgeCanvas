@@ -40,7 +40,7 @@ export default new NativeFunction({
     ],
     async execute (ctx) {
         if (!this.data.fields) this.data.fields = [];
-        if (!ctx.canvasManager || !(ctx.canvasManager instanceof CanvasManager))
+        if (!(ctx.canvasManager instanceof CanvasManager))
             ctx.canvasManager = new CanvasManager();
 
         const options = await this['resolveMultipleArgs'](ctx, 0,1,2);
@@ -59,9 +59,7 @@ export default new NativeFunction({
         }
 
         ctx.canvasManager.set(name, ctx.canvasManager.lastCurrent);
-        ctx.canvasManager.current = ctx.canvasManager.current.slice(
-            0, ctx.canvasManager.current.length - 1
-        );
+        ctx.canvasManager.current.pop();
 
         return this.success();
     }

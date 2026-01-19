@@ -9,9 +9,11 @@ import {
     GradientManager,
     ImageManager,
     GIFManager,
-    NeuQuantManager
+    NeuQuantManager,
+    httpsRegex
 } from './classes';
 
+export const SupportedFonts = ['ttf', 'otf', 'woff', 'woff2'];
 export async function registerFonts(fonts: { src: string, name?: string | null }[], log: boolean) {
     for (const font of fonts) {
         if (!existsSync(font.src)) {
@@ -21,7 +23,7 @@ export async function registerFonts(fonts: { src: string, name?: string | null }
 
         if (statSync(font.src).isFile()) {
             let filename = basename(font.src);
-            if (!['ttf', 'otf', 'woff', 'woff2'].find(x => filename.endsWith(`.${x}`))) 
+            if (!SupportedFonts.find(x => filename.endsWith(`.${x}`)))
                 return;
 
             filename = font.name ?? filename.slice(0, filename.lastIndexOf('.'));
@@ -36,7 +38,7 @@ export async function registerFonts(fonts: { src: string, name?: string | null }
             if (!GlobalFonts.register(readFileSync(font.src), filename) && log)
                 return Logger.warn(`Failed to register font: ${filename} (${font.src})`);
             Logger.info(`Registered a font: ${filename} (${font.src})`);
-        } else return registerFonts(readdirSync(font.src).map(x => ({ src: join(font.src, x) })), log);
+        } else registerFonts(readdirSync(font.src).map(x => ({ src: join(font.src, x) })), log);
     }
 }
 
@@ -55,17 +57,16 @@ Image.prototype.getBuffer = async function () {
     let buffer: Buffer;
     if (this.src instanceof Uint8Array)
         return Buffer.from(this.src);
-    
-    if (typeof this.src === 'string') {
-        if (this.src.startsWith('data:')) {
-            const base64 = this.src.split(',')[1];
-            buffer = Buffer.from(base64, 'base64');
-        } else if (/https?:\/\//.test(this.src)) {
-            const response = await fetch(this.src);
-            if (!response.ok) throw new Error(`Failed to fetch image from ${this.src}`);
-            buffer = Buffer.from(await response.arrayBuffer());
-        } else buffer = readFileSync(this.src);
-    } else throw new Error('Invalid image source');
+
+    if (typeof this.src !== 'string')
+        throw new Error('Invalid image source');
+
+    if (this.src.startsWith('data:')) {
+        const base64 = this.src.split(',')[1];
+        buffer = Buffer.from(base64, 'base64');
+    } else if (httpsRegex.test(this.src))
+        buffer = Buffer.from(await (await fetch(this.src)).arrayBuffer());
+    else buffer = readFileSync(this.src);
 
     return buffer;
 }

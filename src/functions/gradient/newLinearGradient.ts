@@ -53,13 +53,13 @@ export default new NativeFunction({
         }
     ],
     execute (ctx, [name, x1, y1, x2, y2]) {
-        if (!ctx.gradientManager || !(ctx.gradientManager instanceof GradientManager))
+        if (!(ctx.gradientManager instanceof GradientManager))
             ctx.gradientManager = new GradientManager();
 
         ctx.gradientManager.set(name, GradientType.linear, x1, y1, x2, y2);
         for (const stop of ctx.gradientManager.stops)
             ctx.gradientManager?.get(name)?.addColorStop(...stop);
-        
+
         ctx.gradientManager.stops = [];
         return this.success();
     }

@@ -1,7 +1,18 @@
-export interface CustomCanvasProperties {
-    rectAlign?: RectAlign;
-    rectBaseline?: RectBaseline;
-}
+import { Image } from '@napi-rs/canvas';
+
+/**
+ * ``CanvasBuilder`` Exclusive Properties.
+ */
+export interface CanvasBuilderCustomProperties {
+    /**
+     * The horizontal alignment of the rectangle. Defaults to ``RectAlign.right``.
+     */
+    rectAlign: RectAlign;
+    /**
+     * The vertical alignment of the rectangle. Defaults to ``RectBaseline.bottom``.
+     */
+    rectBaseline: RectBaseline;
+};
 
 export interface ProgressBarOptions {
     style?: string | CanvasGradient | CanvasPattern;
@@ -14,9 +25,10 @@ export interface ProgressBarOptions {
     };
     type?: 'fill' | 'stroke' | 'clear';
     radius?: number | number[];
-    direction?: 'horizontal' | 'vertical';
+    direction?: 'horizontal' | 'vertical' | 'both';
     clip?: number | number[];
     left?: string | CanvasGradient | CanvasPattern;
+    leftType?: 'fill' | 'stroke' | 'clear';
 }
 
 export interface PieChartOptions {
@@ -49,16 +61,18 @@ export interface BarOptions {
     'direction'?: 'horizontal' | 'vertical';
     'clip-radius'?: number | number[];
     'left'?: string;
+    'left-type'?: 'fill' | 'stroke' | 'clear';
 }
 
-export enum ImageFormat { png, jpeg, avif, webp }
+export type Spans = Array<string | Image | null>;
+
+export enum ImageFormat { png, jpeg, avif, webp, gif }
 export enum RectAlign { left, center, right }
 export enum RectBaseline { top, center, bottom }
 export enum FillOrStroke { fill, stroke }
 export enum FillOrStrokeOrClear { none, fill, stroke, clear }
+export enum TextWrap { word, character }
 export enum WidthOrHeight { width, height }
-export enum AlignOrBaseline { align, baseline }
-export enum StyleType { color, gradient, pattern }
 export enum FilterMethod { add, set, remove, clear, get, json }
 export enum Filters { none, blur, sepia, grayscale, brightness, contrast, invert, saturate, 'drop-shadow' }
 export enum TextBaseline { top, hanging, middle, alphabetic, ideographic, bottom }
@@ -69,9 +83,9 @@ export enum LineJoinShape { round, bevel, miter }
 export enum MeasureTextProperty {
     actualBoundingBoxAscent,
     actualBoundingBoxDescent,
-    actualBoundingBoxLeft, 
+    actualBoundingBoxLeft,
     actualBoundingBoxRight,
-    fontBoundingBoxAscent, 
+    fontBoundingBoxAscent,
     fontBoundingBoxDescent,
     alphabeticBaseline,
     emHeightAscent,

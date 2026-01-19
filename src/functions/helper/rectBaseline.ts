@@ -30,7 +30,7 @@ export default new NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
- 
+
         return this.success(baseline !== null
             ? (
                 canvas.customProperties.rectBaseline = (
@@ -38,7 +38,7 @@ export default new NativeFunction({
                 ) as unknown as RectBaseline, undefined
             ) : typeof canvas.customProperties?.rectBaseline === 'number'
                 ? RectBaseline[canvas.customProperties.rectBaseline]
-                : canvas.customProperties?.rectBaseline ?? 'bottom'
+                : canvas.customProperties.rectBaseline
         );
     }
 });

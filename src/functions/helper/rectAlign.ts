@@ -30,7 +30,7 @@ export default new NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
- 
+
         return this.success(align !== null
             ? (
                 canvas.customProperties.rectAlign = (
@@ -38,7 +38,7 @@ export default new NativeFunction({
                 ) as unknown as RectAlign, undefined
             ) : typeof canvas.customProperties?.rectAlign === 'number'
                 ? RectAlign[canvas.customProperties.rectAlign]
-                : canvas.customProperties?.rectAlign ?? 'left'
+                : canvas.customProperties.rectAlign
         );
     }
 });

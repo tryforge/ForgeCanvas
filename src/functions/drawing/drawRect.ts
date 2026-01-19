@@ -73,7 +73,7 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        if (!style && (t === FillOrStrokeOrClear.fill || t === FillOrStrokeOrClear.stroke))
+        if (!style?.length && (t === FillOrStrokeOrClear.fill || t === FillOrStrokeOrClear.stroke))
             return this.customError(FCError.NoStyle);
 
         const styleT = t === FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle',

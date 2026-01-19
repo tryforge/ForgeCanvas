@@ -4,7 +4,7 @@ import { FCError } from '../../classes';
 export default new NativeFunction({
     name: '$rotate',
     aliases: ['$rotateCanvas', '$rotation'],
-    description: 'Rotates a canvas.',
+    description: 'Sets the rotation in the canvas.',
     version: '1.0.0',
     brackets: true,
     unwrap: true,

@@ -1,11 +1,10 @@
 import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
-import { CanvasUtil, ImageManager } from '../..';
+import { CanvasUtil } from '../..';
 
 export default new NativeFunction({
-    name: '$loadImage',
-    aliases: ['$createImage', '$newImage'],
-    description: 'Loads an image.',
-    version: '1.1.0',
+    name: '$preloadImage',
+    description: 'Loads an image globally. Recommended for images that will be used in multiple commands. Use preload://name to draw.',
+    version: '1.3.0',
     brackets: true,
     unwrap: true,
     args: [
@@ -25,13 +24,10 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx, [name, src]) {
-        if (!ctx.imageManager || !(ctx.imageManager instanceof ImageManager))
-            ctx.imageManager = new ImageManager();
-
         const img = await CanvasUtil.resolveImage(this, ctx, src);
         if (img instanceof Return) return img;
 
-        ctx.imageManager.set(name, img);
+        ctx.client.preloadImages.set(name, img);
         return this.success();
     }
 });

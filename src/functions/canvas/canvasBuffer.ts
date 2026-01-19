@@ -37,10 +37,8 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        ctx.setEnvironmentKey(vname, canvas.buffer(
-            (f !== null 
-                ? 'image/' + (typeof f === 'number' ? ImageFormat[f] : f)
-            : 'image/png') as any
+        ctx.setEnvironmentKey(vname, canvas.buffer( // @ts-ignore
+            `image/${(typeof f === 'number' ? ImageFormat[f] : f) ?? 'png'}`
         ));
         return this.success();
     }

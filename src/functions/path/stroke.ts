@@ -30,13 +30,11 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        const oldstyle = canvas.ctx.strokeStyle,
-              s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        const s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
         if (s instanceof Return) return s;
 
         canvas.ctx.strokeStyle = s;
         canvas.ctx.stroke();
-        canvas.ctx.strokeStyle = oldstyle;
 
         return this.success();
     }

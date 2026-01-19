@@ -64,17 +64,15 @@ export default new NativeFunction({
                 ? Uint8Array.from(palette)
                 : undefined
         ));
-        
+
         for (let i = 4; i < this.data.fields.length; i++) {
             const r = await this['resolveCode'](ctx, this.data.fields[i]);
             if (!r?.success) return r;
         }
-            
+
         ctx.gifManager.setEncoder(name, ctx.gifManager.lastCurrentEncoder);
-        ctx.gifManager.currentEncoder = ctx.gifManager.currentEncoder.slice(
-            0, ctx.gifManager.currentEncoder.length - 1
-        );
-        
+        ctx.gifManager.currentEncoder.pop();
+
         return this.success();
     }
 });

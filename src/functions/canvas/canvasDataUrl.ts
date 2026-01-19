@@ -30,8 +30,8 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        return this.success(canvas.dataUrl((f !== null 
-            ? 'image/' + (typeof f === 'number' ? ImageFormat[f] : f)
-        : 'image/png') as any));
+        return this.success(canvas.dataUrl( // @ts-ignore
+            `image/${(typeof f === 'number' ? ImageFormat[f] : f) ?? 'png'}`
+        ));
     }
 });

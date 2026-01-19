@@ -57,13 +57,13 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent;
         if (!canvas) return this.customError('No canvas');
 
-        const data: BarData[] = (ctx.getEnvironmentKey('progressBarData') ?? []) as BarData[]; 
+        const data: BarData[] = (ctx.getEnvironmentKey('progressBarData') ?? []) as BarData[];
         const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {}) as BarOptions;
         const type = options.type ?? 'normal';
 
         const background = await CanvasUtil.resolveStyle(
             this, ctx, canvas,
-            options['background-style'] ?? '#000000'
+            options['background-style'] ?? '#0'
         );
         if (background instanceof Return) return background;
 
@@ -74,7 +74,7 @@ export default new NativeFunction({
 
             const style = await CanvasUtil.resolveStyle(
                 this, ctx, canvas,
-                progress.style as string ?? '#000'
+                progress.style as string ?? '#0'
             );
             if (style instanceof Return) return style;
 
@@ -95,7 +95,8 @@ export default new NativeFunction({
                     radius: options.radius,
                     direction: options.direction,
                     clip: options['clip-radius'],
-                    left: options.left
+                    left: options.left,
+                    leftType: options['left-type']
                 }
             );
         } else {

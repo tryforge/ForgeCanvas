@@ -70,8 +70,8 @@ export default new NativeFunction({
 
         await canvas.drawImage(
             img, x, y,
-            typeof width === 'string' ? null : width,
-            typeof height === 'string' ? null : height,
+            typeof width === 'string' || !width ? null : width,
+            typeof height === 'string' || !width ? null : height,
             radius.length === 1
                 ? radius[0] : radius
         );
