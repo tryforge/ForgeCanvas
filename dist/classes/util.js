@@ -67,7 +67,21 @@ exports.CanvasUtil = {
             return gradient;
         }
         if (s[0] === 'pattern') {
-            const splits = args.split(':'), type = splits.shift()?.toLowerCase(), repeat = splits.length > 0 && [
+            const splits = args.split(':'), type = splits.shift()?.toLowerCase();
+            let x, y;
+            if (splits.length > 2) {
+                const l = splits.length;
+                const xa = parseFloat(splits[l - 2]);
+                const ya = parseFloat(splits[l - 1]);
+                if (!Number.isNaN(xa) && !Number.isNaN(ya)) {
+                    x = xa;
+                    y = ya;
+                    splits.pop();
+                    splits.pop();
+                }
+                console.log(x, y, splits);
+            }
+            const repeat = splits.length && [
                 'repeat', 'repeat-x',
                 'repeat-y', 'no-repeat'
             ].includes(splits[splits.length - 1])
@@ -90,7 +104,10 @@ exports.CanvasUtil = {
             }
             else
                 image = await (0, canvas_1.loadImage)(repeat ? splits.join(':') : `${type}:${splits.join(':')}`);
-            return canvas.ctx.createPattern(image, repeat);
+            const pattern = canvas.ctx.createPattern(image, repeat);
+            if (x !== undefined && y !== undefined)
+                pattern.setTransform(new canvas_1.DOMMatrix().translate(x, y));
+            return pattern;
         }
         return (exports.hexRegex.test(style) ? style :
             exports.rgbaRegex.test(style) ? exports.CanvasUtil.rgbaStringToHex(style) :

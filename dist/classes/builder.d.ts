@@ -61,12 +61,11 @@ export declare class CanvasBuilder {
      * @param wrap - The text wrapping behavior. If not provided, doesn't wrap the text at all.
      * @param lineOffset - The vertical offset between lines of text.
      * @param nlBegin - The beginning position of new lines within the text. ``SKRSContext2D.textAlign`` by default.
-     * @returns
      */
     text(type: FillOrStroke, spans: Spans, x: number, y: number, font: string, maxWidth?: number | null, wrap?: TextWrap | null, lineOffset?: number | null, nlBegin?: CanvasTextAlign | null): void;
     /**
      * Draws an image on the canvas.
-     * Works the same as ``SKRSContext2D.drawImage``
+     * Works the same as ``SKRSContext2D.drawImage`` but rounds it for you.
      * @param image - The image to draw.
      * @param x - The X coordinate of the image's starting point.
      * @param y - The Y coordinate of the image's starting point.

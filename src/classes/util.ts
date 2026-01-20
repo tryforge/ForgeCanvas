@@ -1,5 +1,5 @@
 import { Frame, hexToRgba, indexedToRgba, rgbaToHex } from '@gifsx/gifsx';
-import { Canvas, createCanvas, GlobalFonts, Image, ImageData, loadImage } from '@napi-rs/canvas';
+import { Canvas, createCanvas, GlobalFonts, Image, ImageData, loadImage, DOMMatrix } from '@napi-rs/canvas';
 import { CompiledFunction, Context, ForgeClient } from '@tryforge/forgescript';
 
 import { Spans } from '../typings';
@@ -70,12 +70,27 @@ export const CanvasUtil = {
 
         if (s[0] === 'pattern') {
             const splits = args.split(':'),
-                type = splits.shift()?.toLowerCase(),
-                repeat = splits.length > 0 && [
-                    'repeat', 'repeat-x',
-                    'repeat-y', 'no-repeat'
-                ].includes(splits[splits.length - 1])
-                    ? splits.pop() : null;
+                type = splits.shift()?.toLowerCase();
+            let x: number | undefined, y: number | undefined;
+
+            if (splits.length > 2) {
+                const l = splits.length;
+                const xa = parseFloat(splits[l - 2]);
+                const ya = parseFloat(splits[l - 1]);
+                if (!Number.isNaN(xa) && !Number.isNaN(ya)) {
+                    x = xa;
+                    y = ya;
+                    splits.pop();
+                    splits.pop();
+                }
+                console.log(x, y, splits);
+            }
+
+            const repeat = splits.length && [
+                'repeat', 'repeat-x',
+                'repeat-y', 'no-repeat'
+            ].includes(splits[splits.length - 1])
+                ? splits.pop() : null;
 
             let image: Image | ImageData | Canvas;
 
@@ -95,7 +110,10 @@ export const CanvasUtil = {
                 image = img;
             } else image = await loadImage(repeat ? splits.join(':') : `${type}:${splits.join(':')}`);
 
-            return canvas.ctx.createPattern(image, repeat as any);
+            const pattern = canvas.ctx.createPattern(image, repeat as any);
+            if (x !== undefined && y !== undefined)
+                pattern.setTransform(new DOMMatrix().translate(x, y));
+            return pattern;
         }
 
         return (
