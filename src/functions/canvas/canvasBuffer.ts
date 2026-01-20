@@ -20,7 +20,8 @@ export default new NativeFunction({
             description: 'The variable to load it to, accessed with $env[name]',
             type: ArgType.String,
             required: true,
-            rest: false
+            rest: false,
+            version: '1.3.0'
         },
         {
             name: 'format',

@@ -164,3 +164,18 @@ export enum DecoderOption {
     lineLength,
     loops
 }
+export enum LottieOption {
+    duration,
+    fps,
+    frames,
+    width,
+    height,
+    version,
+    inPoint,
+    outPoint
+}
+export enum LottieSeekType {
+    position,
+    frame,
+    time
+}

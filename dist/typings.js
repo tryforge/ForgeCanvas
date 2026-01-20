@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DecoderOption = exports.FrameOption = exports.DisposalMethod = exports.ColorOutput = exports.ColorDataType = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.WidthOrHeight = exports.TextWrap = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.ImageFormat = void 0;
+exports.LottieSeekType = exports.LottieOption = exports.DecoderOption = exports.FrameOption = exports.DisposalMethod = exports.ColorOutput = exports.ColorDataType = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.WidthOrHeight = exports.TextWrap = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.ImageFormat = void 0;
 ;
 var ImageFormat;
 (function (ImageFormat) {
@@ -191,3 +191,20 @@ var DecoderOption;
     DecoderOption[DecoderOption["lineLength"] = 3] = "lineLength";
     DecoderOption[DecoderOption["loops"] = 4] = "loops";
 })(DecoderOption || (exports.DecoderOption = DecoderOption = {}));
+var LottieOption;
+(function (LottieOption) {
+    LottieOption[LottieOption["duration"] = 0] = "duration";
+    LottieOption[LottieOption["fps"] = 1] = "fps";
+    LottieOption[LottieOption["frames"] = 2] = "frames";
+    LottieOption[LottieOption["width"] = 3] = "width";
+    LottieOption[LottieOption["height"] = 4] = "height";
+    LottieOption[LottieOption["version"] = 5] = "version";
+    LottieOption[LottieOption["inPoint"] = 6] = "inPoint";
+    LottieOption[LottieOption["outPoint"] = 7] = "outPoint";
+})(LottieOption || (exports.LottieOption = LottieOption = {}));
+var LottieSeekType;
+(function (LottieSeekType) {
+    LottieSeekType[LottieSeekType["position"] = 0] = "position";
+    LottieSeekType[LottieSeekType["frame"] = 1] = "frame";
+    LottieSeekType[LottieSeekType["time"] = 2] = "time";
+})(LottieSeekType || (exports.LottieSeekType = LottieSeekType = {}));

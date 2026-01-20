@@ -76,11 +76,10 @@ export default new NativeFunction({
         if (!style?.length && (t === FillOrStrokeOrClear.fill || t === FillOrStrokeOrClear.stroke))
             return this.customError(FCError.NoStyle);
 
-        const styleT = t === FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle',
-              s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        const s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
         if (s instanceof Return) return s;
 
-        canvas.ctx[styleT] = s;
+        canvas.ctx[t === FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle'] = s;
         canvas.rect(
             t, x, y,
             width, height,

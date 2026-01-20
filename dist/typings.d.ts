@@ -227,3 +227,18 @@ export declare enum DecoderOption {
     lineLength = 3,
     loops = 4
 }
+export declare enum LottieOption {
+    duration = 0,
+    fps = 1,
+    frames = 2,
+    width = 3,
+    height = 4,
+    version = 5,
+    inPoint = 6,
+    outPoint = 7
+}
+export declare enum LottieSeekType {
+    position = 0,
+    frame = 1,
+    time = 2
+}

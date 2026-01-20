@@ -115,11 +115,10 @@ export default new NativeFunction({
         const valid = CanvasUtil.validateFont(font);
         if (!valid || typeof valid === 'string') return this.customError(valid);
 
-        const styleT = t === FillOrStroke.fill ? 'fillStyle' : 'strokeStyle',
-              s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        const s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
         if (s instanceof Return) return s;
 
-        canvas.ctx[styleT] = s;
+        canvas.ctx[t === FillOrStroke.fill ? 'fillStyle' : 'strokeStyle'] = s;
         canvas.text(
             t,
             await CanvasUtil.parseText(

@@ -314,6 +314,7 @@ var FCError;
     FCError["NoFrame"] = "No frame with provided name found";
     FCError["NoSizeAndPalette"] = "No size and palette has been set";
     FCError["FrameFail"] = "Failed to load a frame";
+    FCError["NoLottie"] = "No Lottie animation with provided name found";
     FCError["NoBarData"] = "No bar data provided";
     FCError["InvalidBarType"] = "Invalid bar type provided (Expected normal/pie)";
     FCError["InvalidBarDirection"] = "Invalid bar direction provided (Expected horizontal/vertical)";

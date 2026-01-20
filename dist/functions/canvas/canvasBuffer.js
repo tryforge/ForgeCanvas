@@ -21,7 +21,8 @@ exports.default = new forgescript_1.NativeFunction({
             description: 'The variable to load it to, accessed with $env[name]',
             type: forgescript_1.ArgType.String,
             required: true,
-            rest: false
+            rest: false,
+            version: '1.3.0'
         },
         {
             name: 'format',

@@ -164,9 +164,18 @@ export class CanvasBuilder {
                 }
 
                 if (wrap === TextWrap.word) {
-                    const words: Record<string, number> = {};
+                    let fontCache = wordWidthCache.get(font);
+                    if (!fontCache) {
+                        fontCache = new Map();
+                        wordWidthCache.set(font, fontCache);
+                    }
+
                     for (const word of span.match(/\S+\s*|\s+/g) ?? []) {
-                        const wordWidth = words[word] ?? (words[word] = ctx.measureText(word).width);
+                        let wordWidth = fontCache.get(word);
+                        if (wordWidth === undefined) {
+                            wordWidth = ctx.measureText(word).width;
+                            fontCache.set(word, wordWidth);
+                        }
 
                         if (lineWidth + wordWidth > maxWidth) {
                             lines.push([]);
@@ -177,11 +186,20 @@ export class CanvasBuilder {
                         lineWidth += wordWidth;
                     }
                 } else if (wrap === TextWrap.character) {
-                    const chars: Record<string, number> = {};
+                    let fontCache = charWidthCache.get(font);
+                    if (!fontCache) {
+                        fontCache = new Map();
+                        charWidthCache.set(font, fontCache);
+                    }
+
                     let line = '';
                     let current = 0;
                     for (const char of span) {
-                        const charWidth = chars[char] ?? (chars[char] = ctx.measureText(char).width);
+                        let charWidth = fontCache.get(char);
+                        if (charWidth === undefined) {
+                            charWidth = ctx.measureText(char).width;
+                            fontCache?.set(char, charWidth);
+                        }
 
                         if (lineWidth + current + charWidth > maxWidth) {
                             lines[lines.length - 1].push({ item: line, w: current });
@@ -600,3 +618,6 @@ export class CanvasBuilder {
         return this.canvas.toBuffer(mime as any);
     }
 }
+
+export const charWidthCache = new Map<string, Map<string, number>>();
+export const wordWidthCache = new Map<string, Map<string, number>>();

@@ -374,6 +374,8 @@ export enum FCError {
     NoSizeAndPalette        = 'No size and palette has been set',
     FrameFail               = 'Failed to load a frame',
 
+    NoLottie                = 'No Lottie animation with provided name found',
+
     NoBarData               = 'No bar data provided',
     InvalidBarType          = 'Invalid bar type provided (Expected normal/pie)',
     InvalidBarDirection     = 'Invalid bar direction provided (Expected horizontal/vertical)',

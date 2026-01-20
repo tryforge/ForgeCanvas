@@ -120,3 +120,5 @@ export declare class CanvasBuilder {
     dataUrl(mime?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif'): string;
     buffer(mime?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif'): Buffer;
 }
+export declare const charWidthCache: Map<string, Map<string, number>>;
+export declare const wordWidthCache: Map<string, Map<string, number>>;

@@ -1,5 +1,5 @@
 import { ForgeClient, ForgeExtension } from '@tryforge/forgescript';
-import { CanvasManager, GradientManager, ImageManager, GIFManager, NeuQuantManager } from './classes';
+import { CanvasManager, GradientManager, ImageManager, GIFManager, NeuQuantManager, LottieManager } from './classes';
 export declare const SupportedFonts: string[];
 export declare function registerFonts(fonts: {
     src: string;
@@ -21,6 +21,7 @@ declare module '@tryforge/forgescript' {
         imageManager?: ImageManager;
         gifManager?: GIFManager;
         neuquantManager?: NeuQuantManager;
+        lottieManager?: LottieManager;
     }
 }
 declare module '@napi-rs/canvas' {

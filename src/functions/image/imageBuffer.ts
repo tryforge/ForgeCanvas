@@ -4,11 +4,19 @@ import { FCError } from '../../classes';
 
 export default new NativeFunction({
     name: '$imageBuffer',
-    description: 'Returns image\'s buffer.',
+    description: 'Stores the image\'s buffer.',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
+        {
+            name: 'variable name',
+            description: 'The variable to load it to, accessed with $env[name]',
+            type: ArgType.String,
+            required: true,
+            rest: false,
+            version: '1.3.0'
+        },
         {
             name: 'path',
             description: 'The image path.',
@@ -17,7 +25,7 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [path]) {
+    async execute (ctx, [vname, path]) {
         let image: Image | undefined
 
         if (path.startsWith('images://')) {
@@ -32,9 +40,8 @@ export default new NativeFunction({
             image = manager?.get(path);
         } else image = await loadImage(path);
         if (!image) return this.customError(FCError.NoImage);
-        
-        return this.success(`[${Array.from(
-            await image.getBuffer() ?? []
-        ).join(', ')}]`);
+
+        ctx.setEnvironmentKey(vname, await image.getBuffer());
+        return this.success();
     }
 });

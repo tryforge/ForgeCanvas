@@ -5,11 +5,19 @@ const canvas_1 = require("@napi-rs/canvas");
 const classes_1 = require("../../classes");
 exports.default = new forgescript_1.NativeFunction({
     name: '$imageBuffer',
-    description: 'Returns image\'s buffer.',
+    description: 'Stores the image\'s buffer.',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
+        {
+            name: 'variable name',
+            description: 'The variable to load it to, accessed with $env[name]',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false,
+            version: '1.3.0'
+        },
         {
             name: 'path',
             description: 'The image path.',
@@ -18,7 +26,7 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [path]) {
+    async execute(ctx, [vname, path]) {
         let image;
         if (path.startsWith('images://')) {
             path = path.slice(9);
@@ -33,6 +41,7 @@ exports.default = new forgescript_1.NativeFunction({
             image = await (0, canvas_1.loadImage)(path);
         if (!image)
             return this.customError(classes_1.FCError.NoImage);
-        return this.success(`[${Array.from(await image.getBuffer() ?? []).join(', ')}]`);
+        ctx.setEnvironmentKey(vname, await image.getBuffer());
+        return this.success();
     }
 });

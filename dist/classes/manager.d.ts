@@ -1,4 +1,4 @@
-import { Image } from '@napi-rs/canvas';
+import { Image, LottieAnimation } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
 import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
@@ -51,5 +51,8 @@ export declare class GIFManager {
 }
 export declare class NeuQuantManager extends Manager<NeuQuant> {
     set(name: string, nq: NeuQuant): void;
+}
+export declare class LottieManager extends Manager<LottieAnimation> {
+    set(name: string, lottie: LottieAnimation): void;
 }
 export {};

@@ -116,10 +116,10 @@ exports.default = new forgescript_1.NativeFunction({
         const valid = __1.CanvasUtil.validateFont(font);
         if (!valid || typeof valid === 'string')
             return this.customError(valid);
-        const styleT = t === __1.FillOrStroke.fill ? 'fillStyle' : 'strokeStyle', s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        const s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
         if (s instanceof forgescript_1.Return)
             return s;
-        canvas.ctx[styleT] = s;
+        canvas.ctx[t === __1.FillOrStroke.fill ? 'fillStyle' : 'strokeStyle'] = s;
         canvas.text(t, await __1.CanvasUtil.parseText(ctx.client, text, multiline === true, allowEmojis), x, y, font, typeof maxWidth === 'number' ? maxWidth : undefined, 
         // @ts-expect-error
         __1.TextAlign[wrap] !== undefined ? wrap : undefined, typeof lineOffset === 'number' ? lineOffset : undefined, 

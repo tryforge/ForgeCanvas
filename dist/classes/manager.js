@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NeuQuantManager = exports.GIFManager = exports.ImageManager = exports.GradientManager = exports.CanvasManager = void 0;
+exports.LottieManager = exports.NeuQuantManager = exports.GIFManager = exports.ImageManager = exports.GradientManager = exports.CanvasManager = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const builder_1 = require("./builder");
 const __1 = require("../");
@@ -89,3 +89,7 @@ class NeuQuantManager extends Manager {
     set(name, nq) { this.map.set(name, nq); }
 }
 exports.NeuQuantManager = NeuQuantManager;
+class LottieManager extends Manager {
+    set(name, lottie) { this.map.set(name, lottie); }
+}
+exports.LottieManager = LottieManager;

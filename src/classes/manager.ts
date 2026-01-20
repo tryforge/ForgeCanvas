@@ -1,4 +1,4 @@
-import { createCanvas, Image, SKRSContext2D } from '@napi-rs/canvas';
+import { createCanvas, Image, LottieAnimation, SKRSContext2D } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
 import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
@@ -105,4 +105,8 @@ export class GIFManager {
 
 export class NeuQuantManager extends Manager<NeuQuant> {
     public set(name: string, nq: NeuQuant) { this.map.set(name, nq) }
+}
+
+export class LottieManager extends Manager<LottieAnimation> {
+    public set(name: string, lottie: LottieAnimation) { this.map.set(name, lottie) }
 }

@@ -10,7 +10,8 @@ import {
     ImageManager,
     GIFManager,
     NeuQuantManager,
-    httpsRegex
+    httpsRegex,
+    LottieManager
 } from './classes';
 
 export const SupportedFonts = ['ttf', 'otf', 'woff', 'woff2'];
@@ -82,6 +83,7 @@ declare module '@tryforge/forgescript' {
         imageManager?: ImageManager;
         gifManager?: GIFManager;
         neuquantManager?: NeuQuantManager;
+        lottieManager?: LottieManager;
     }
 }
 
