@@ -1,0 +1,130 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const forgescript_1 = require("@tryforge/forgescript");
+const __1 = require("../..");
+exports.default = new forgescript_1.NativeFunction({
+    name: '$drawText',
+    aliases: ['$placeText', '$text', '$writeText'],
+    description: 'Draws a filled/stroked text on a canvas.',
+    version: '1.0.0',
+    brackets: true,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'type',
+            description: 'The text type',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.FillOrStroke,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'text',
+            description: 'The text to draw',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'font',
+            description: 'The text font ({size}px {font name})',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'style',
+            description: 'The style (color/gradient/pattern)',
+            type: forgescript_1.ArgType.String,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'x',
+            description: 'The text start X coordinate',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'y',
+            description: 'The text start Y coordinate',
+            type: forgescript_1.ArgType.Number,
+            required: true,
+            rest: false
+        },
+        {
+            name: 'maxWidth',
+            description: 'Maximum font width',
+            type: forgescript_1.ArgType.Number,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'multiline',
+            description: 'Indicates if new lines should be allowed',
+            type: forgescript_1.ArgType.Boolean,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'wrap',
+            description: 'Indicates how the text should be wrapped if it exceeds the maximum width',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.TextWrap,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'lineOffset',
+            description: 'The text lines offset',
+            type: forgescript_1.ArgType.Number,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'newlineBeginning',
+            description: 'The alignment of the text when a new line is encountered',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.TextAlign,
+            required: false,
+            rest: false,
+            version: '1.3.0'
+        },
+        {
+            name: 'allowEmojis',
+            description: 'Indicates if custom emojis should be drawn',
+            type: forgescript_1.ArgType.Boolean,
+            required: false,
+            rest: false,
+            version: '1.3.0'
+        }
+    ],
+    async execute(ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset, nlAlign, allowEmojis]) {
+        const canvas = name
+            ? ctx.canvasManager?.get(name)
+            : ctx.canvasManager?.lastCurrent;
+        if (!canvas)
+            return this.customError(__1.FCError.NoCanvas);
+        const valid = __1.CanvasUtil.validateFont(font);
+        if (!valid || typeof valid === 'string')
+            return this.customError(valid);
+        const styleT = t === __1.FillOrStroke.fill ? 'fillStyle' : 'strokeStyle', s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        if (s instanceof forgescript_1.Return)
+            return s;
+        canvas.ctx[styleT] = s;
+        canvas.text(t, await __1.CanvasUtil.parseText(ctx.client, text, multiline === true, allowEmojis), x, y, font, typeof maxWidth === 'number' ? maxWidth : undefined, 
+        // @ts-expect-error
+        __1.TextAlign[wrap] !== undefined ? wrap : undefined, typeof lineOffset === 'number' ? lineOffset : undefined, 
+        // @ts-expect-error
+        typeof nlAlign === 'number' ? __1.TextAlign[nlAlign] : nlAlign);
+        return this.success();
+    }
+});
