@@ -1,11 +1,18 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FCError = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.filterRegex = exports.fontRegex = exports.httpsRegex = exports.emojiRegex = void 0;
+exports.FCError = exports.CanvasUtil = exports.Colors = exports.hexRegex = exports.rgbaRegex = exports.filterRegex = exports.fontRegex = exports.httpsRegex = exports.wordRegex = exports.emojiRegex = exports.fontcssRegex = exports.urlRegex = void 0;
 exports.loadFrame = loadFrame;
 exports.parseArgs = parseArgs;
 const gifsx_1 = require("@gifsx/gifsx");
 const canvas_1 = require("@napi-rs/canvas");
+exports.urlRegex = /^url\(['"]?|['"]?\)$/g;
+exports.fontcssRegex = /\/\*\s*(?<subset>[\w-]+)\s*\*\/[\s\S]*?font-family:\s*['"]?(?<family>[^'";]+)['"]?;[\s\S]*?url\((?<url>[^)]+)\)/g;
 exports.emojiRegex = /<(a?):(\w+):(\d+)>/;
+exports.wordRegex = /\S+\s*|\s+/g;
 exports.httpsRegex = /https?:\/\//;
 exports.fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z_.0-9]+?)\s*$/i;
 exports.filterRegex = /([a-zA-Z-]+)\(([^)]+)\)/g;
@@ -318,6 +325,7 @@ var FCError;
     FCError["NoBarData"] = "No bar data provided";
     FCError["InvalidBarType"] = "Invalid bar type provided (Expected normal/pie)";
     FCError["InvalidBarDirection"] = "Invalid bar direction provided (Expected horizontal/vertical)";
+    FCError["NoComponent"] = "No component with provided name found";
     FCError["NoSize"] = "No size has been set";
     FCError["NoPath"] = "No path provided";
     FCError["ArrayExpected"] = "Array expected";

@@ -1,4 +1,8 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
@@ -57,7 +61,7 @@ exports.default = new forgescript_1.NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.FCError.NoCanvas);
         const data = (ctx.getEnvironmentKey('progressBarData') ?? []);
         const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {});
         const type = options.type ?? 'normal';

@@ -1,9 +1,14 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LottieManager = exports.NeuQuantManager = exports.GIFManager = exports.ImageManager = exports.GradientManager = exports.CanvasManager = void 0;
+exports.ComponentManager = exports.LottieManager = exports.NeuQuantManager = exports.GIFManager = exports.ImageManager = exports.GradientManager = exports.CanvasManager = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const builder_1 = require("./builder");
 const __1 = require("../");
+const component_1 = require("./component");
 class Manager {
     map;
     constructor() {
@@ -93,3 +98,10 @@ class LottieManager extends Manager {
     set(name, lottie) { this.map.set(name, lottie); }
 }
 exports.LottieManager = LottieManager;
+class ComponentManager extends Manager {
+    set(component) {
+        this.map.set(component.name, component instanceof component_1.CanvasComponent
+            ? component : new component_1.CanvasComponent(component));
+    }
+}
+exports.ComponentManager = ComponentManager;

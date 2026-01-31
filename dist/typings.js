@@ -1,6 +1,11 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LottieSeekType = exports.LottieOption = exports.DecoderOption = exports.FrameOption = exports.DisposalMethod = exports.ColorOutput = exports.ColorDataType = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.WidthOrHeight = exports.TextWrap = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.ImageFormat = void 0;
+;
 ;
 var ImageFormat;
 (function (ImageFormat) {
@@ -38,6 +43,7 @@ var TextWrap;
 (function (TextWrap) {
     TextWrap[TextWrap["word"] = 0] = "word";
     TextWrap[TextWrap["character"] = 1] = "character";
+    TextWrap[TextWrap["smart"] = 2] = "smart";
 })(TextWrap || (exports.TextWrap = TextWrap = {}));
 var WidthOrHeight;
 (function (WidthOrHeight) {

@@ -2,6 +2,7 @@ import { Image, LottieAnimation } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
 import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
+import { CanvasComponent, ICanvasComponent } from './component';
 declare class Manager<T> {
     map: Map<string, T>;
     constructor();
@@ -54,5 +55,8 @@ export declare class NeuQuantManager extends Manager<NeuQuant> {
 }
 export declare class LottieManager extends Manager<LottieAnimation> {
     set(name: string, lottie: LottieAnimation): void;
+}
+export declare class ComponentManager extends Manager<CanvasComponent> {
+    set(component: CanvasComponent | ICanvasComponent): void;
 }
 export {};

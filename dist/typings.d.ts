@@ -12,6 +12,10 @@ export interface CanvasBuilderCustomProperties {
      */
     rectBaseline: RectBaseline;
 }
+export interface Grid {
+    gap: number;
+    elements: string[];
+}
 export interface ProgressBarOptions {
     style?: string | CanvasGradient | CanvasPattern;
     background?: {
@@ -89,7 +93,8 @@ export declare enum FillOrStrokeOrClear {
 }
 export declare enum TextWrap {
     word = 0,
-    character = 1
+    character = 1,
+    smart = 2
 }
 export declare enum WidthOrHeight {
     width = 0,

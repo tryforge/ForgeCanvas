@@ -1,4 +1,8 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wordWidthCache = exports.charWidthCache = exports.CanvasBuilder = void 0;
 const gifsx_1 = require("@gifsx/gifsx");
@@ -103,6 +107,20 @@ class CanvasBuilder {
         ctx.font = font;
         const lines = [[]];
         let lineWidth = 0;
+        const cache = wrap === __1.TextWrap.character ? exports.charWidthCache : exports.wordWidthCache;
+        let fontCache = cache.get(font);
+        if (!fontCache) {
+            fontCache = new Map();
+            cache.set(font, fontCache);
+        }
+        let charFontCache = null;
+        if (wrap === __1.TextWrap.smart) {
+            charFontCache = cache.get(font);
+            if (!charFontCache) {
+                charFontCache = new Map();
+                cache.set(font, charFontCache);
+            }
+        }
         for (const span of spans) {
             if (!span) {
                 lines.push([]);
@@ -114,32 +132,7 @@ class CanvasBuilder {
                     lines[lines.length - 1].push({ item: span, w: ctx.measureText(span).width });
                     continue;
                 }
-                if (wrap === __1.TextWrap.word) {
-                    let fontCache = exports.wordWidthCache.get(font);
-                    if (!fontCache) {
-                        fontCache = new Map();
-                        exports.wordWidthCache.set(font, fontCache);
-                    }
-                    for (const word of span.match(/\S+\s*|\s+/g) ?? []) {
-                        let wordWidth = fontCache.get(word);
-                        if (wordWidth === undefined) {
-                            wordWidth = ctx.measureText(word).width;
-                            fontCache.set(word, wordWidth);
-                        }
-                        if (lineWidth + wordWidth > maxWidth) {
-                            lines.push([]);
-                            lineWidth = 0;
-                        }
-                        lines[lines.length - 1].push({ item: word, w: wordWidth });
-                        lineWidth += wordWidth;
-                    }
-                }
-                else if (wrap === __1.TextWrap.character) {
-                    let fontCache = exports.charWidthCache.get(font);
-                    if (!fontCache) {
-                        fontCache = new Map();
-                        exports.charWidthCache.set(font, fontCache);
-                    }
+                if (wrap === __1.TextWrap.character) {
                     let line = '';
                     let current = 0;
                     for (const char of span) {
@@ -161,6 +154,49 @@ class CanvasBuilder {
                     }
                     lines[lines.length - 1].push({ item: line, w: current });
                     lineWidth = current;
+                }
+                else {
+                    for (const word of span.match(__1.wordRegex) ?? []) {
+                        let wordWidth = fontCache.get(word);
+                        if (wordWidth === undefined) {
+                            wordWidth = ctx.measureText(word).width;
+                            fontCache.set(word, wordWidth);
+                        }
+                        if (lineWidth + wordWidth > maxWidth) {
+                            if (wrap === __1.TextWrap.smart && wordWidth > maxWidth) {
+                                if (lines[lines.length - 1].length) {
+                                    lines.push([]);
+                                    lineWidth = 0;
+                                }
+                                let line = '';
+                                let current = 0;
+                                for (const char of word) {
+                                    let charWidth = charFontCache.get(char);
+                                    if (charWidth === undefined) {
+                                        charWidth = ctx.measureText(char).width;
+                                        charFontCache.set(char, charWidth);
+                                    }
+                                    if (lineWidth + current + charWidth > maxWidth) {
+                                        lines[lines.length - 1].push({ item: line, w: current });
+                                        lines.push([]);
+                                        line = char;
+                                        current = charWidth;
+                                        lineWidth = 0;
+                                        continue;
+                                    }
+                                    line += char;
+                                    current += charWidth;
+                                }
+                                lines[lines.length - 1].push({ item: line, w: current });
+                                lineWidth = current;
+                                continue;
+                            }
+                            lines.push([]);
+                            lineWidth = 0;
+                        }
+                        lines[lines.length - 1].push({ item: word, w: wordWidth });
+                        lineWidth += wordWidth;
+                    }
                 }
             }
             else {

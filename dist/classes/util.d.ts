@@ -3,7 +3,10 @@ import { Image } from '@napi-rs/canvas';
 import { CompiledFunction, Context, ForgeClient } from '@tryforge/forgescript';
 import { Spans } from '../typings';
 import { CanvasBuilder } from './builder';
+export declare const urlRegex: RegExp;
+export declare const fontcssRegex: RegExp;
 export declare const emojiRegex: RegExp;
+export declare const wordRegex: RegExp;
 export declare const httpsRegex: RegExp;
 export declare const fontRegex: RegExp;
 export declare const filterRegex: RegExp;
@@ -49,6 +52,7 @@ export declare enum FCError {
     NoBarData = "No bar data provided",
     InvalidBarType = "Invalid bar type provided (Expected normal/pie)",
     InvalidBarDirection = "Invalid bar direction provided (Expected horizontal/vertical)",
+    NoComponent = "No component with provided name found",
     NoSize = "No size has been set",
     NoPath = "No path provided",
     ArrayExpected = "Array expected",
