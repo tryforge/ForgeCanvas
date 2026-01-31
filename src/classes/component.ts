@@ -30,6 +30,5 @@ export class CanvasComponent implements ICanvasComponent {
         this.name = component.name;
         this.#code = component.code;
         this.compiled = Compiler.compile(this.#code);
-        console.log(this.compiled);
     }
 }

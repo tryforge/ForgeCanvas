@@ -118,7 +118,7 @@ export declare class CanvasBuilder {
     resize(width: number, height: number): void;
     align(x: number, y: number, width: number, height: number): [number, number];
     dataUrl(mime?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif'): string;
-    buffer(mime?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif'): Buffer;
+    buffer(mime?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif'): Buffer<ArrayBufferLike>;
 }
 export declare const charWidthCache: Map<string, Map<string, number>>;
 export declare const wordWidthCache: Map<string, Map<string, number>>;

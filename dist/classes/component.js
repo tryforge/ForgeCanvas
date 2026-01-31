@@ -18,7 +18,6 @@ class CanvasComponent {
         this.name = component.name;
         this.#code = component.code;
         this.compiled = forgescript_1.Compiler.compile(this.#code);
-        console.log(this.compiled);
     }
 }
 exports.CanvasComponent = CanvasComponent;

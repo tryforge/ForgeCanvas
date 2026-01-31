@@ -43,7 +43,7 @@ export default new NativeFunction({
         if (!(ctx.gifManager instanceof GIFManager))
             ctx.gifManager = new GIFManager();
 
-        let gif: ArrayBuffer | Uint8ClampedArray | undefined;
+        let gif: ArrayBuffer | Uint8Array | Buffer | undefined;
         if (path.startsWith('http://') || path.startsWith('https://')) {
             const response = await fetch(path);
             if (!response.ok) return this.customError(`Failed to fetch ${path}`);
@@ -59,7 +59,7 @@ export default new NativeFunction({
         ctx.gifManager.setDecoder(
             name,
             new Decoder(
-                Buffer.from(gif),
+                new Uint8Array(gif),
                 options ? ctx.gifManager.getDecodeOptions(options) : undefined
             )
         );

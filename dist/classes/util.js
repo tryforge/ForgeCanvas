@@ -86,7 +86,6 @@ exports.CanvasUtil = {
                     splits.pop();
                     splits.pop();
                 }
-                console.log(x, y, splits);
             }
             const repeat = splits.length && [
                 'repeat', 'repeat-x',
@@ -151,7 +150,7 @@ exports.CanvasUtil = {
             const context = canvas.getContext('2d');
             const imageData = context.createImageData(width, height);
             imageData.data.set(buffer.length === width * height * 4
-                ? buffer : (0, gifsx_1.indexedToRgba)(Uint8Array.from(buffer), frame.palette ?? Uint8Array.from([]), frame.transparent));
+                ? buffer : (0, gifsx_1.indexedToRgba)(Uint8Array.from(buffer), new Uint8Array(frame.palette ?? []), frame.transparent));
             context.putImageData(imageData, 0, 0);
             img = canvas.toBuffer('image/png');
         }

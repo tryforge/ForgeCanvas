@@ -91,7 +91,6 @@ export const CanvasUtil = {
                     splits.pop();
                     splits.pop();
                 }
-                console.log(x, y, splits);
             }
 
             const repeat = splits.length && [
@@ -172,7 +171,7 @@ export const CanvasUtil = {
                 buffer.length === width * height * 4
                     ? buffer : indexedToRgba(
                         Uint8Array.from(buffer),
-                        frame.palette ?? Uint8Array.from([]),
+                        new Uint8Array(frame.palette ?? []),
                         frame.transparent
                     )
             );

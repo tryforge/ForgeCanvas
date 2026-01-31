@@ -57,7 +57,7 @@ exports.default = new forgescript_1.NativeFunction({
         }
         else
             gif = await (0, promises_1.readFile)(path, null);
-        ctx.gifManager.setDecoder(name, new gifsx_1.Decoder(Buffer.from(gif), options ? ctx.gifManager.getDecodeOptions(options) : undefined));
+        ctx.gifManager.setDecoder(name, new gifsx_1.Decoder(new Uint8Array(gif), options ? ctx.gifManager.getDecodeOptions(options) : undefined));
         return this.success();
     }
 });
