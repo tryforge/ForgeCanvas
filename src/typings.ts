@@ -1,3 +1,8 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { Image } from '@napi-rs/canvas';
 
 /**
@@ -12,6 +17,11 @@ export interface CanvasBuilderCustomProperties {
      * The vertical alignment of the rectangle. Defaults to ``RectBaseline.bottom``.
      */
     rectBaseline: RectBaseline;
+};
+
+export interface Grid {
+    gap: number;
+    elements: string[];
 };
 
 export interface ProgressBarOptions {
@@ -71,7 +81,7 @@ export enum RectAlign { left, center, right }
 export enum RectBaseline { top, center, bottom }
 export enum FillOrStroke { fill, stroke }
 export enum FillOrStrokeOrClear { none, fill, stroke, clear }
-export enum TextWrap { word, character }
+export enum TextWrap { word, character, smart }
 export enum WidthOrHeight { width, height }
 export enum FilterMethod { add, set, remove, clear, get, json }
 export enum Filters { none, blur, sepia, grayscale, brightness, contrast, invert, saturate, 'drop-shadow' }
