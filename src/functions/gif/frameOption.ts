@@ -1,3 +1,8 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
 import { Frame } from '@gifsx/gifsx';
 import { FrameOption } from '../..';

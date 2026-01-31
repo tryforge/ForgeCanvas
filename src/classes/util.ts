@@ -1,3 +1,8 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { Frame, hexToRgba, indexedToRgba, rgbaToHex } from '@gifsx/gifsx';
 import { Canvas, createCanvas, GlobalFonts, Image, ImageData, loadImage, DOMMatrix } from '@napi-rs/canvas';
 import { CompiledFunction, Context, ForgeClient } from '@tryforge/forgescript';
@@ -5,7 +10,10 @@ import { CompiledFunction, Context, ForgeClient } from '@tryforge/forgescript';
 import { Spans } from '../typings';
 import { CanvasBuilder } from './builder';
 
+export const urlRegex = /^url\(['"]?|['"]?\)$/g;
+export const fontcssRegex = /\/\*\s*(?<subset>[\w-]+)\s*\*\/[\s\S]*?font-family:\s*['"]?(?<family>[^'";]+)['"]?;[\s\S]*?url\((?<url>[^)]+)\)/g;
 export const emojiRegex = /<(a?):(\w+):(\d+)>/;
+export const wordRegex = /\S+\s*|\s+/g;
 export const httpsRegex = /https?:\/\//;
 export const fontRegex = /^\s*(?=(?:(?:[-a-z]+\s*){0,2}(italic|oblique))?)(?=(?:(?:[-a-z]+\s*){0,2}(small-caps))?)(?=(?:(?:[-a-z]+\s*){0,2}(bold(?:er)?|lighter|[1-9]00))?)(?:(?:normal|\1|\2|\3)\s*){0,3}((?:xx?-)?(?:small|large)|medium|smaller|larger|[.\d]+(?:\%|in|[cem]m|ex|p[ctx]))(?:\s*\/\s*(normal|[.\d]+(?:\%|in|[cem]m|ex|p[ctx])))?\s*([-,\'\sa-z_.0-9]+?)\s*$/i;
 export const filterRegex = /([a-zA-Z-]+)\(([^)]+)\)/g;
@@ -352,6 +360,7 @@ export function parseArgs(str: string, prefix: string | number, length: number, 
     return args;
 }
 
+
 export enum FCError {
     NoCanvas                = 'No canvas with provided name found',
     NoImage                 = 'No image with provided name found',
@@ -379,6 +388,7 @@ export enum FCError {
     NoBarData               = 'No bar data provided',
     InvalidBarType          = 'Invalid bar type provided (Expected normal/pie)',
     InvalidBarDirection     = 'Invalid bar direction provided (Expected horizontal/vertical)',
+    NoComponent             = 'No component with provided name found',
 
     NoSize                  = 'No size has been set',
     NoPath                  = 'No path provided',

@@ -1,3 +1,8 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
 import { BarData, BarOptions, CanvasUtil, FCError } from '../..';
 
@@ -55,7 +60,7 @@ export default new NativeFunction({
         const canvas = name
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError('No canvas');
+        if (!canvas) return this.customError(FCError.NoCanvas);
 
         const data: BarData[] = (ctx.getEnvironmentKey('progressBarData') ?? []) as BarData[];
         const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {}) as BarOptions;

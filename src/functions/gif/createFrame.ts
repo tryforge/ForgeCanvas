@@ -1,3 +1,8 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { ArgType, NativeFunction, Return } from '@tryforge/forgescript';
 import { DisposalMethod } from '@gifsx/gifsx';
 import { GIFManager, CanvasUtil } from '../..';

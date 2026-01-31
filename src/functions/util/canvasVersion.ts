@@ -1,3 +1,8 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
 import { version as f } from '../../../package.json';
 import { version as c } from '@napi-rs/canvas/package.json';
