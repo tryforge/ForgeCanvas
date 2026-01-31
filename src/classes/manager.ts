@@ -1,7 +1,13 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { createCanvas, Image, LottieAnimation, SKRSContext2D } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
 import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
+import { CanvasComponent, ICanvasComponent } from './component';
 
 class Manager<T> {
     public map: Map<string, T>;
@@ -109,4 +115,13 @@ export class NeuQuantManager extends Manager<NeuQuant> {
 
 export class LottieManager extends Manager<LottieAnimation> {
     public set(name: string, lottie: LottieAnimation) { this.map.set(name, lottie) }
+}
+
+export class ComponentManager extends Manager<CanvasComponent> {
+    public set(component: CanvasComponent | ICanvasComponent) {
+        this.map.set(
+            component.name, component instanceof CanvasComponent
+                ? component : new CanvasComponent(component)
+        );
+    }
 }
