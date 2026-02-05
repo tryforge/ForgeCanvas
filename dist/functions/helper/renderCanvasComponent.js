@@ -61,29 +61,41 @@ exports.default = new forgescript_1.NativeFunction({
         if (!component)
             return this.customError(__1.FCError.NoComponent);
         let oldmatrix;
-        if (x && y) {
+        if (x || y) {
             oldmatrix = cctx.getTransform();
             cctx.translate(x, y);
         }
         const { canvasManager } = ctx;
+        const oldoptions = ctx.getEnvironmentKey('options');
+        ctx.setEnvironmentKey('options', options);
         canvasManager.current.push(canvas);
-        const context = new forgescript_1.Context({
-            ...ctx.cloneRuntime(),
-            data: component.compiled,
-            obj: {},
-            doNotSend: true
-        });
-        context.setEnvironmentKey('options', options);
-        context.canvasManager = canvasManager;
-        context.imageManager = ctx.imageManager;
-        context.gradientManager = ctx.gradientManager;
-        context.gifManager = ctx.gifManager;
-        context.lottieManager = ctx.lottieManager;
-        context.neuquantManager = ctx.neuquantManager;
-        await forgescript_1.Interpreter.run(context);
+        const { functions, code, resolve } = component.compiled;
+        const args = new Array(functions.length);
+        let content;
+        if (ctx.runtime.data.functions.length) {
+            try {
+                for (let i = 0, len = functions.length; i < len; i++) {
+                    const fn = functions[i];
+                    const rt = await fn.execute(ctx);
+                    args[i] = (!rt.success && !ctx.handleNotSuccess(fn, rt)) ? ctx["error"]() : rt.value;
+                }
+            }
+            catch (err) {
+                if (err instanceof Error)
+                    forgescript_1.Logger.error(err);
+                else if (err instanceof forgescript_1.Return && err.return)
+                    if (err.return)
+                        return err;
+                return this.customError(err?.toString() ?? '');
+            }
+            content = resolve(args);
+        }
+        else
+            content = code;
         canvasManager.current.pop();
+        ctx.setEnvironmentKey('options', oldoptions);
         if (oldmatrix)
             cctx.setTransform(oldmatrix);
-        return this.success();
+        return this.success(content);
     }
 });
