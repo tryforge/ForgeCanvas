@@ -35,7 +35,15 @@ registerFonts([
 
 ForgeCanvas.components.set({
     name: 'ball',
-    code: '$log[$env[options]]$drawRect[;fill;$env[options;0];0;0;$env[options;1];$env[options;2];$divide[$env[options;1];2]]]'
+    code: '$log[$env[options]]$drawRect[;fill;$env[options;1];0;0;$env[options;0];$env[options;0];$divide[$env[options;0];2]]]'
 })
+
+ForgeCanvas.components.set({
+    name: 'balls',
+    code: `
+        $renderComponent[;ball;0;0;$env[options;0];$env[options;1]]
+        $renderComponent[;ball;$env[options;0];$env[options;0];$env[options;0];$env[options;1]]
+    `
+});
 
 client.login(process.env.TOKEN);
