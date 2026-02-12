@@ -34,7 +34,7 @@ registerFonts([
 ], true);
 
 ForgeCanvas.components.set({
-    name: 'ball',
+    name: 'circle',
     params: [
         {
             name: 'style',
@@ -52,7 +52,7 @@ ForgeCanvas.components.set({
 })
 
 ForgeCanvas.components.set({
-    name: 'balls',
+    name: 'circles',
     params: [
         {
             name: 'style',
@@ -67,9 +67,8 @@ ForgeCanvas.components.set({
     ],
     brackets: true,
     code: `
-        $djsEval[console.log(ctx.getEnvironmentKey('style'))]
-        $renderComponent[;ball;0;0;$env[style];$env[size]]
-        $renderComponent[;ball;$env[size];$env[size];$env[style];$env[size]]
+        $renderComponent[;circle;0;0;$env[style];$env[size]]
+        $renderComponent[;circle;$env[size];$env[size];$env[style];$env[size]]
     `
 });
 

@@ -30,7 +30,7 @@ client.applicationCommands.load('dist/__tests__/commands');
     { src: './assets/Twemoji.ttf', name: 'Twemoji' }
 ], true);
 __1.ForgeCanvas.components.set({
-    name: 'ball',
+    name: 'circle',
     params: [
         {
             name: 'style',
@@ -47,7 +47,7 @@ __1.ForgeCanvas.components.set({
     code: '$drawRect[;fill;$env[style];0;0;$env[size];$env[size];$divide[$env[size];2]]]'
 });
 __1.ForgeCanvas.components.set({
-    name: 'balls',
+    name: 'circles',
     params: [
         {
             name: 'style',
@@ -62,9 +62,8 @@ __1.ForgeCanvas.components.set({
     ],
     brackets: true,
     code: `
-        $djsEval[console.log(ctx.getEnvironmentKey('style'))]
-        $renderComponent[;ball;0;0;$env[style];$env[size]]
-        $renderComponent[;ball;$env[size];$env[size];$env[style];$env[size]]
+        $renderComponent[;circle;0;0;$env[style];$env[size]]
+        $renderComponent[;circle;$env[size];$env[size];$env[style];$env[size]]
     `
 });
 __1.ForgeCanvas.components.load(__dirname + '/components', true);
