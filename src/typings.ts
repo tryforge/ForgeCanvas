@@ -81,9 +81,9 @@ export enum RectAlign { left, center, right }
 export enum RectBaseline { top, center, bottom }
 export enum FillOrStroke { fill, stroke }
 export enum FillOrStrokeOrClear { none, fill, stroke, clear }
-export enum TextWrap { word, character, smart }
+export enum TextWrap { word, character, smart, 'erase-character', 'erase-word' }
 export enum WidthOrHeight { width, height }
-export enum FilterMethod { add, set, remove, clear, get, json }
+export enum FilterMethod { add, set, remove, clear, get, json, setRaw }
 export enum Filters { none, blur, sepia, grayscale, brightness, contrast, invert, saturate, 'drop-shadow' }
 export enum TextBaseline { top, hanging, middle, alphabetic, ideographic, bottom }
 export enum TextAlign { start, right, center, left, end }

@@ -55,7 +55,7 @@ exports.default = new forgescript_1.NativeFunction({
         if (options) {
             if (typeof options.delay === 'number')
                 f.delay = options.delay;
-            // @ts-ignore
+            // @ts-expect-error
             if (options.dispose && gifsx_1.DisposalMethod[options.dispose])
                 f.dispose = options.dispose;
             if (typeof options.transparent === 'number')

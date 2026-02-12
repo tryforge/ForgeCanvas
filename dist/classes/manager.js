@@ -8,7 +8,10 @@ exports.ComponentManager = exports.LottieManager = exports.NeuQuantManager = exp
 const canvas_1 = require("@napi-rs/canvas");
 const builder_1 = require("./builder");
 const __1 = require("../");
-const component_1 = require("./component");
+const node_fs_1 = require("node:fs");
+const node_path_1 = require("node:path");
+const forgescript_1 = require("@tryforge/forgescript");
+const forgescript_2 = require("@tryforge/forgescript");
 class Manager {
     map;
     constructor() {
@@ -100,8 +103,29 @@ class LottieManager extends Manager {
 exports.LottieManager = LottieManager;
 class ComponentManager extends Manager {
     set(component) {
-        this.map.set(component.name, component instanceof component_1.CanvasComponent
-            ? component : new component_1.CanvasComponent(component));
+        this.map.set(// @ts-ignore
+        component?.data?.name ?? component.name, component instanceof forgescript_2.ForgeFunction
+            ? component : new forgescript_2.ForgeFunction(component));
+    }
+    load(path, log) {
+        if (!(0, node_fs_1.existsSync)(path))
+            throw forgescript_1.Logger.error(`Component ${path} does not exist`);
+        if ((0, node_fs_1.statSync)(path).isFile() && path.endsWith('.js') || path.endsWith('.ts')) {
+            try {
+                require.cache[path] = undefined;
+                const r = require(path);
+                const component = r?.default ?? r;
+                this.set(component);
+                if (log)
+                    forgescript_1.Logger.info(`Successfully loaded component: ${component.data?.name ?? component.name}`);
+            }
+            catch (error) {
+                throw forgescript_1.Logger.error(`Failed to load component ${path}: ${error}`);
+            }
+        }
+        else
+            for (const child of (0, node_fs_1.readdirSync)(path))
+                this.load((0, node_path_1.join)(path, child), log);
     }
 }
 exports.ComponentManager = ComponentManager;

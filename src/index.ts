@@ -32,7 +32,7 @@ export async function registerFonts(fonts: { src: string, name?: string | null }
                 const { statusCode, headers, body } = await request(font.src, {
                     headers: { 'User-Agent': 'Mozilla/5.0 () Gecko/20100101 Firefox/147.0' }
                 });
-                if (statusCode >= 400) throw new Error(`Failed to fetch font: ${font.src} (${statusCode})`);
+                if (statusCode >= 400) throw Logger.error(`Failed to fetch font: ${font.src} (${statusCode})`);
 
                 if ((headers['content-type'] as string)?.startsWith('text/')) {
                     const families = [...(await body.text()).matchAll(fontcssRegex)].map(match => {
@@ -41,11 +41,11 @@ export async function registerFonts(fonts: { src: string, name?: string | null }
                         return { src: url, name: subset?.length ? `${family}-${subset.trim()}` : family };
                     });
 
-                    if (!families.length) throw new Error(`Invalid font CSS: ${font.name ?? font.src}`);
+                    if (!families.length) throw Logger.error(`Invalid font CSS: ${font.name ?? font.src}`);
                     await registerFonts(families, log);
                 } else if (!GlobalFonts.register(Buffer.from(await body.arrayBuffer()), font.name ?? undefined) && log) {
                     Logger.warn(`Failed to register font: '${font.name ?? font.src}'`);
-                } else Logger.info(`Registered a font: ${font.name ?? font.src}`);
+                } else if (log) Logger.info(`Registered a font: ${font.name ?? font.src}`);
                 continue;
             }
         }
@@ -73,7 +73,7 @@ export async function registerFonts(fonts: { src: string, name?: string | null }
                 Logger.warn(`Failed to register font: ${filename} (${font.src})`);
                 continue;
             }
-            Logger.info(`Registered a font: ${filename} (${font.src})`);
+            if (log) Logger.info(`Registered a font: ${filename} (${font.src})`);
         } else registerFonts(readdirSync(font.src).map(x => ({ src: join(font.src, x) })), log);
     }
 }

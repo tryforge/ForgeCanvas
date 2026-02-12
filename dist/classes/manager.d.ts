@@ -2,7 +2,8 @@ import { Image, LottieAnimation } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
 import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
-import { CanvasComponent, ICanvasComponent } from './component';
+import { IForgeFunction } from '@tryforge/forgescript';
+import { ForgeFunction } from '@tryforge/forgescript';
 declare class Manager<T> {
     map: Map<string, T>;
     constructor();
@@ -56,7 +57,8 @@ export declare class NeuQuantManager extends Manager<NeuQuant> {
 export declare class LottieManager extends Manager<LottieAnimation> {
     set(name: string, lottie: LottieAnimation): void;
 }
-export declare class ComponentManager extends Manager<CanvasComponent> {
-    set(component: CanvasComponent | ICanvasComponent): void;
+export declare class ComponentManager extends Manager<ForgeFunction> {
+    set(component: ForgeFunction | IForgeFunction): void;
+    load(path: string, log?: boolean): void;
 }
 export {};

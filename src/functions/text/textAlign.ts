@@ -35,15 +35,14 @@ export default new NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas) return this.customError(FCError.NoCanvas);
- 
-        return this.success(align !== null
-            ? (
-                canvas.textAlign = (
-                    typeof align === 'number' ? TextAlign[align] : align
-                ) as CanvasTextAlign, undefined
-            ) : typeof canvas.textAlign === 'number'
-                ? TextAlign[canvas.textAlign]
-                : canvas.textAlign ?? 'start'
-        );
+
+        if (align !== null && align !== undefined) {
+            canvas.textAlign = (
+                typeof align === 'number' ? TextAlign[align] : align
+            ) as CanvasTextAlign;
+            return this.success();
+        }
+
+        return this.success(canvas.textAlign ?? 'start');
     }
 });

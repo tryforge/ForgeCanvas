@@ -7,7 +7,10 @@ import { createCanvas, Image, LottieAnimation, SKRSContext2D } from '@napi-rs/ca
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
 import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
-import { CanvasComponent, ICanvasComponent } from './component';
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { IForgeFunction, Logger } from '@tryforge/forgescript';
+import { ForgeFunction } from '@tryforge/forgescript';
 
 class Manager<T> {
     public map: Map<string, T>;
@@ -117,11 +120,26 @@ export class LottieManager extends Manager<LottieAnimation> {
     public set(name: string, lottie: LottieAnimation) { this.map.set(name, lottie) }
 }
 
-export class ComponentManager extends Manager<CanvasComponent> {
-    public set(component: CanvasComponent | ICanvasComponent) {
-        this.map.set(
-            component.name, component instanceof CanvasComponent
-                ? component : new CanvasComponent(component)
+export class ComponentManager extends Manager<ForgeFunction> {
+    public set(component: ForgeFunction | IForgeFunction) {
+        this.map.set( // @ts-ignore
+            component?.data?.name ?? component.name,
+            component instanceof ForgeFunction
+                ? component : new ForgeFunction(component)
         );
+    }
+
+    public load(path: string, log?: boolean) {
+        if (!existsSync(path)) throw Logger.error(`Component ${path} does not exist`);
+        if (statSync(path).isFile() && path.endsWith('.js') || path.endsWith('.ts')) {
+            try {
+                require.cache[path] = undefined;
+                const r = require(path);
+                const component = r?.default ?? r;
+                this.set(component);
+                if (log) Logger.info(`Successfully loaded component: ${component.data?.name ?? component.name}`);
+            } catch (error) { throw Logger.error(`Failed to load component ${path}: ${error}`) }
+        } else for (const child of readdirSync(path))
+            this.load(join(path, child), log);
     }
 }

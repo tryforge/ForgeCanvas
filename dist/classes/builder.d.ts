@@ -73,7 +73,7 @@ export declare class CanvasBuilder {
      * @param height - The height of the image. If not provided, defaults to the image's height.
      * @param radius - The radius of the image's corners. If not provided, defaults to no rounding.
      */
-    drawImage(image: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL, x: number, y: number, width?: number | null, height?: number | null, radius?: number | number[] | null): Promise<void>;
+    drawImage(image: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL, x: number, y: number, width?: number | null, height?: number | null, radius?: number | number[] | null, srcX?: number | null, srcY?: number | null, srcWidth?: number | null, srcHeight?: number | null): Promise<void>;
     /**
      * A helper function that draws a progress bar on the canvas.
      * @param x The X coordinate of the progress bar.
@@ -96,6 +96,9 @@ export declare class CanvasBuilder {
     drawPieChart(x: number, y: number, width: number, height: number, data: BarData[], config?: PieChartOptions): void;
     /**
      * Adds/sets/removes a filter of the canvas.
+     * @param method - The method AKA filter action to perform.
+     * @param filter - The filter to add, set, or remove.
+     * @param value - The value of the filter.
      */
     filter(method: FilterMethod, filter?: Filters | null, value?: string | null): string | {
         filter: string;

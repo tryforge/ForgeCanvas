@@ -3,7 +3,7 @@
 * Copyright © 2026 BotForge
 */
 
-import { NativeFunction, ArgType, Logger, Return } from '@tryforge/forgescript';
+import { NativeFunction, ArgType, Compiler, Interpreter } from '@tryforge/forgescript';
 import { FCError, ForgeCanvas } from '../..';
 import { DOMMatrix } from '@napi-rs/canvas';
 
@@ -46,7 +46,7 @@ export default new NativeFunction({
         {
             name: 'options',
             description: 'The options of the component',
-            type: ArgType.Unknown,
+            type: ArgType.String,
             required: false,
             rest: true
         }
@@ -68,35 +68,41 @@ export default new NativeFunction({
         }
 
         const { canvasManager } = ctx;
-        const oldoptions = ctx.getEnvironmentKey('options');
-        ctx.setEnvironmentKey('options', options);
+
         canvasManager!.current.push(canvas);
 
-        const { functions, code, resolve } = component.compiled;
-        const args = new Array<unknown>(functions.length);
-        let content: string;
+        const context = ctx.clone({
+            data: component.compiled ?? Compiler.compile(component.data.code, component.data.path),
+            doNotSend: true,
+            allowTopLevelReturn: true
+        });
 
-        if (ctx.runtime.data.functions.length) {
-            try {
-                for (let i = 0, len = functions.length; i < len; i++) {
-                    const fn = functions[i];
-                    const rt = await fn.execute(ctx);
-                    args[i] = (!rt.success && !ctx.handleNotSuccess(fn, rt)) ? ctx["error"]() : rt.value;
-                }
-            } catch (err: unknown) {
-                if (err instanceof Error) Logger.error(err)
-                else if (err instanceof Return && err.return)
-                    if (err.return) return err;
-                return this.customError(err?.toString() ?? '');
-            }
+        context.canvasManager = canvasManager;
+        context.imageManager = ctx.imageManager;
+        context.gradientManager = ctx.gradientManager;
+        context.gifManager = ctx.gifManager;
+        context.lottieManager = ctx.lottieManager;
+        context.neuquantManager = ctx.neuquantManager;
 
-            content = resolve(args)
-        } else content = code;
+        const params = Array.isArray(component.data.params) ? component.data.params : [];
+        const required = params.filter(param => typeof param === 'string' || param.required !== false);
+
+        if (options.length < required.length)
+            return this.customError(
+                `Calling custom function ${this.data.name} requires ${required.length} argument${required.length > 1 ? 's' : ''}, received ${options.length}`
+            );
+
+        for (let i = 0, len = params.length; i < len; i++) {
+            const param = params[i];
+            const name = typeof param === 'string' ? param : param.name;
+            context.setEnvironmentKey(name, options[i]);
+        }
+
+        const r = await Interpreter.run(context);
 
         canvasManager!.current.pop();
-        ctx.setEnvironmentKey('options', oldoptions);
-
         if (oldmatrix) cctx.setTransform(oldmatrix);
-        return this.success(content);
+
+        return r === null ? this.stop() : this.success(r);
     }
 });

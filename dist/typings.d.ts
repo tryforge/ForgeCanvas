@@ -94,7 +94,9 @@ export declare enum FillOrStrokeOrClear {
 export declare enum TextWrap {
     word = 0,
     character = 1,
-    smart = 2
+    smart = 2,
+    'erase-character' = 3,
+    'erase-word' = 4
 }
 export declare enum WidthOrHeight {
     width = 0,
@@ -106,7 +108,8 @@ export declare enum FilterMethod {
     remove = 2,
     clear = 3,
     get = 4,
-    json = 5
+    json = 5,
+    setRaw = 6
 }
 export declare enum Filters {
     none = 0,

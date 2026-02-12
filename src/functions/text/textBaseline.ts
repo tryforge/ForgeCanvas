@@ -34,15 +34,14 @@ export default new NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas) return this.customError(FCError.NoCanvas);
- 
-        return this.success(baseline !== null
-            ? (
-                canvas.textBaseline = (
-                    typeof baseline === 'number' ? TextBaseline[baseline] : baseline
-                ) as CanvasTextBaseline, undefined
-            ) : typeof canvas.textBaseline === 'number'
-                ? TextBaseline[canvas.textBaseline]
-                : canvas.textBaseline ?? 'bottom'
-        );
+
+        if (baseline !== null && baseline !== undefined) {
+            canvas.textBaseline = (
+                typeof baseline === 'number' ? TextBaseline[baseline] : baseline
+            ) as CanvasTextBaseline;
+            return this.success();
+        }
+
+        return this.success(canvas.textBaseline);
     }
 });

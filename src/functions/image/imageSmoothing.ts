@@ -35,7 +35,7 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        return this.success(enabled
+        return this.success(enabled !== null && enabled !== undefined
             ? (canvas.imageSmoothingEnabled = enabled, undefined)
             : canvas.imageSmoothingEnabled
         );

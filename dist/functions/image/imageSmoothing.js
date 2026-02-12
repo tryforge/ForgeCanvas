@@ -35,7 +35,7 @@ exports.default = new forgescript_1.NativeFunction({
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas)
             return this.customError(classes_1.FCError.NoCanvas);
-        return this.success(enabled
+        return this.success(enabled !== null && enabled !== undefined
             ? (canvas.imageSmoothingEnabled = enabled, undefined)
             : canvas.imageSmoothingEnabled);
     }

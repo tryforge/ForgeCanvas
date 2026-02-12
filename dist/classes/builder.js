@@ -96,7 +96,7 @@ class CanvasBuilder {
      * @param nlBegin - The beginning position of new lines within the text. ``SKRSContext2D.textAlign`` by default.
      */
     text(type, spans, x, y, font, maxWidth, wrap, lineOffset, nlBegin) {
-        if (!spans?.length)
+        if (!spans?.length || spans?.every(span => !span))
             return;
         const fontm = __1.CanvasUtil.validateFont(font);
         if (typeof fontm === 'string')
@@ -105,6 +105,14 @@ class CanvasBuilder {
         lineOffset = fontsize * 0.25 - (lineOffset ?? 0);
         wrap ??= undefined;
         ctx.font = font;
+        if (spans.length === 1 && wrap === null || wrap === undefined) {
+            const span = spans[0];
+            if (typeof span === 'string')
+                ctx[func](span, x, y, maxWidth ?? undefined);
+            else
+                ctx.drawImage(span, x, y, Math.min(imgsize, maxWidth || imgsize), imgsize);
+            return;
+        }
         const lines = [[]];
         let lineWidth = 0;
         const cache = wrap === __1.TextWrap.character ? exports.charWidthCache : exports.wordWidthCache;
@@ -132,7 +140,7 @@ class CanvasBuilder {
                     lines[lines.length - 1].push({ item: span, w: ctx.measureText(span).width });
                     continue;
                 }
-                if (wrap === __1.TextWrap.character) {
+                if (wrap === __1.TextWrap.character || wrap === __1.TextWrap['erase-character']) {
                     let line = '';
                     let current = 0;
                     for (const char of span) {
@@ -142,6 +150,8 @@ class CanvasBuilder {
                             fontCache?.set(char, charWidth);
                         }
                         if (lineWidth + current + charWidth > maxWidth) {
+                            if (wrap === __1.TextWrap['erase-character'])
+                                break;
                             lines[lines.length - 1].push({ item: line, w: current });
                             lines.push([]);
                             line = char;
@@ -163,6 +173,8 @@ class CanvasBuilder {
                             fontCache.set(word, wordWidth);
                         }
                         if (lineWidth + wordWidth > maxWidth) {
+                            if (wrap === __1.TextWrap['erase-word'])
+                                break;
                             if (wrap === __1.TextWrap.smart && wordWidth > maxWidth) {
                                 if (lines[lines.length - 1].length) {
                                     lines.push([]);
@@ -249,19 +261,23 @@ class CanvasBuilder {
      * @param height - The height of the image. If not provided, defaults to the image's height.
      * @param radius - The radius of the image's corners. If not provided, defaults to no rounding.
      */
-    async drawImage(image, x, y, width, height, radius) {
+    async drawImage(image, x, y, width, height, radius, srcX, srcY, srcWidth, srcHeight) {
         const ctx = this.ctx;
         image = await (0, canvas_1.loadImage)(image);
         width ??= image.width;
         height ??= image.height;
         [x, y] = this.align(x, y, width, height);
+        const args = [x, y, width, height];
+        if (typeof srcX === 'number') // @ts-ignore
+            args.unshift(srcX, srcY, srcWidth, srcHeight);
+        // @ts-ignore
         if (!radius)
-            return ctx.drawImage(image, x, y, width, height);
+            return ctx.drawImage(image, ...args);
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
-        ctx.clip();
-        ctx.drawImage(image, x, y, width, height);
+        ctx.clip(); // @ts-ignore
+        ctx.drawImage(image, ...args);
         ctx.restore();
     }
     /**
@@ -360,20 +376,24 @@ class CanvasBuilder {
     }
     /**
      * Adds/sets/removes a filter of the canvas.
+     * @param method - The method AKA filter action to perform.
+     * @param filter - The filter to add, set, or remove.
+     * @param value - The value of the filter.
      */
     filter(method, filter, value) {
         const ctx = this.ctx;
+        console.log(filter, value, method);
         const f = typeof filter === 'number' ? __1.Filters[filter] : filter, unit = filter === __1.Filters.grayscale || filter === __1.Filters.sepia ? '%' :
             (filter === __1.Filters.blur ? 'px' : ''), fstr = ` ${f}(${value}${unit})`;
         switch (method) {
             case __1.FilterMethod.add: {
-                if (!filter || !value)
+                if (!f || !value)
                     throw new Error(__1.FCError.NoFilterOrValue);
                 ctx.filter = ctx.filter !== 'none' ? ctx.filter += fstr : fstr;
                 return;
             }
             case __1.FilterMethod.set: {
-                if (!filter || !value)
+                if (!f || !value)
                     throw new Error(__1.FCError.NoFilterOrValue);
                 ctx.filter = fstr;
                 return;
@@ -385,11 +405,18 @@ class CanvasBuilder {
                 ctx.filter = filters.length ? filters.map(x => x.raw).join(' ') : 'none';
                 return;
             }
-            case __1.FilterMethod.clear:
+            case __1.FilterMethod.clear: {
                 ctx.filter = 'none';
                 return;
+            }
             case __1.FilterMethod.get: return ctx.filter;
             case __1.FilterMethod.json: return __1.CanvasUtil.parseFilters(ctx.filter);
+            case __1.FilterMethod.setRaw: {
+                if (!value)
+                    throw new Error(__1.FCError.NoFilterOrValue);
+                ctx.filter = value;
+                return;
+            }
         }
     }
     /**

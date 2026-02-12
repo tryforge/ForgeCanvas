@@ -6,6 +6,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const classes_1 = require("../../classes");
+const typings_1 = require("../../typings");
 exports.default = new forgescript_1.NativeFunction({
     name: '$drawImage',
     aliases: ['$placeImage'],
@@ -16,49 +17,49 @@ exports.default = new forgescript_1.NativeFunction({
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'src',
-            description: 'The image source.',
+            description: 'The image source',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'x',
-            description: 'The image start X coordinate.',
+            description: 'The image start X coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'y',
-            description: 'The image start Y coordinate.',
+            description: 'The image start Y coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'width',
-            description: 'The image width.',
+            description: 'The image width',
             type: forgescript_1.ArgType.Number,
             required: false,
             rest: false
         },
         {
             name: 'height',
-            description: 'The image height.',
+            description: 'The image height',
             type: forgescript_1.ArgType.Number,
             required: false,
             rest: false
         },
         {
             name: 'radius',
-            description: 'The image radius.',
+            description: 'The image radius',
             type: forgescript_1.ArgType.Number,
             required: false,
             rest: true
@@ -70,11 +71,21 @@ exports.default = new forgescript_1.NativeFunction({
             : ctx.canvasManager?.lastCurrent;
         if (!canvas)
             return this.customError(classes_1.FCError.NoCanvas);
+        width = num(width);
+        height = num(height);
         const img = await classes_1.CanvasUtil.resolveImage(this, ctx, src);
-        if (img instanceof forgescript_1.Return)
-            return img;
-        await canvas.drawImage(img, x, y, typeof width === 'string' || !width ? null : width, typeof height === 'string' || !width ? null : height, radius.length === 1
+        if (img instanceof forgescript_1.Return) {
+            const style = await classes_1.CanvasUtil.resolveStyle(this, ctx, canvas, src);
+            if (style instanceof forgescript_1.Return)
+                return img;
+            canvas.ctx.fillStyle = style;
+            canvas.rect(typings_1.FillOrStrokeOrClear.fill, x, y, width, height, radius.length === 1 ? radius[0] : radius);
+            return this.success();
+        }
+        ;
+        await canvas.drawImage(img, x, y, width, height, radius.length === 1
             ? radius[0] : radius);
         return this.success();
     }
 });
+const num = (x) => typeof x === 'string' || !x ? null : x;

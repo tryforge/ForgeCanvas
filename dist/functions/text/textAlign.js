@@ -36,9 +36,10 @@ exports.default = new forgescript_1.NativeFunction({
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas)
             return this.customError(__1.FCError.NoCanvas);
-        return this.success(align !== null
-            ? (canvas.textAlign = (typeof align === 'number' ? __1.TextAlign[align] : align), undefined) : typeof canvas.textAlign === 'number'
-            ? __1.TextAlign[canvas.textAlign]
-            : canvas.textAlign ?? 'start');
+        if (align !== null && align !== undefined) {
+            canvas.textAlign = (typeof align === 'number' ? __1.TextAlign[align] : align);
+            return this.success();
+        }
+        return this.success(canvas.textAlign ?? 'start');
     }
 });

@@ -15,42 +15,42 @@ exports.default = new forgescript_1.NativeFunction({
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'x',
-            description: 'The X coordinate.',
+            description: 'The X coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'y',
-            description: 'The Y coordinate.',
+            description: 'The Y coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'width',
-            description: 'The width.',
+            description: 'The width',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'height',
-            description: 'The height.',
+            description: 'The height',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'config',
-            description: 'The progress bar configuration.',
+            description: 'The progress bar configuration',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false

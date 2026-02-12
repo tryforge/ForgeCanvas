@@ -36,8 +36,8 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        return this.success(t !== null
-            ? (canvas.fontVariantCaps = (typeof t === 'number' 
+        return this.success(t !== null && t !== undefined
+            ? (canvas.fontVariantCaps = (typeof t === 'number'
                 ? FontVariantCaps[t]
                 : t
             ) as CanvasFontVariantCaps, undefined) : canvas.fontVariantCaps

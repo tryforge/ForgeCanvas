@@ -37,7 +37,7 @@ async function registerFonts(fonts, log) {
                     headers: { 'User-Agent': 'Mozilla/5.0 () Gecko/20100101 Firefox/147.0' }
                 });
                 if (statusCode >= 400)
-                    throw new Error(`Failed to fetch font: ${font.src} (${statusCode})`);
+                    throw forgescript_1.Logger.error(`Failed to fetch font: ${font.src} (${statusCode})`);
                 if (headers['content-type']?.startsWith('text/')) {
                     const families = [...(await body.text()).matchAll(classes_1.fontcssRegex)].map(match => {
                         // @ts-expect-error
@@ -45,13 +45,13 @@ async function registerFonts(fonts, log) {
                         return { src: url, name: subset?.length ? `${family}-${subset.trim()}` : family };
                     });
                     if (!families.length)
-                        throw new Error(`Invalid font CSS: ${font.name ?? font.src}`);
+                        throw forgescript_1.Logger.error(`Invalid font CSS: ${font.name ?? font.src}`);
                     await registerFonts(families, log);
                 }
                 else if (!canvas_1.GlobalFonts.register(Buffer.from(await body.arrayBuffer()), font.name ?? undefined) && log) {
                     forgescript_1.Logger.warn(`Failed to register font: '${font.name ?? font.src}'`);
                 }
-                else
+                else if (log)
                     forgescript_1.Logger.info(`Registered a font: ${font.name ?? font.src}`);
                 continue;
             }
@@ -76,7 +76,8 @@ async function registerFonts(fonts, log) {
                 forgescript_1.Logger.warn(`Failed to register font: ${filename} (${font.src})`);
                 continue;
             }
-            forgescript_1.Logger.info(`Registered a font: ${filename} (${font.src})`);
+            if (log)
+                forgescript_1.Logger.info(`Registered a font: ${filename} (${font.src})`);
         }
         else
             registerFonts((0, node_fs_1.readdirSync)(font.src).map(x => ({ src: (0, node_path_1.join)(font.src, x) })), log);

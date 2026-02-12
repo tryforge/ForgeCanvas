@@ -21,10 +21,8 @@ export default new NativeFunction({
         rest: false
     }],
     execute (_, [sep]) {
-        return this.success(
-            GlobalFonts.families
-                .map(x => x?.family)
-                .join(sep ?? ', ')
-        );
+        return this.success(GlobalFonts.families
+            .map(x => x?.family)
+            .join(sep ?? ', '));
     }
 });

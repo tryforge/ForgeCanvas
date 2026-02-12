@@ -35,9 +35,10 @@ exports.default = new forgescript_1.NativeFunction({
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas)
             return this.customError(__1.FCError.NoCanvas);
-        return this.success(baseline !== null
-            ? (canvas.textBaseline = (typeof baseline === 'number' ? __1.TextBaseline[baseline] : baseline), undefined) : typeof canvas.textBaseline === 'number'
-            ? __1.TextBaseline[canvas.textBaseline]
-            : canvas.textBaseline ?? 'bottom');
+        if (baseline !== null && baseline !== undefined) {
+            canvas.textBaseline = (typeof baseline === 'number' ? __1.TextBaseline[baseline] : baseline);
+            return this.success();
+        }
+        return this.success(canvas.textBaseline);
     }
 });

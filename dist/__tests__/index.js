@@ -31,13 +31,41 @@ client.applicationCommands.load('dist/__tests__/commands');
 ], true);
 __1.ForgeCanvas.components.set({
     name: 'ball',
-    code: '$log[$env[options]]$drawRect[;fill;$env[options;1];0;0;$env[options;0];$env[options;0];$divide[$env[options;0];2]]]'
+    params: [
+        {
+            name: 'style',
+            type: forgescript_1.ArgType.String,
+            required: true
+        },
+        {
+            name: 'size',
+            type: forgescript_1.ArgType.Number,
+            required: true
+        }
+    ],
+    brackets: true,
+    code: '$drawRect[;fill;$env[style];0;0;$env[size];$env[size];$divide[$env[size];2]]]'
 });
 __1.ForgeCanvas.components.set({
     name: 'balls',
+    params: [
+        {
+            name: 'style',
+            type: forgescript_1.ArgType.String,
+            required: true
+        },
+        {
+            name: 'size',
+            type: forgescript_1.ArgType.Number,
+            required: true
+        }
+    ],
+    brackets: true,
     code: `
-        $renderComponent[;ball;0;0;$env[options;0];$env[options;1]]
-        $renderComponent[;ball;$env[options;0];0;$env[options;0];$env[options;1]]
+        $djsEval[console.log(ctx.getEnvironmentKey('style'))]
+        $renderComponent[;ball;0;0;$env[style];$env[size]]
+        $renderComponent[;ball;$env[size];$env[size];$env[style];$env[size]]
     `
 });
+__1.ForgeCanvas.components.load(__dirname + '/components', true);
 client.login(process.env.TOKEN);

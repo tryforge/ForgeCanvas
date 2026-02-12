@@ -47,7 +47,7 @@ export default new NativeFunction({
         } else image = await loadImage(path);
         if (!image) return this.customError(FCError.ImageFail);
 
-        return this.success(property !== null // @ts-ignore
+        return this.success(property !== null && property !== undefined // @ts-ignore
             ? image[WidthOrHeight[
                 (typeof property === 'string' ? WidthOrHeight[property] : property) as any
             ]]

@@ -138,7 +138,8 @@ export class CanvasBuilder {
         lineOffset?: number | null,
         nlBegin?: CanvasTextAlign | null
     ) {
-        if (!spans?.length) return;
+        if (!spans?.length || spans?.every(span => !span))
+            return;
 
         const fontm = CanvasUtil.validateFont(font);
         if (typeof fontm === 'string') throw new Error(fontm);
@@ -152,6 +153,14 @@ export class CanvasBuilder {
         wrap ??= undefined;
 
         ctx.font = font;
+
+        if (spans.length === 1 && wrap === null || wrap === undefined) {
+            const span = spans[0]!;
+            if (typeof span === 'string')
+                ctx[func](span, x, y, maxWidth ?? undefined);
+            else ctx.drawImage(span, x, y, Math.min(imgsize, maxWidth || imgsize), imgsize);
+            return;
+        }
 
         const lines: { item: string | Image, w: number }[][] = [[]];
         let lineWidth = 0;
@@ -184,7 +193,7 @@ export class CanvasBuilder {
                     continue;
                 }
 
-                if (wrap === TextWrap.character) {
+                if (wrap === TextWrap.character || wrap === TextWrap['erase-character']) {
                     let line = '';
                     let current = 0;
                     for (const char of span) {
@@ -195,6 +204,7 @@ export class CanvasBuilder {
                         }
 
                         if (lineWidth + current + charWidth > maxWidth) {
+                            if (wrap === TextWrap['erase-character']) break;
                             lines[lines.length - 1].push({ item: line, w: current });
 
                             lines.push([]);
@@ -219,6 +229,7 @@ export class CanvasBuilder {
                         }
 
                         if (lineWidth + wordWidth > maxWidth) {
+                            if (wrap === TextWrap['erase-word']) break;
                             if (wrap === TextWrap.smart && wordWidth > maxWidth) {
                                 if (lines[lines.length - 1].length) {
                                     lines.push([]);
@@ -324,7 +335,11 @@ export class CanvasBuilder {
         y: number,
         width?: number | null,
         height?: number | null,
-        radius?: number | number[] | null
+        radius?: number | number[] | null,
+        srcX?: number | null,
+        srcY?: number | null,
+        srcWidth?: number | null,
+        srcHeight?: number | null
     ) {
         const ctx = this.ctx;
         image = await loadImage(image);
@@ -332,14 +347,17 @@ export class CanvasBuilder {
         height ??= image.height;
         [x, y] = this.align(x, y, width, height);
 
-        if (!radius)
-            return ctx.drawImage(image, x, y, width, height);
+        const args = [x, y, width, height];
+        if (typeof srcX === 'number') // @ts-ignore
+            args.unshift(srcX, srcY, srcWidth, srcHeight);
+        // @ts-ignore
+        if (!radius) return ctx.drawImage(image, ...args);
 
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
-        ctx.clip();
-        ctx.drawImage(image, x, y, width, height);
+        ctx.clip(); // @ts-ignore
+        ctx.drawImage(image, ...args);
         ctx.restore();
     }
 
@@ -486,6 +504,9 @@ export class CanvasBuilder {
 
     /**
      * Adds/sets/removes a filter of the canvas.
+     * @param method - The method AKA filter action to perform.
+     * @param filter - The filter to add, set, or remove.
+     * @param value - The value of the filter.
      */
     public filter(
         method: FilterMethod,
@@ -493,6 +514,7 @@ export class CanvasBuilder {
         value?: string | null
     ) {
         const ctx = this.ctx;
+        console.log(filter, value, method);
 
         const f = typeof filter === 'number' ? Filters[filter] : filter,
             unit = filter === Filters.grayscale || filter === Filters.sepia ? '%' :
@@ -501,12 +523,12 @@ export class CanvasBuilder {
 
         switch (method) {
             case FilterMethod.add: {
-                if (!filter || !value) throw new Error(FCError.NoFilterOrValue);
+                if (!f || !value) throw new Error(FCError.NoFilterOrValue);
                 ctx.filter = ctx.filter !== 'none' ? ctx.filter += fstr : fstr;
                 return;
             }
             case FilterMethod.set: {
-                if (!filter || !value) throw new Error(FCError.NoFilterOrValue);
+                if (!f || !value) throw new Error(FCError.NoFilterOrValue);
                 ctx.filter = fstr;
                 return;
             }
@@ -516,11 +538,17 @@ export class CanvasBuilder {
                 ctx.filter = filters.length ? filters.map(x => x.raw).join(' ') : 'none';
                 return;
             }
-            case FilterMethod.clear:
+            case FilterMethod.clear: {
                 ctx.filter = 'none';
                 return;
+            }
             case FilterMethod.get: return ctx.filter;
             case FilterMethod.json: return CanvasUtil.parseFilters(ctx.filter);
+            case FilterMethod.setRaw: {
+                if (!value) throw new Error(FCError.NoFilterOrValue);
+                ctx.filter = value;
+                return;
+            }
         }
     }
 

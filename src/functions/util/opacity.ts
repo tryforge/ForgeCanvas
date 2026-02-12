@@ -35,7 +35,7 @@ export default new NativeFunction({
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas) return this.customError(FCError.NoCanvas);
 
-        return this.success(opacity
+        return this.success(opacity !== null && opacity !== undefined
             ? (canvas.globalAlpha = opacity / 100, undefined)
             : canvas.globalAlpha
         );

@@ -52,11 +52,11 @@ export default new NativeFunction({
 
         const f = await CanvasUtil.resolveFrame(this, ctx, frame, speed);
         if (f instanceof Return) return f;
-        
+
         if (options) {
             if (typeof options.delay === 'number') f.delay = options.delay;
 
-            // @ts-ignore
+            // @ts-expect-error
             if (options.dispose && DisposalMethod[options.dispose])
                 f.dispose = options.dispose as DisposalMethod;
 

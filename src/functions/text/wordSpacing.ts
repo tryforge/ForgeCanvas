@@ -34,9 +34,9 @@ export default new NativeFunction({
             ? ctx.canvasManager?.get(name)
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas) return this.customError(FCError.NoCanvas);
- 
-        return this.success(spacing
-            ? (canvas.wordSpacing = `${spacing}px`, undefined) 
+
+        return this.success(spacing !== undefined && spacing !== null
+            ? (canvas.wordSpacing = `${spacing}px`, undefined)
             : canvas.wordSpacing
         );
     }

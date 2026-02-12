@@ -34,7 +34,7 @@ exports.default = new forgescript_1.NativeFunction({
             : ctx.canvasManager?.lastCurrent)?.ctx;
         if (!canvas)
             return this.customError(classes_1.FCError.NoCanvas);
-        return this.success(spacing
+        return this.success(spacing !== undefined && spacing !== null
             ? (canvas.letterSpacing = `${spacing}px`, undefined)
             : canvas.letterSpacing);
     }

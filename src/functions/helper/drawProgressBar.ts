@@ -15,42 +15,42 @@ export default new NativeFunction({
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'x',
-            description: 'The X coordinate.',
+            description: 'The X coordinate',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'y',
-            description: 'The Y coordinate.',
+            description: 'The Y coordinate',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'width',
-            description: 'The width.',
+            description: 'The width',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'height',
-            description: 'The height.',
+            description: 'The height',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'config',
-            description: 'The progress bar configuration.',
+            description: 'The progress bar configuration',
             type: ArgType.String,
             required: true,
             rest: false

@@ -8,22 +8,22 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$canvasSize',
-    aliases: ['$canvasDimensions'],
-    description: 'Returns canvas size.',
+    aliases: ['$canvasDimensions', '$canvasResolution'],
+    description: 'Returns the canvas size.',
     version: '1.1.0',
     brackets: false,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'property',
-            description: 'The size property to return.',
+            description: 'The size property to return',
             type: forgescript_1.ArgType.Enum,
             enum: __1.WidthOrHeight,
             required: false,

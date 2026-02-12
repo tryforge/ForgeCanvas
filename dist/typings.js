@@ -44,6 +44,8 @@ var TextWrap;
     TextWrap[TextWrap["word"] = 0] = "word";
     TextWrap[TextWrap["character"] = 1] = "character";
     TextWrap[TextWrap["smart"] = 2] = "smart";
+    TextWrap[TextWrap["erase-character"] = 3] = "erase-character";
+    TextWrap[TextWrap["erase-word"] = 4] = "erase-word";
 })(TextWrap || (exports.TextWrap = TextWrap = {}));
 var WidthOrHeight;
 (function (WidthOrHeight) {
@@ -58,6 +60,7 @@ var FilterMethod;
     FilterMethod[FilterMethod["clear"] = 3] = "clear";
     FilterMethod[FilterMethod["get"] = 4] = "get";
     FilterMethod[FilterMethod["json"] = 5] = "json";
+    FilterMethod[FilterMethod["setRaw"] = 6] = "setRaw";
 })(FilterMethod || (exports.FilterMethod = FilterMethod = {}));
 var Filters;
 (function (Filters) {
