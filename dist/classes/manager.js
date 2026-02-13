@@ -110,7 +110,9 @@ class ComponentManager extends Manager {
     load(path, log) {
         if (!(0, node_fs_1.existsSync)(path))
             throw forgescript_1.Logger.error(`Component ${path} does not exist`);
-        if ((0, node_fs_1.statSync)(path).isFile() && path.endsWith('.js') || path.endsWith('.ts')) {
+        if ((0, node_fs_1.statSync)(path).isFile()) {
+            if (!path.endsWith('.js'))
+                return;
             try {
                 require.cache[path] = undefined;
                 const r = require(path);
