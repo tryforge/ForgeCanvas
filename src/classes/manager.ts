@@ -3,7 +3,7 @@
 * Copyright © 2026 BotForge
 */
 
-import { createCanvas, Image, LottieAnimation, SKRSContext2D } from '@napi-rs/canvas';
+import { createCanvas, Image, LottieAnimation, SKRSContext2D, loadImage } from '@napi-rs/canvas';
 import { CanvasBuilder } from './builder';
 import { GradientType } from '../';
 import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
@@ -73,6 +73,10 @@ export class GradientManager extends Manager<CanvasGradient> {
 
 export class ImageManager extends Manager<Image> {
     public set(name: string, image: Image) { this.map.set(name, image) }
+    
+    public async load(name: string, path: string) {
+        this.map.set(name, await loadImage(path));
+    }
 }
 
 export class GIFManager {
@@ -132,7 +136,7 @@ export class ComponentManager extends Manager<ForgeFunction> {
     public load(path: string, log?: boolean) {
         if (!existsSync(path)) throw Logger.error(`Component ${path} does not exist`);
         if (statSync(path).isFile()) {
-	    if(!path.endsWith('.js')) return;
+            if(!path.endsWith('.js')) return;
             try {
                 require.cache[path] = undefined;
                 const r = require(path);
