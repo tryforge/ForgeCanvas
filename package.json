@@ -30,13 +30,13 @@
   "homepage": "https://github.com/tryforge/ForgeCanvas#readme",
   "devDependencies": {
     "@swc/cli": "^0.8.0",
-    "@tryforge/forgescript": "^2.5.0",
-    "@types/node": "^25.1.0",
-    "typedoc": "^0.28.16",
+    "@tryforge/forgescript": "^2.6.0",
+    "@types/node": "^25.5.0",
+    "typedoc": "^0.28.17",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "@gifsx/gifsx": "^1.0.15",
-    "@napi-rs/canvas": "^0.1.91"
+    "@napi-rs/canvas": "^0.1.97"
   }
 }
