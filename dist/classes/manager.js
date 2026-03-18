@@ -59,6 +59,9 @@ class GradientManager extends Manager {
 exports.GradientManager = GradientManager;
 class ImageManager extends Manager {
     set(name, image) { this.map.set(name, image); }
+    async load(name, path) {
+        this.map.set(name, await (0, canvas_1.loadImage)(path));
+    }
 }
 exports.ImageManager = ImageManager;
 class GIFManager {

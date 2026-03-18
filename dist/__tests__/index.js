@@ -15,16 +15,8 @@ const client = new forgescript_1.ForgeClient({
     extensions: [new __1.ForgeCanvas()],
     prefixes: ['.']
 });
-client.commands.add({
-    name: 'eval',
-    aliases: ['e', 'е'],
-    type: 'messageCreate',
-    code: `
-        $onlyIf[$authorID==$botOwnerID;nuh uh]
-        $eval[$message]
-    `,
-});
-client.applicationCommands.load('dist/__tests__/commands');
+client.applicationCommands.load('dist/__tests__/slash');
+client.commands.load('dist/__tests__/commands');
 (0, __1.registerFonts)([
     { src: 'https://fonts.googleapis.com/css2?family=Comfortaa&display=swap' },
     { src: './assets/Twemoji.ttf', name: 'Twemoji' }

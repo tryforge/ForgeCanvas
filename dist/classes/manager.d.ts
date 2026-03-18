@@ -28,6 +28,7 @@ export declare class GradientManager extends Manager<CanvasGradient> {
 }
 export declare class ImageManager extends Manager<Image> {
     set(name: string, image: Image): void;
+    load(name: string, path: string): Promise<void>;
 }
 export declare class GIFManager {
     encoders: Map<string, Encoder>;
