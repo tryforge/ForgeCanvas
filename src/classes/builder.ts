@@ -225,41 +225,43 @@ export class CanvasBuilder {
 
                         if (lineWidth + wordWidth > maxWidth) {
                             if (wrap === TextWrap['erase-word']) break;
-                            if (wrap === TextWrap.smart && wordWidth > maxWidth) {
-                                if (lines[lines.length - 1].length) {
-                                    lines.push([]);
-                                    lineWidth = 0;
-                                }
-
-                                let line = '';
-                                let current = 0;
-                                for (const char of word) {
-                                    let charWidth = charFontCache.get(char);
-                                    if (charWidth === undefined) {
-                                        charWidth = ctx.measureText(char).width;
-                                        charFontCache.set(char, charWidth);
-                                    }
-
-                                    if (lineWidth + current + charWidth > maxWidth) {
-                                        lines[lines.length - 1].push({ item: line, w: current });
-
-                                        lines.push([]);
-                                        line = char;
-                                        current = charWidth;
-                                        lineWidth = 0;
-                                        continue;
-                                    }
-
-                                    line += char;
-                                    current += charWidth;
-                                }
-
-                                lines[lines.length - 1].push({ item: line, w: current });
-                                lineWidth = current;
+                            if (wrap !== TextWrap.smart || wordWidth < maxWidth) {
+                                lines.push([]);
+                                lineWidth = 0;
                                 continue;
                             }
-                            lines.push([]);
-                            lineWidth = 0;
+
+                            if (lines[lines.length - 1].length) {
+                                lines.push([]);
+                                lineWidth = 0;
+                            }
+
+                            let line = '';
+                            let current = 0;
+                            for (const char of word) {
+                                let charWidth = charFontCache.get(char);
+                                if (charWidth === undefined) {
+                                    charWidth = ctx.measureText(char).width;
+                                    charFontCache.set(char, charWidth);
+                                }
+
+                                if (lineWidth + current + charWidth > maxWidth) {
+                                    lines[lines.length - 1].push({ item: line, w: current });
+
+                                    lines.push([]);
+                                    line = char;
+                                    current = charWidth;
+                                    lineWidth = 0;
+                                    continue;
+                                }
+
+                                line += char;
+                                current += charWidth;
+                            }
+
+                            lines[lines.length - 1].push({ item: line, w: current });
+                            lineWidth = current;
+                            continue;
                         }
 
                         lines[lines.length - 1].push({ item: word, w: wordWidth });

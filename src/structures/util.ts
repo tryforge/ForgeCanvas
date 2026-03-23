@@ -13,7 +13,6 @@ import { join, basename } from 'node:path';
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 
 import { ForgeCanvasError, CanvasBuilder, Spans, ImageFormat, ImageManager } from '..';
-import textalign from '../functions/text/textAlign';
 
 export const urlRegex = /^url\(['"]?|['"]?\)$/g;
 export const fontcssRegex = /\/\*\s*(?<subset>[\w-]+)\s*\*\/[\s\S]*?font-family:\s*['"]?(?<family>[^'";]+)['"]?;[\s\S]*?url\((?<url>[^)]+)\)/g;
@@ -154,9 +153,15 @@ export async function resolveStyle(self: CompiledFunction, ctx: Context, canvas:
             if (!img) return self.customError(ForgeCanvasError.NoImage);
 
             image = img;
-        } else image = await (ctx.imageManager ??= new ImageManager()).load(
-            repeat ? splits.join(':') : `${type}:${splits.join(':')}`
-        );
+        } else {
+            const src = repeat ? splits.join(':') : `${type}:${splits.join(':')}`;
+            image = await loadImage(
+                src,
+                ctx.imageManager?.loadOptions ?? ctx.client.preloadImages.loadOptions
+            );
+            
+            (ctx.imageManager ??= new ImageManager()).map.set(src, image);
+        }
 
         const pattern = canvas.ctx.createPattern(image, repeat as any);
         if (x !== undefined && y !== undefined)
@@ -251,7 +256,7 @@ export async function resolveImage(self: CompiledFunction, ctx: Context, src: st
             img = `data:image/svg+xml;base64,${Buffer.from(src)?.toString('base64')}`;
     }
 
-    return await loadImage(img, ctx.imageManager?.loadOptions)
+    return await loadImage(img, ctx.imageManager?.loadOptions ?? ctx.client.preloadImages?.loadOptions)
         .catch((e: any) => self.customError(e.toString()));
 }
 
@@ -314,7 +319,7 @@ export async function resolveFrame(self: CompiledFunction, ctx: Context, frame: 
 
             if (!img) return self.customError(ForgeCanvasError.NoImage);
             return await loadFrame(
-                (ctx.imageManager ?? (ctx.imageManager = new ImageManager())),
+                (ctx.imageManager ??= new ImageManager()),
                 img, speed
             );
         }

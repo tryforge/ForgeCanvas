@@ -17,6 +17,13 @@ export default new NativeFunction({
     unwrap: true,
     args: [
         {
+            name: 'global',
+            description: 'If true, touches global Image Manager instead',
+            type: ArgType.Boolean,
+            required: false,
+            rest: false
+        },
+        {
             name: 'alt',
             description: 'Sets the alt text of the next images',
             type: ArgType.String,
@@ -38,9 +45,10 @@ export default new NativeFunction({
             rest: false
         }
     ],
-    async execute (ctx, [alt, max, opts]) {
-        const manager = ctx.imageManager instanceof ImageManager ?
-            ctx.imageManager : ctx.imageManager = new ImageManager();
+    async execute (ctx, [g, alt, max, opts]) {
+        const manager = !g ? (ctx.imageManager instanceof ImageManager ?
+                ctx.imageManager : ctx.imageManager = new ImageManager())
+            : ctx.client.preloadImages;
 
         if (!alt && !max && !opts) return this.successJSON(manager.loadOptions ?? {});
 

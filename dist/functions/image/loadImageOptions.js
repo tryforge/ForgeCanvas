@@ -15,6 +15,13 @@ exports.default = new forgescript_1.NativeFunction({
     unwrap: true,
     args: [
         {
+            name: 'global',
+            description: 'If true, touches global Image Manager instead',
+            type: forgescript_1.ArgType.Boolean,
+            required: false,
+            rest: false
+        },
+        {
             name: 'alt',
             description: 'Sets the alt text of the next images',
             type: forgescript_1.ArgType.String,
@@ -36,9 +43,10 @@ exports.default = new forgescript_1.NativeFunction({
             rest: false
         }
     ],
-    async execute(ctx, [alt, max, opts]) {
-        const manager = ctx.imageManager instanceof __1.ImageManager ?
-            ctx.imageManager : ctx.imageManager = new __1.ImageManager();
+    async execute(ctx, [g, alt, max, opts]) {
+        const manager = !g ? (ctx.imageManager instanceof __1.ImageManager ?
+            ctx.imageManager : ctx.imageManager = new __1.ImageManager())
+            : ctx.client.preloadImages;
         if (!alt && !max && !opts)
             return this.successJSON(manager.loadOptions ?? {});
         const options = {};

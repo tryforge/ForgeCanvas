@@ -153,8 +153,11 @@ async function resolveStyle(self, ctx, canvas, style) {
                 return self.customError(__1.ForgeCanvasError.NoImage);
             image = img;
         }
-        else
-            image = await (ctx.imageManager ??= new __1.ImageManager()).load(repeat ? splits.join(':') : `${type}:${splits.join(':')}`);
+        else {
+            const src = repeat ? splits.join(':') : `${type}:${splits.join(':')}`;
+            image = await (0, canvas_1.loadImage)(src, ctx.imageManager?.loadOptions ?? ctx.client.preloadImages.loadOptions);
+            (ctx.imageManager ??= new __1.ImageManager()).map.set(src, image);
+        }
         const pattern = canvas.ctx.createPattern(image, repeat);
         if (x !== undefined && y !== undefined)
             pattern.setTransform(new DOMMatrix().translate(x, y));
@@ -228,7 +231,7 @@ async function resolveImage(self, ctx, src) {
         default: if (src?.includes('<svg'))
             img = `data:image/svg+xml;base64,${Buffer.from(src)?.toString('base64')}`;
     }
-    return await (0, canvas_1.loadImage)(img, ctx.imageManager?.loadOptions)
+    return await (0, canvas_1.loadImage)(img, ctx.imageManager?.loadOptions ?? ctx.client.preloadImages?.loadOptions)
         .catch((e) => self.customError(e.toString()));
 }
 function rgbaStringToHex(rgba) {
@@ -269,7 +272,7 @@ async function resolveFrame(self, ctx, frame, speed) {
                 ?.get(meow ? source.slice(10) : source);
             if (!img)
                 return self.customError(__1.ForgeCanvasError.NoImage);
-            return await loadFrame((ctx.imageManager ?? (ctx.imageManager = new __1.ImageManager())), img, speed);
+            return await loadFrame((ctx.imageManager ??= new __1.ImageManager()), img, speed);
         }
         case 'canvas': {
             const canvas = ctx.canvasManager?.get(frame.slice(9));
