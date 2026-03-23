@@ -4,27 +4,28 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Image, loadImage } from '@napi-rs/canvas';
-import { FCError, WidthOrHeight } from '../..';
+import { Image } from '@napi-rs/canvas';
+
+import { ForgeCanvasError, WidthOrHeight } from '../..';
 
 export default new NativeFunction({
     name: '$imageSize',
     aliases: ['$imgSize', '$imageDimensions'],
-    description: 'Returns image\'s size.',
+    description: 'Returns the image\'s size',
     version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'path',
-            description: 'The image path.',
+            description: 'The image path or name (via images://name or, preload://name, if global)',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'property',
-            description: 'The size property to return.',
+            description: 'Whether to return the image\'s width or height; Returns both as JSON if empty',
             type: ArgType.Enum,
             enum: WidthOrHeight,
             required: false,
@@ -44,8 +45,10 @@ export default new NativeFunction({
             }
 
             image = manager?.get(path);
-        } else image = await loadImage(path);
-        if (!image) return this.customError(FCError.ImageFail);
+        } else if (path.startsWith('preload://'))
+            image = ctx.client.preloadImages.get(path);
+        else image = await ctx.imageManager?.load(path);
+        if (!image) return this.customError(ForgeCanvasError.ImageFail);
 
         return this.success(property !== null && property !== undefined // @ts-ignore
             ? image[WidthOrHeight[

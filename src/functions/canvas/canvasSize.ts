@@ -4,12 +4,12 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError, WidthOrHeight } from '../..';
+import { ForgeCanvasError, WidthOrHeight } from '../..';
 
 export default new NativeFunction({
     name: '$canvasSize',
     aliases: ['$canvasDimensions', '$canvasResolution'],
-    description: 'Returns the canvas size.',
+    description: 'Returns the canvas size',
     version: '1.1.0',
     brackets: false,
     unwrap: true,
@@ -31,10 +31,8 @@ export default new NativeFunction({
         }
     ],
     execute (ctx, [name, property]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.getOrCurrent(name)?.inner;
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
         return this.success(property !== null // @ts-ignore
             ? canvas[WidthOrHeight[

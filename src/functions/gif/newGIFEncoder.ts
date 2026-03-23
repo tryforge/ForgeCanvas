@@ -4,48 +4,49 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { GIFManager } from '../../classes';
 import { Encoder } from '@gifsx/gifsx';
+
+import { GIFManager } from '../..';
 
 export default new NativeFunction({
     name: '$newGIFEncoder',
     aliases: ['$createGIFEncoder', '$GIFEncoder', '$createEncoder', '$newEncoder'],
-    description: 'Creates a new GIF Encoder.',
+    description: 'Creates a new GIF Encoder',
     version: '1.2.0',
     brackets: true,
     unwrap: false,
     args: [
         {
             name: 'gif',
-            description: 'Name of the new GIF Encoder.',
+            description: 'Name of the new GIF Encoder',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'width',
-            description: 'Width of the new canvas.',
+            description: 'Width of the new canvas',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'height',
-            description: 'Height of the new canvas.',
+            description: 'Height of the new canvas',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'palette',
-            description: 'Palette for the GIF.',
+            description: 'Palette for the GIF',
             type: ArgType.Json,
             required: false,
             rest: false
         },
         {
             name: 'functions',
-            description: 'Functions.',
+            description: 'Functions',
             type: ArgType.Unknown,
             required: false,
             rest: true
@@ -53,8 +54,8 @@ export default new NativeFunction({
     ],
     async execute(ctx) {
         if (!this.data.fields) this.data.fields = [];
-        if (!ctx.gifManager || !(ctx.gifManager instanceof GIFManager))
-            ctx.gifManager = new GIFManager();
+        const manager = ctx.gifManager instanceof GIFManager ?
+            ctx.gifManager : ctx.gifManager = new GIFManager();
 
         const options = await this['resolveMultipleArgs'](ctx, 0,1,2,3);
         let [name, width, height, palette] = options.args;
@@ -63,20 +64,22 @@ export default new NativeFunction({
         if (!r?.success) return r;
 
         try { palette = JSON.parse(palette) } catch(_){};
-        ctx.gifManager.currentEncoder.push(new Encoder(
+        
+        const previous = manager.currentEncoder;
+        manager.currentEncoder = new Encoder(
             width, height,
             Array.isArray(palette)
                 ? Uint8Array.from(palette)
                 : undefined
-        ));
+        );
 
         for (let i = 4; i < this.data.fields.length; i++) {
             const r = await this['resolveCode'](ctx, this.data.fields[i]);
             if (!r?.success) return r;
         }
 
-        ctx.gifManager.setEncoder(name, ctx.gifManager.lastCurrentEncoder);
-        ctx.gifManager.currentEncoder.pop();
+        manager.setEncoder(name, manager.currentEncoder);
+        manager.currentEncoder = previous;
 
         return this.success();
     }

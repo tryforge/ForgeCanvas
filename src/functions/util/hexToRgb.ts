@@ -8,14 +8,14 @@ import { hexToRgb } from '@gifsx/gifsx';
 
 export default new NativeFunction({
     name: '$hexToRgb',
-    description: 'Converts HEX into RGB.',
+    description: 'Converts HEX into RGB',
     version: '1.2.1',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'hex',
-            description: 'The hex to convert into RGB.',
+            description: 'The hex to convert into RGB',
             type: ArgType.String,
             required: true,
             rest: true

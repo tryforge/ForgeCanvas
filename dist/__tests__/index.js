@@ -5,7 +5,7 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../");
+const __1 = require("..");
 const client = new forgescript_1.ForgeClient({
     intents: [
         'GuildMembers', 'GuildMessages',

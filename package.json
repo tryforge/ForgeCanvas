@@ -3,11 +3,12 @@
   "version": "1.3.0",
   "description": "A ForgeScript extension allowing you to create and edit images with ease.",
   "main": "dist/index.js",
-  "scripts": {
-    "docgen": "tsc && npm run license && typedoc src/index.ts && node dist/docgen",
-    "test": "swc src -d dist --strip-leading-paths && node --env-file=.env dist/__tests__/index.js",
-    "license": "node dist/@build/license.js"
+  "author": "lordex",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/tryforge/ForgeCanvas/issues"
   },
+  "homepage": "https://github.com/tryforge/ForgeCanvas#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tryforge/ForgeCanvas.git"
@@ -22,12 +23,17 @@
     "jpeg",
     "gif"
   ],
-  "author": "lordex",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/tryforge/ForgeCanvas/issues"
+  "scripts": {
+    "build": "swc src -d dist --strip-leading-paths",
+    "docgen": "typedoc src/index.ts && node dist/docgen",
+    "test": "npm run build && node --env-file=.env dist/__tests__/index.js",
+    "license": "node dist/@build/license.js",
+    "prepublish": "npm run license && tsc && npm run docgen"
   },
-  "homepage": "https://github.com/tryforge/ForgeCanvas#readme",
+  "dependencies": {
+    "@gifsx/gifsx": "^1.0.15",
+    "@napi-rs/canvas": "0.1.96"
+  },
   "devDependencies": {
     "@swc/cli": "^0.8.0",
     "@tryforge/forgescript": "^2.6.0",
@@ -35,8 +41,7 @@
     "typedoc": "^0.28.17",
     "typescript": "^5.9.3"
   },
-  "dependencies": {
-    "@gifsx/gifsx": "^1.0.15",
-    "@napi-rs/canvas": "^0.1.97"
+  "peerDependencies": {
+    "@tryforge/forgescript": "^2"
   }
 }

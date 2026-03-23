@@ -40,7 +40,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, type, t]) {
         const lottie = ctx.lottieManager?.get(name);
         if (!lottie)
-            return this.customError(__1.FCError.NoLottie);
+            return this.customError(__1.ForgeCanvasError.NoLottie);
         lottie[type === __1.LottieSeekType.frame ? 'seekFrame'
             : type === __1.LottieSeekType.time ? 'seekTime'
                 : 'seek'](t);

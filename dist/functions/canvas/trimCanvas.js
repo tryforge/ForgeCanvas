@@ -5,11 +5,11 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const classes_1 = require("../../classes");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$cropCanvas',
     aliases: ['$canvasCrop', '$canvasTrim', '$trimCanvas'],
-    description: 'Crops a canvas.',
+    description: 'Crops a canvas',
     version: '1.0.0',
     brackets: false,
     unwrap: true,
@@ -55,11 +55,9 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     execute(ctx, [name, top, left, right, bottom]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
+        const canvas = ctx.canvasManager?.get(name ?? '') ?? ctx.canvasManager?.current;
         if (!canvas)
-            return this.customError(classes_1.FCError.NoCanvas);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
         return this.success(canvas.trim(top !== false, left !== false, right !== false, bottom !== false));
     }
 });

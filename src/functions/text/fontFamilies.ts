@@ -9,13 +9,13 @@ import { GlobalFonts } from '@napi-rs/canvas';
 export default new NativeFunction({
     name: '$fontFamilies',
     aliases: ['$fontFam', '$fonts', '$fontNames'],
-    description: 'Returns a list of the available fonts.',
+    description: 'Returns a list of the available fonts',
     version: '1.0.0',
     brackets: false,
     unwrap: true,
     args: [{
         name: 'separator',
-        description: 'The font separator.',
+        description: 'The font separator',
         type: ArgType.String,
         required: false,
         rest: false

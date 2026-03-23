@@ -8,35 +8,35 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$measureText',
-    description: 'Measures text.',
+    description: 'Returns text metrics that contain information about the measured text (such as its width, for example)',
     version: '1.0.0',
     brackets: false,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'text',
-            description: 'The text to measure.',
+            description: 'The text to measure',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'font',
-            description: 'The font.',
+            description: 'The font',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'property',
-            description: 'The result\'s property to return.',
+            description: 'The measured text\'s TextMetrics property to return',
             type: forgescript_1.ArgType.Enum,
             enum: __1.MeasureTextProperty,
             required: false,
@@ -44,12 +44,10 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [name, text, font, property]) {
-        const canvas = (name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent)?.ctx;
+        const canvas = ctx.canvasManager?.getOrCurrent(name)?.ctx;
         if (!canvas)
-            return this.customError(__1.FCError.NoCanvas);
-        const valid = __1.CanvasUtil.validateFont(font);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
+        const valid = (0, __1.validateFont)(font);
         if (!valid || typeof valid === 'string')
             return this.customError(valid);
         canvas.font = font;

@@ -4,11 +4,11 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError } from '../../classes';
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$imageSmoothing',
-    description: 'Sets or returns the image smoothing in a canvas.',
+    description: 'Sets or returns the image smoothing in a canvas',
     version: '1.0.0',
     aliases: ["$imageSmooth"],
     brackets: false,
@@ -16,24 +16,22 @@ export default new NativeFunction({
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'enabled',
-            description: 'Determines whether scaled images are smoothed or not.',
+            description: 'Determines whether scaled images are smoothed or not',
             type: ArgType.Boolean,
             required: false,
             rest: false
         }
     ],
     execute (ctx, [name, enabled]) {
-        const canvas = (name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent)?.ctx;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.getOrCurrent(name)?.ctx;
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
         return this.success(enabled !== null && enabled !== undefined
             ? (canvas.imageSmoothingEnabled = enabled, undefined)

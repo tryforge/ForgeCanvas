@@ -5,13 +5,13 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const fs_1 = require("fs");
-const classes_1 = require("../../classes");
 const canvas_1 = require("@napi-rs/canvas");
+const node_fs_1 = require("node:fs");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$loadLottieAnimation',
     aliases: ['$loadLottie', '$lottie', '$lottieAnimation'],
-    description: 'Loads a lottie animation.',
+    description: 'Loads a lottie animation from an URL/File path or a JSON',
     version: '1.3.0',
     brackets: true,
     unwrap: true,
@@ -39,9 +39,9 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     execute(ctx, [name, data, resourcePath]) {
-        if (!(ctx.lottieManager instanceof classes_1.LottieManager))
-            ctx.lottieManager = new classes_1.LottieManager();
-        const d = (0, fs_1.existsSync)(data) ? (0, fs_1.readFileSync)(data) : data;
+        if (!(ctx.lottieManager instanceof __1.LottieManager))
+            ctx.lottieManager = new __1.LottieManager();
+        const d = (0, node_fs_1.existsSync)(data) ? (0, node_fs_1.readFileSync)(data) : data;
         ctx.lottieManager.set(name, canvas_1.LottieAnimation.loadFromData(d, resourcePath ? { resourcePath } : undefined));
         return this.success();
     }

@@ -9,7 +9,7 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$lottieOption',
     aliases: ['$lottieProperty', '$lottieOpt', '$lottieAnimationOption', '$lottieAnimationProperty'],
-    description: 'Returns an option of the lottie animation.',
+    description: 'Returns an option of the lottie animation',
     version: '1.3.0',
     brackets: true,
     unwrap: true,
@@ -33,7 +33,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, option]) {
         const lottie = ctx.lottieManager?.get(name);
         if (!lottie)
-            return this.customError(__1.FCError.NoLottie);
+            return this.customError(__1.ForgeCanvasError.NoLottie);
         // @ts-expect-error
         return this.success(lottie[typeof option === 'number' ? __1.LottieOption[option] : option]);
     }

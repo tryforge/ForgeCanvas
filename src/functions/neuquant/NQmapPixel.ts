@@ -4,47 +4,47 @@
 */
 
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
-import { FCError } from '../../classes';
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$NQmapPixel',
     aliases: ['$mapPixel'],
-    description: 'Maps the rgba-pixel in-place to the best-matching color in the color map.',
+    description: 'Maps the rgba-pixel in-place to the best-matching color in the color map',
     version: '1.2.1',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'name',
-            description: 'Name of the NeuQuant instance.',
+            description: 'Name of the NeuQuant instance',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'r',
-            description: 'The red value.',
+            description: 'The red value',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'g',
-            description: 'The green value.',
+            description: 'The green value',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'b',
-            description: 'The blue value.',
+            description: 'The blue value',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'a',
-            description: 'The alpha value.',
+            description: 'The alpha value',
             type: ArgType.Number,
             required: true,
             rest: false
@@ -52,7 +52,7 @@ export default new NativeFunction({
     ],
     execute (ctx, [name, r, g, b, a]) {
         const nq = ctx.neuquantManager?.get(name);
-        if (!nq) return this.customError(FCError.NoNeuQuant);
+        if (!nq) return this.customError(ForgeCanvasError.NoNeuQuant);
 
         nq.mapPixel(Uint8Array.from([r, g, b, a]))
         return this.success();

@@ -8,21 +8,21 @@ import { rgbToHex } from '@gifsx/gifsx';
 
 export default new NativeFunction({
     name: '$rgbToHex',
-    description: 'Converts RGB into HEX.',
+    description: 'Converts RGB into HEX',
     version: '1.2.1',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'allowShort',
-            description: 'Whether to allow short hex output. (default: false)',
+            description: 'Whether to allow short hex output (default: false)',
             type: ArgType.Boolean,
             required: false,
             rest: false
         },
         {
             name: 'rgba',
-            description: 'The RGB to convert into HEX.',
+            description: 'The RGB to convert into HEX',
             type: ArgType.Number,
             check: (x: number) => x >= 0 && x <= 255,
             required: true,

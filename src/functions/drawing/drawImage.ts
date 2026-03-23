@@ -4,13 +4,12 @@
 */
 
 import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
-import { CanvasUtil, FCError } from '../../classes';
-import { FillOrStrokeOrClear } from '../../typings';
+import { FillOrStrokeOrClear, ForgeCanvasError, ImageManager, resolveImage, resolveStyle } from '../..';
 
 export default new NativeFunction({
     name: '$drawImage',
     aliases: ['$placeImage'],
-    description: 'Draws an image on a canvas.',
+    description: 'Draws an image on a canvas',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
@@ -66,17 +65,18 @@ export default new NativeFunction({
         }
     ],
     async execute(ctx, [name, src, x, y, width, height, radius]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const manager = ctx.imageManager instanceof ImageManager ?
+            ctx.imageManager : ctx.imageManager = new ImageManager();
+        
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
         width = num(width);
         height = num(height);
 
-        const img = await CanvasUtil.resolveImage(this, ctx, src);
+        const img = await resolveImage(this, ctx, src);
         if (img instanceof Return) {
-            const style = await CanvasUtil.resolveStyle(this, ctx, canvas, src);
+            const style = await resolveStyle(this, ctx, canvas, src);
             if (style instanceof Return) return img;
 
             canvas.ctx.fillStyle = style;
@@ -89,6 +89,7 @@ export default new NativeFunction({
         };
 
         await canvas.drawImage(
+            manager,
             img, x, y,
             width, height,
             radius.length === 1

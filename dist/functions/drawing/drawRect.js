@@ -9,21 +9,21 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$drawRect',
     aliases: ['$placeRect', '$rectangle', '$rect'],
-    description: 'Draws a rectangle on a canvas.',
+    description: 'Draws a rectangle on a canvas',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'type',
-            description: 'The rectangle type.',
+            description: 'The rectangle type',
             type: forgescript_1.ArgType.Enum,
             enum: __1.FillOrStrokeOrClear,
             required: true,
@@ -38,49 +38,47 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'x',
-            description: 'The rect start X coordinate.',
+            description: 'The rect start X coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'y',
-            description: 'The rect start Y coordinate.',
+            description: 'The rect start Y coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'width',
-            description: 'The rect width.',
+            description: 'The rect width',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'height',
-            description: 'The rect height.',
+            description: 'The rect height',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'radius',
-            description: 'The rect radius.',
+            description: 'The rect radius',
             type: forgescript_1.ArgType.Number,
             required: false,
             rest: true
         }
     ],
     async execute(ctx, [name, t, style, x, y, width, height, radius]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.FCError.NoCanvas);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
         if (!style?.length && (t === __1.FillOrStrokeOrClear.fill || t === __1.FillOrStrokeOrClear.stroke))
-            return this.customError(__1.FCError.NoStyle);
-        const s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+            return this.customError(__1.ForgeCanvasError.NoStyle);
+        const s = await (0, __1.resolveStyle)(this, ctx, canvas, style);
         if (s instanceof forgescript_1.Return)
             return s;
         canvas.ctx[t === __1.FillOrStrokeOrClear.fill ? 'fillStyle' : 'strokeStyle'] = s;

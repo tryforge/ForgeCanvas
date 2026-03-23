@@ -16,56 +16,56 @@ exports.default = new forgescript_1.NativeFunction({
     args: [
         {
             name: 'name',
-            description: 'Name of the new gradient.',
+            description: 'Name of the new gradient',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'x1',
-            description: 'The X coordinate of the start circle.',
+            description: 'The X coordinate of the start circle',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'y1',
-            description: 'The Y coordinate of the start circle.',
+            description: 'The Y coordinate of the start circle',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'r1',
-            description: 'The radius of the start circle.',
+            description: 'The radius of the start circle',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'x2',
-            description: 'The X coordinate of the end circle.',
+            description: 'The X coordinate of the end circle',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'y2',
-            description: 'The Y coordinate of the end circle.',
+            description: 'The Y coordinate of the end circle',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'r2',
-            description: 'The radius of the end circle.',
+            description: 'The radius of the end circle',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'stops',
-            description: 'Color stops.',
+            description: 'The gradient\'s color stops',
             type: forgescript_1.ArgType.Number,
             required: false,
             rest: true

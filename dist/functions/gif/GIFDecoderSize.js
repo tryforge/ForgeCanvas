@@ -9,21 +9,21 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$GIFDecoderSize',
     aliases: ['$decoderSize'],
-    description: 'Returns the size of the GIF Decoder.',
+    description: 'Returns the size of the GIF Decoder',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the Decoder.',
+            description: 'Name of the Decoder',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'property',
-            description: 'The size property to return.',
+            description: 'The size property to return',
             type: forgescript_1.ArgType.Enum,
             enum: __1.WidthOrHeight,
             required: false,
@@ -33,7 +33,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, property]) {
         const gif = ctx.gifManager?.getDecoder(name);
         if (!gif)
-            return this.customError(__1.FCError.NoDecoder);
+            return this.customError(__1.ForgeCanvasError.NoDecoder);
         return this.success(property !== null // @ts-ignore
             ? gif[__1.WidthOrHeight[(typeof property === 'string' ? __1.WidthOrHeight[property] : property)]]
             : JSON.stringify({ width: gif.width, height: gif.height }));

@@ -9,28 +9,28 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$addColorStop',
     aliases: ['$colorStop'],
-    description: 'Adds a color stop to the gradient.',
+    description: 'Adds a color stop to the gradient',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'name',
-            description: 'Name of the gradient.',
+            description: 'Name of the gradient',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'offset',
-            description: 'The color stop offset.',
+            description: 'The color stop offset',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'color',
-            description: 'Color of the stop.',
+            description: 'Color of the stop',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
@@ -38,12 +38,12 @@ exports.default = new forgescript_1.NativeFunction({
     ],
     execute(ctx, [name, offset, color]) {
         if (!(offset / 100 >= 0 && offset / 100 <= 1))
-            return this.customError(__1.FCError.InvalidOffset);
+            return this.customError(__1.ForgeCanvasError.InvalidOffset);
         if (!(ctx.gradientManager instanceof __1.GradientManager))
             ctx.gradientManager = new __1.GradientManager();
         const gradient = ctx.gradientManager?.get(name);
         if (name && !gradient)
-            return this.customError(__1.FCError.NoGradient);
+            return this.customError(__1.ForgeCanvasError.NoGradient);
         if (gradient)
             gradient.addColorStop(offset, color);
         else

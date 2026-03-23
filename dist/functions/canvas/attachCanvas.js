@@ -10,40 +10,39 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$attachCanvas',
     aliases: ['$sendCanvas', '$renderCanvas', '$canvasRender'],
-    description: 'Attaches the canvas.',
-    version: '1.0.0',
+    description: 'Creates a new canvas',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'filename',
-            description: 'The name with the extension of the image to be attached as.',
+            description: 'The name with the extension of the image to be attached as',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'format',
-            description: 'The image format.',
+            description: 'The image format',
             type: forgescript_1.ArgType.Enum,
             enum: __1.ImageFormat,
             required: false,
             rest: false
         }
     ],
-    async execute(ctx, [name, filename, f]) {
-        const canvas = ctx.canvasManager?.get(name);
+    async execute(ctx, [name, file, format]) {
+        const canvas = ctx.canvasManager?.get(name)?.inner;
         if (!canvas)
-            return this.customError(__1.FCError.NoCanvas);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
         ctx.container.files.push(new discord_js_1.AttachmentBuilder(// @ts-ignore
-        canvas.buffer(`image/${(typeof f === 'number' ? __1.ImageFormat[f] : f) ?? 'png'}`), { name: filename ?? `${name}.png` }));
+        await canvas.encode((typeof format === 'number' ? __1.ImageFormat[format] : format) ?? 'png'), { name: file ?? `${name}.png` }));
         return this.success();
     }
 });

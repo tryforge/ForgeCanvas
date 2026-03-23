@@ -4,14 +4,16 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { readFileSync, existsSync } from 'fs';
-import { LottieManager } from '../../classes';
 import { LottieAnimation } from '@napi-rs/canvas';
+
+import { readFileSync, existsSync } from 'node:fs';
+
+import { LottieManager } from '../..';
 
 export default new NativeFunction({
     name: '$loadLottieAnimation',
     aliases: ['$loadLottie', '$lottie', '$lottieAnimation'],
-    description: 'Loads a lottie animation.',
+    description: 'Loads a lottie animation from an URL/File path or a JSON',
     version: '1.3.0',
     brackets: true,
     unwrap: true,

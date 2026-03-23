@@ -4,7 +4,7 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError, LottieSeekType } from '../..';
+import { ForgeCanvasError, LottieSeekType } from '../..';
 
 export default new NativeFunction({
     name: '$lottieSeek',
@@ -39,7 +39,7 @@ export default new NativeFunction({
     ],
     execute(ctx, [name, type, t]) {
         const lottie = ctx.lottieManager?.get(name);
-        if (!lottie) return this.customError(FCError.NoLottie);
+        if (!lottie) return this.customError(ForgeCanvasError.NoLottie);
 
         lottie[
             type === LottieSeekType.frame ? 'seekFrame'

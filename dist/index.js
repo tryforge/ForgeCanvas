@@ -14,79 +14,41 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ForgeCanvas = exports.SUPPORTED_FONT_FORMATS = void 0;
-exports.registerFonts = registerFonts;
+exports.ForgeCanvas = exports.version = void 0;
 const forgescript_1 = require("@tryforge/forgescript");
-const canvas_1 = require("@napi-rs/canvas");
-const node_fs_1 = require("node:fs");
-const node_path_1 = require("node:path");
-const undici_1 = require("undici");
-const package_json_1 = require("../package.json");
 const classes_1 = require("./classes");
-exports.SUPPORTED_FONT_FORMATS = ['ttf', 'otf', 'woff', 'woff2'];
-async function registerFonts(fonts, log) {
-    for (const font of fonts) {
-        if (font.src.startsWith('url(') || font.src.startsWith('http')) {
-            font.src = font.src.replace(classes_1.urlRegex, '').trim();
-            if (classes_1.httpsRegex.test(font.src)) {
-                const { statusCode, headers, body } = await (0, undici_1.request)(font.src, {
-                    headers: { 'User-Agent': 'Mozilla/5.0 () Gecko/20100101 Firefox/147.0' }
-                });
-                if (statusCode >= 400)
-                    throw forgescript_1.Logger.error(`Failed to fetch font: ${font.src} (${statusCode})`);
-                if (headers['content-type']?.startsWith('text/')) {
-                    const families = [...(await body.text()).matchAll(classes_1.fontcssRegex)].map(match => {
-                        // @ts-expect-error
-                        const { url, subset, family = font.name } = match.groups;
-                        return { src: url, name: subset?.length ? `${family}-${subset.trim()}` : family };
-                    });
-                    if (!families.length)
-                        throw forgescript_1.Logger.error(`Invalid font CSS: ${font.name ?? font.src}`);
-                    await registerFonts(families, log);
-                }
-                else if (!canvas_1.GlobalFonts.register(Buffer.from(await body.arrayBuffer()), font.name ?? undefined) && log) {
-                    forgescript_1.Logger.warn(`Failed to register font: '${font.name ?? font.src}'`);
-                }
-                else if (log)
-                    forgescript_1.Logger.info(`Registered a font: ${font.name ?? font.src}`);
-                continue;
-            }
-        }
-        if (!(0, node_fs_1.existsSync)(font.src)) {
-            if (log)
-                throw new Error(`Invalid font source: ${font.src}`);
-            return;
-        }
-        if ((0, node_fs_1.statSync)(font.src).isFile()) {
-            let filename = (0, node_path_1.basename)(font.src);
-            if (!exports.SUPPORTED_FONT_FORMATS.includes(filename.split('.').pop()))
-                return;
-            filename = font.name ?? filename.slice(0, filename.lastIndexOf('.'));
-            if (log && canvas_1.GlobalFonts.has(filename))
-                forgescript_1.Logger.warn(`Font with name '${filename}' already exists`);
-            if (!filename?.length)
-                throw new Error(`Font name cannot be empty: ${font.src}`);
-            if (filename.includes(','))
-                throw new Error(`Font name cannot contain commas: ${filename}`);
-            if (!canvas_1.GlobalFonts.register((0, node_fs_1.readFileSync)(font.src), filename) && log) {
-                forgescript_1.Logger.warn(`Failed to register font: ${filename} (${font.src})`);
-                continue;
-            }
-            if (log)
-                forgescript_1.Logger.info(`Registered a font: ${filename} (${font.src})`);
-        }
-        else
-            registerFonts((0, node_fs_1.readdirSync)(font.src).map(x => ({ src: (0, node_path_1.join)(font.src, x) })), log);
-    }
-}
+const pkg = __importStar(require("../package.json"));
+exports.version = pkg.version;
 class ForgeCanvas extends forgescript_1.ForgeExtension {
     name = 'forge.canvas';
-    description = package_json_1.description;
-    version = package_json_1.version;
+    description = pkg.description;
+    version = exports.version;
     init(client) {
         this.load(__dirname + '/functions');
         client.preloadImages = new classes_1.ImageManager();
@@ -94,21 +56,5 @@ class ForgeCanvas extends forgescript_1.ForgeExtension {
     static components = new classes_1.ComponentManager();
 }
 exports.ForgeCanvas = ForgeCanvas;
-canvas_1.Image.prototype.getBuffer = async function () {
-    let buffer;
-    if (this.src instanceof Uint8Array)
-        return Buffer.from(this.src);
-    if (typeof this.src !== 'string')
-        throw new Error('Invalid image source');
-    if (this.src.startsWith('data:')) {
-        const base64 = this.src.split(',')[1];
-        buffer = Buffer.from(base64, 'base64');
-    }
-    else if (classes_1.httpsRegex.test(this.src))
-        buffer = Buffer.from(await (await (0, undici_1.fetch)(this.src)).arrayBuffer());
-    else
-        buffer = (0, node_fs_1.readFileSync)(this.src);
-    return buffer;
-};
+__exportStar(require("./structures"), exports);
 __exportStar(require("./classes"), exports);
-__exportStar(require("./typings"), exports);

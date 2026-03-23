@@ -8,7 +8,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$drawProgressBar',
-    description: 'Creates and draws progress bars on a canvas.',
+    description: 'Creates and draws progress bars on a canvas',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
@@ -57,23 +57,21 @@ exports.default = new forgescript_1.NativeFunction({
         },
     ],
     async execute(ctx, [name, x, y, width, height]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.FCError.NoCanvas);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
         const data = (ctx.getEnvironmentKey('progressBarData') ?? []);
         const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {});
         const type = options.type ?? 'normal';
-        const background = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, options['background-style'] ?? '#0');
+        const background = await (0, __1.resolveStyle)(this, ctx, canvas, options['background-style'] ?? '#0');
         if (background instanceof forgescript_1.Return)
             return background;
         let res;
         if (type === 'normal') {
             const progress = data[0];
             if (!progress)
-                return this.customError(__1.FCError.NoBarData);
-            const style = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, progress.style ?? '#0');
+                return this.customError(__1.ForgeCanvasError.NoBarData);
+            const style = await (0, __1.resolveStyle)(this, ctx, canvas, progress.style ?? '#0');
             if (style instanceof forgescript_1.Return)
                 return style;
             res = canvas.drawProgressBar(x, y, width, height, progress.value, {

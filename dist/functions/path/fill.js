@@ -9,21 +9,21 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$fill',
     aliases: ['$pathFill', '$fillPath'],
-    description: 'Fills the current path.',
+    description: 'Fills the current path',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'style',
-            description: 'The style. (color/gradient/pattern)',
+            description: 'The style (color/gradient/pattern)',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
@@ -38,12 +38,10 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [name, style, rule]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.FCError.NoCanvas);
-        const oldstyle = canvas.ctx.fillStyle, s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
+        const oldstyle = canvas.ctx.fillStyle, s = await (0, __1.resolveStyle)(this, ctx, canvas, style);
         if (s instanceof forgescript_1.Return)
             return s;
         canvas.ctx.fillStyle = s;

@@ -4,12 +4,13 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { Image, loadImage } from '@napi-rs/canvas';
-import { FCError } from '../../classes';
+import { Image } from '@napi-rs/canvas';
+
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$imageBuffer',
-    description: 'Stores the image\'s buffer.',
+    description: 'Stores the image\'s buffer which can be accessed with $env',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
@@ -24,7 +25,7 @@ export default new NativeFunction({
         },
         {
             name: 'path',
-            description: 'The image path.',
+            description: 'The image path',
             type: ArgType.String,
             required: true,
             rest: false
@@ -43,10 +44,10 @@ export default new NativeFunction({
             }
 
             image = manager?.get(path);
-        } else image = await loadImage(path);
-        if (!image) return this.customError(FCError.NoImage);
+        } else image = await ctx.imageManager?.load(path);
+        if (!image) return this.customError(ForgeCanvasError.NoImage);
 
-        ctx.setEnvironmentKey(vname, await image.getBuffer());
+        ctx.setEnvironmentKey(vname, Buffer.from(image.src));
         return this.success();
     }
 });

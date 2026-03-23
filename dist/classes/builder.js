@@ -5,22 +5,18 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wordWidthCache = exports.charWidthCache = exports.CanvasBuilder = void 0;
-const gifsx_1 = require("@gifsx/gifsx");
 const canvas_1 = require("@napi-rs/canvas");
 const __1 = require("..");
+const gifsx_1 = require("@gifsx/gifsx");
 class CanvasBuilder {
+    /**
+     * The inner canvas.
+     */
+    inner;
     /**
      * The inner canvas context.
      */
     ctx;
-    /**
-     * The inner canvas.
-     */
-    canvas;
-    /**
-     * Reference to the ``CanvasUtil`` class.
-     */
-    util = __1.CanvasUtil;
     /**
      * ``CanvasBuilder`` Exclusive Properties.
      *
@@ -34,14 +30,14 @@ class CanvasBuilder {
         rectAlign: __1.RectAlign.right,
         rectBaseline: __1.RectBaseline.bottom
     };
-    get width() { return this.canvas.width; }
-    get height() { return this.canvas.height; }
+    constructor(width, height) {
+        this.inner = (0, canvas_1.createCanvas)(width, height);
+        this.ctx = this.inner.getContext('2d');
+    }
+    get width() { return this.inner.width; }
+    get height() { return this.inner.height; }
     set width(val) { this.resize(val, this.height); }
     set height(val) { this.resize(this.width, val); }
-    constructor(width, height) {
-        this.canvas = (0, canvas_1.createCanvas)(width, height);
-        this.ctx = this.canvas.getContext('2d');
-    }
     /**
      * Draws a rectangle on the canvas.
      * @param type - The type of drawing operation to perform for the rectangle. (fill/stroke/clear)
@@ -53,8 +49,8 @@ class CanvasBuilder {
      */
     rect(type, x, y, width, height, radius) {
         const ctx = this.ctx;
-        width ??= this.canvas.width - x;
-        height ??= this.canvas.height - y;
+        width ??= this.inner.width - x;
+        height ??= this.inner.height - y;
         radius ??= 0;
         [x, y] = this.align(x, y, width, height);
         if (type === __1.FillOrStrokeOrClear.none)
@@ -98,7 +94,7 @@ class CanvasBuilder {
     text(type, spans, x, y, font, maxWidth, wrap, lineOffset, nlBegin) {
         if (!spans?.length || spans?.every(span => !span))
             return;
-        const fontm = __1.CanvasUtil.validateFont(font);
+        const fontm = (0, __1.validateFont)(font);
         if (typeof fontm === 'string')
             throw new Error(fontm);
         const ctx = this.ctx, fontsize = Number.parseFloat(fontm[4]), imgsize = fontsize * 1.25, func = `${typeof type === 'number' ? __1.FillOrStroke[type] : type}Text`;
@@ -253,7 +249,8 @@ class CanvasBuilder {
     }
     /**
      * Draws an image on the canvas.
-     * Works the same as ``SKRSContext2D.drawImage`` but rounds it for you.
+     * Works the same as ``SKRSContext2D.drawImage`` but also handles loading and radius for you.
+     * @param manager - An ``ImageManager`` instance.
      * @param image - The image to draw.
      * @param x - The X coordinate of the image's starting point.
      * @param y - The Y coordinate of the image's starting point.
@@ -261,22 +258,23 @@ class CanvasBuilder {
      * @param height - The height of the image. If not provided, defaults to the image's height.
      * @param radius - The radius of the image's corners. If not provided, defaults to no rounding.
      */
-    async drawImage(image, x, y, width, height, radius, srcX, srcY, srcWidth, srcHeight) {
+    async drawImage(manager, image, x, y, width, height, radius, srcX, srcY, srcWidth, srcHeight) {
         const ctx = this.ctx;
-        image = await (0, canvas_1.loadImage)(image);
+        if (!(image instanceof canvas_1.Image))
+            image = manager ? await manager.load(image)
+                : await (0, canvas_1.loadImage)(image);
         width ??= image.width;
         height ??= image.height;
         [x, y] = this.align(x, y, width, height);
         const args = [x, y, width, height];
         if (typeof srcX === 'number') // @ts-ignore
             args.unshift(srcX, srcY, srcWidth, srcHeight);
-        // @ts-ignore
         if (!radius)
             return ctx.drawImage(image, ...args);
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
-        ctx.clip(); // @ts-ignore
+        ctx.clip();
         ctx.drawImage(image, ...args);
         ctx.restore();
     }
@@ -296,7 +294,7 @@ class CanvasBuilder {
         const { style = '#fff', type = 'fill', radius, direction = 'horizontal', clip = false, left, leftType = 'fill' } = config;
         const background = config.background ?? {};
         background.enabled ??= true;
-        background.style ??= '0';
+        background.style ??= '#fff';
         if (background.enabled) {
             ctx[background.type === 'fill' ? 'fillStyle' : 'strokeStyle'] = background.style; // @ts-ignore
             this.rect(__1.FillOrStrokeOrClear[background.type ?? 'fill'], x, y, width, height, background.radius);
@@ -342,7 +340,7 @@ class CanvasBuilder {
         const ctx = this.ctx;
         const background = config.background ?? {};
         background.enabled ??= true;
-        background.style ??= '0';
+        background.style ??= '#fff';
         [x, y] = this.align(x, y, width, height);
         if (background.enabled)
             this.rect(// @ts-ignore
@@ -382,26 +380,25 @@ class CanvasBuilder {
      */
     filter(method, filter, value) {
         const ctx = this.ctx;
-        console.log(filter, value, method);
         const f = typeof filter === 'number' ? __1.Filters[filter] : filter, unit = filter === __1.Filters.grayscale || filter === __1.Filters.sepia ? '%' :
             (filter === __1.Filters.blur ? 'px' : ''), fstr = ` ${f}(${value}${unit})`;
         switch (method) {
             case __1.FilterMethod.add: {
                 if (!f || !value)
-                    throw new Error(__1.FCError.NoFilterOrValue);
+                    throw new Error(__1.ForgeCanvasError.NoFilterOrValue);
                 ctx.filter = ctx.filter !== 'none' ? ctx.filter += fstr : fstr;
                 return;
             }
             case __1.FilterMethod.set: {
                 if (!f || !value)
-                    throw new Error(__1.FCError.NoFilterOrValue);
+                    throw new Error(__1.ForgeCanvasError.NoFilterOrValue);
                 ctx.filter = fstr;
                 return;
             }
             case __1.FilterMethod.remove: {
                 if (!f)
-                    throw new Error(__1.FCError.NoFilter);
-                const filters = __1.CanvasUtil.parseFilters(ctx.filter).filter(x => x.filter !== f);
+                    throw new Error(__1.ForgeCanvasError.NoFilter);
+                const filters = (0, __1.parseFilters)(ctx.filter).filter(x => x.filter !== f);
                 ctx.filter = filters.length ? filters.map(x => x.raw).join(' ') : 'none';
                 return;
             }
@@ -410,10 +407,10 @@ class CanvasBuilder {
                 return;
             }
             case __1.FilterMethod.get: return ctx.filter;
-            case __1.FilterMethod.json: return __1.CanvasUtil.parseFilters(ctx.filter);
+            case __1.FilterMethod.json: return (0, __1.parseFilters)(ctx.filter);
             case __1.FilterMethod.setRaw: {
                 if (!value)
-                    throw new Error(__1.FCError.NoFilterOrValue);
+                    throw new Error(__1.ForgeCanvasError.NoFilterOrValue);
                 ctx.filter = value;
                 return;
             }
@@ -425,8 +422,8 @@ class CanvasBuilder {
      */
     rotate(angle) {
         const ctx = this.ctx;
-        const centerX = this.canvas.width / 2;
-        const centerY = this.canvas.height / 2;
+        const centerX = this.inner.width / 2;
+        const centerY = this.inner.height / 2;
         ctx.translate(centerX, centerY);
         ctx.rotate((angle * Math.PI) / 180);
         ctx.translate(-centerX, -centerY);
@@ -437,58 +434,64 @@ class CanvasBuilder {
     trim(tTop = true, tLeft = true, tRight = true, tBottom = true) {
         if (!tTop && !tLeft && !tRight && !tBottom)
             return;
-        const { width, height } = this.canvas, ctx = this.ctx, data = new Uint32Array(this.canvas.data().buffer);
+        const { width, height } = this.inner, ctx = this.ctx, data = new Uint32Array(this.inner.data().buffer);
         let top = 0, bottom = height - 1, left = 0, right = width - 1;
         if (tTop) {
-            while (top < height && this.checkRow(data, top, width))
+            while (top < height && CanvasBuilder.checkRow(data, top, width))
                 top++;
             if (top > bottom)
                 return;
         }
         if (tBottom)
-            while (bottom > top && this.checkRow(data, bottom, width))
+            while (bottom > top && CanvasBuilder.checkRow(data, bottom, width))
                 bottom--;
         if (tLeft)
-            while (left < width && this.checkColumn(data, left, top, bottom, width))
+            while (left < width && CanvasBuilder.checkColumn(data, left, top, bottom, width))
                 left++;
         if (tRight)
-            while (right > left && this.checkColumn(data, right, top, bottom, width))
+            while (right > left && CanvasBuilder.checkColumn(data, right, top, bottom, width))
                 right--;
         right -= left - 1;
         bottom -= top - 1;
         if (right === width && bottom === height)
             return;
         const trimmed = ctx.getImageData(left, top, right, bottom);
-        this.canvas.width = right;
-        this.canvas.height = bottom;
+        this.inner.width = right;
+        this.inner.height = bottom;
         ctx.putImageData(trimmed, 0, 0);
     }
-    checkRow(data, y, width) {
-        const offset = y * width;
-        for (let x = 0; x < width; x++)
-            if (data[offset + x])
+    static checkRow(data, y, width) {
+        const start = y * width, end = start + width;
+        for (let i = start; i < end; i++)
+            if (data[i])
                 return false;
         return true;
     }
-    checkColumn(data, x, top, bottom, width) {
-        for (let y = top; y <= bottom; y++)
-            if (data[y * width + x])
+    static checkColumn(data, x, top, bottom, width) {
+        let i = top * width + x;
+        const end = bottom * width + x;
+        while (i <= end) {
+            if (data[i])
                 return false;
+            i += width;
+        }
         return true;
     }
+    /** Returns an array of pixels at a rectangle */
     getPixels(x, y, width, height, t) {
         const ctx = this.ctx;
-        width ??= this.canvas.width;
-        height ??= this.canvas.height;
+        width ??= this.inner.width;
+        height ??= this.inner.height;
         const data = ctx.getImageData(x, y, width, height).data;
         if (t === __1.ColorDataType.Rgba)
             return Array.from(data);
         return (0, gifsx_1.rgbaToHex)(Uint8Array.from(data), false, true);
     }
+    /** Returns an array of pixels at a rectangle */
     setPixels(x, y, width, height, colors, t) {
         const ctx = this.ctx;
-        width ??= this.canvas.width;
-        height ??= this.canvas.height;
+        width ??= this.inner.width;
+        height ??= this.inner.height;
         const data = ctx.createImageData(width, height);
         if (t !== __1.ColorDataType.Rgba)
             data.data.set(Uint8ClampedArray.from((0, gifsx_1.hexToRgba)(colors)));
@@ -496,12 +499,14 @@ class CanvasBuilder {
             data.data.set(Uint8ClampedArray.from(colors));
         ctx.putImageData(data, x, y);
     }
+    /** Resizes the canvas */
     resize(width, height) {
-        const ctx = this.ctx, canvas = this.canvas, data = ctx.getImageData(0, 0, width, height);
+        const ctx = this.ctx, canvas = this.inner, data = ctx.getImageData(0, 0, width, height);
         canvas.width = width;
         canvas.height = height;
         ctx.putImageData(data, 0, 0);
     }
+    /** Calculates the alignment coordinates */
     align(x, y, width, height) {
         const { rectAlign, rectBaseline } = this.customProperties;
         return [
@@ -511,11 +516,14 @@ class CanvasBuilder {
                 rectBaseline === __1.RectBaseline.top ? y - height : y
         ];
     }
-    dataUrl(mime = 'image/png') {
-        return this.canvas.toDataURL(mime);
+    async dataUrl(format) {
+        return this.inner.toDataURLAsync('image/' + (typeof format === 'number' ? __1.ImageFormat[format] : format) ?? 'png');
     }
-    buffer(mime = 'image/png') {
-        return this.canvas.toBuffer(mime);
+    buffer(format) {
+        return this.inner.toBuffer('image/' + (typeof format === 'number' ? __1.ImageFormat[format] : format) ?? 'png');
+    }
+    async encode(format) {
+        return this.inner.encode((typeof format === 'number' ? __1.ImageFormat[format] : format));
     }
 }
 exports.CanvasBuilder = CanvasBuilder;

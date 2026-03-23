@@ -5,26 +5,27 @@
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { AttachmentBuilder } from 'discord.js';
-import { FCError } from '../../classes';
+
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$attachGIF',
     aliases: ['$sendGIF', '$renderGIF', '$gifRender'],
-    description: 'Attaches the GIF.',
+    description: 'Attaches the GIF',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the GIF.',
+            description: 'Name of the GIF',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'filename',
-            description: 'The name of the GIF to be attached as.',
+            description: 'The name of the GIF to be attached as',
             type: ArgType.String,
             required: false,
             rest: false
@@ -34,7 +35,7 @@ export default new NativeFunction({
         const gif = ctx.gifManager?.getEncoder(name);
         filename = `${filename ?? name}.gif`;
         
-        if (!gif) return this.customError(FCError.NoEncoder);
+        if (!gif) return this.customError(ForgeCanvasError.NoEncoder);
 
         ctx.container.files.push(new AttachmentBuilder(
             Buffer.from(gif.getBuffer()),

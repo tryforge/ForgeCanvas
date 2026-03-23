@@ -74,6 +74,7 @@ export interface BarOptions {
     'left-type'?: 'fill' | 'stroke' | 'clear';
 }
 
+// note: null is for new lines
 export type Spans = Array<string | Image | null>;
 
 export enum ImageFormat { png, jpeg, avif, webp, gif }

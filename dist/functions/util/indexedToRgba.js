@@ -15,21 +15,21 @@ exports.default = new forgescript_1.NativeFunction({
     args: [
         {
             name: 'palette',
-            description: 'The palette to use for the conversion.',
+            description: 'The palette to use for the conversion',
             type: forgescript_1.ArgType.Json,
             required: true,
             rest: false
         },
         {
             name: 'transparent',
-            description: 'The index of the transparent color in the palette.',
+            description: 'The index of the transparent color in the palette',
             type: forgescript_1.ArgType.Number,
             required: false,
             rest: false
         },
         {
             name: 'pixels',
-            description: 'The pixels to convert into RGBA.',
+            description: 'The pixels to convert into RGBA',
             type: forgescript_1.ArgType.Number,
             check: (x) => x >= 0 && x <= 255,
             required: true,

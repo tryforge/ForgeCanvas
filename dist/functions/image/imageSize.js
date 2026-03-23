@@ -5,26 +5,25 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const canvas_1 = require("@napi-rs/canvas");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$imageSize',
     aliases: ['$imgSize', '$imageDimensions'],
-    description: 'Returns image\'s size.',
+    description: 'Returns the image\'s size',
     version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'path',
-            description: 'The image path.',
+            description: 'The image path or name (via images://name or, preload://name, if global)',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'property',
-            description: 'The size property to return.',
+            description: 'Whether to return the image\'s width or height; Returns both as JSON if empty',
             type: forgescript_1.ArgType.Enum,
             enum: __1.WidthOrHeight,
             required: false,
@@ -42,10 +41,12 @@ exports.default = new forgescript_1.NativeFunction({
             }
             image = manager?.get(path);
         }
+        else if (path.startsWith('preload://'))
+            image = ctx.client.preloadImages.get(path);
         else
-            image = await (0, canvas_1.loadImage)(path);
+            image = await ctx.imageManager?.load(path);
         if (!image)
-            return this.customError(__1.FCError.ImageFail);
+            return this.customError(__1.ForgeCanvasError.ImageFail);
         return this.success(property !== null && property !== undefined // @ts-ignore
             ? image[__1.WidthOrHeight[(typeof property === 'string' ? __1.WidthOrHeight[property] : property)]]
             : JSON.stringify({ width: image.width, height: image.height }));

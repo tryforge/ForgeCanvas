@@ -4,67 +4,68 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { CanvasBuilder, CanvasManager, FCError } from '../../classes';
+import { CanvasManager, CanvasBuilder, ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$createCanvas',
     aliases: ['$newCanvas', '$canvas'],
-    description: 'Creates a new canvas.',
-    version: '1.0.0',
+    description: 'Creates a new canvas',
     brackets: true,
     unwrap: false,
     args: [
         {
-            name: 'canvas',
-            description: 'Name of the new canvas.',
+            name: 'name',
+            description: 'The name of the canvas',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'width',
-            description: 'Width of the canvas.',
+            description: 'The width of the canvas',
             type: ArgType.Number,
             required: true,
-            rest: false,
+            rest: false
         },
         {
             name: 'height',
-            description: 'Height of the canvas.',
+            description: 'The height of the canvas',
             type: ArgType.Number,
             required: true,
-            rest: false,
+            rest: false
         },
         {
-            name: 'functions',
-            description: 'Functions.',
+            name: 'code',
+            description: 'Executes code with this canvas as current (empty name)',
             type: ArgType.Unknown,
             required: false,
             rest: true
         }
     ],
-    async execute (ctx) {
-        if (!this.data.fields) this.data.fields = [];
-        if (!(ctx.canvasManager instanceof CanvasManager))
-            ctx.canvasManager = new CanvasManager();
+    async execute(ctx) {
+        const manager = ctx.canvasManager instanceof CanvasManager ?
+            ctx.canvasManager : ctx.canvasManager = new CanvasManager();
 
         const options = await this['resolveMultipleArgs'](ctx, 0,1,2);
-        const [name, width, height] = options.args;
+        const [name, w,h] = options.args;
 
         const r = options.return;
         if (!r?.success) return r;
 
-        ctx.canvasManager.current.push(
-            new CanvasBuilder(width, height)
-        );
+        if (!name?.trim()?.length)
+            return this.customError(ForgeCanvasError.EmptyName);
 
-        for (let i = 3; i < this.data.fields.length; i++) {
-            const r = await this['resolveCode'](ctx, this.data.fields[i]);
+        const previous = manager.current;
+        manager.current = new CanvasBuilder(w,h);
+
+        const fields = this.data.fields!;
+        for (let i = 3; i < fields.length; i++) {
+            const r = await this['resolveCode'](ctx, fields[i]);
             if (!r?.success) return r;
         }
 
-        ctx.canvasManager.set(name, ctx.canvasManager.lastCurrent);
-        ctx.canvasManager.current.pop();
+        manager.set(name, manager.current);
+        manager.current = previous;
 
         return this.success();
     }

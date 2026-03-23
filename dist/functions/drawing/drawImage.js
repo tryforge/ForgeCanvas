@@ -5,12 +5,11 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const classes_1 = require("../../classes");
-const typings_1 = require("../../typings");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$drawImage',
     aliases: ['$placeImage'],
-    description: 'Draws an image on a canvas.',
+    description: 'Draws an image on a canvas',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
@@ -66,24 +65,24 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [name, src, x, y, width, height, radius]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
+        const manager = ctx.imageManager instanceof __1.ImageManager ?
+            ctx.imageManager : ctx.imageManager = new __1.ImageManager();
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(classes_1.FCError.NoCanvas);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
         width = num(width);
         height = num(height);
-        const img = await classes_1.CanvasUtil.resolveImage(this, ctx, src);
+        const img = await (0, __1.resolveImage)(this, ctx, src);
         if (img instanceof forgescript_1.Return) {
-            const style = await classes_1.CanvasUtil.resolveStyle(this, ctx, canvas, src);
+            const style = await (0, __1.resolveStyle)(this, ctx, canvas, src);
             if (style instanceof forgescript_1.Return)
                 return img;
             canvas.ctx.fillStyle = style;
-            canvas.rect(typings_1.FillOrStrokeOrClear.fill, x, y, width, height, radius.length === 1 ? radius[0] : radius);
+            canvas.rect(__1.FillOrStrokeOrClear.fill, x, y, width, height, radius.length === 1 ? radius[0] : radius);
             return this.success();
         }
         ;
-        await canvas.drawImage(img, x, y, width, height, radius.length === 1
+        await canvas.drawImage(manager, img, x, y, width, height, radius.length === 1
             ? radius[0] : radius);
         return this.success();
     }

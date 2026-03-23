@@ -4,8 +4,9 @@
 */
 
 import { NativeFunction, ArgType, Compiler, Interpreter } from '@tryforge/forgescript';
-import { FCError, ForgeCanvas } from '../..';
 import { DOMMatrix } from '@napi-rs/canvas';
+
+import { ForgeCanvasError, ForgeCanvas } from '../..';
 
 export default new NativeFunction({
     name: '$renderCanvasComponent',
@@ -52,14 +53,12 @@ export default new NativeFunction({
         }
     ],
     async execute(ctx, [cname, name, x, y, options]) {
-        const canvas = cname
-            ? ctx.canvasManager?.get(cname)
-            : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
         const cctx = canvas.ctx;
 
         const component = ForgeCanvas.components.get(name);
-        if (!component) return this.customError(FCError.NoComponent);
+        if (!component) return this.customError(ForgeCanvasError.NoComponent);
 
         let oldmatrix: DOMMatrix | undefined;
         if (x || y) {
@@ -67,9 +66,10 @@ export default new NativeFunction({
             cctx.translate(x, y);
         }
 
-        const { canvasManager } = ctx;
+        const canvasManager = ctx.canvasManager!;
 
-        canvasManager!.current.push(canvas);
+        const previous = canvasManager.current;
+        canvasManager.current = canvas;
 
         const context = ctx.clone({
             data: component.compiled ?? Compiler.compile(component.data.code, component.data.path),
@@ -100,7 +100,7 @@ export default new NativeFunction({
 
         const r = await Interpreter.run(context);
 
-        canvasManager!.current.pop();
+        canvasManager.current = previous;
         if (oldmatrix) cctx.setTransform(oldmatrix);
 
         return r === null ? this.stop() : this.success(r);

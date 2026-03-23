@@ -5,20 +5,22 @@
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { loadImage } from '@napi-rs/canvas';
+
 import { writeFileSync } from 'node:fs';
-import { ImageManager, ImageFormat, FCError } from '../..';
+
+import { ImageManager, ImageFormat, ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$saveCanvas',
     aliases: ['$downloadCanvas', '$canvasSave', '$canvasDownload'],
-    description: 'Saves a canvas to a file.',
+    description: 'Saves a canvas to a file',
     version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: ArgType.String,
             required: false,
             rest: false
@@ -32,7 +34,7 @@ export default new NativeFunction({
         },
         {
             name: 'format',
-            description: 'The image format.',
+            description: 'The image format',
             type: ArgType.Enum,
             enum: ImageFormat,
             required: false,
@@ -40,22 +42,20 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx, [name, path, f]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
+        
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
+        if (!path) return this.customError(ForgeCanvasError.NoPath);
 
         const format: any = `image/${(typeof f === 'number' ? ImageFormat[f] : f) ?? 'png'}`;
-
-        if (!path) return this.customError(FCError.NoPath);
 
         if (path.startsWith('images://')) {
             if (!ctx.imageManager) ctx.imageManager = new ImageManager();
             ctx.imageManager.set(
                 path.slice(9),
-                await loadImage(canvas.buffer(format))
+                await loadImage(await canvas.encode(format))
             );
-        } else writeFileSync(path, canvas.buffer(format));
+        } else writeFileSync(path, await canvas.encode(format));
         return this.success();
     }
 });

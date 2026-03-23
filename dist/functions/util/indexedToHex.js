@@ -15,35 +15,35 @@ exports.default = new forgescript_1.NativeFunction({
     args: [
         {
             name: 'palette',
-            description: 'The palette to use for the conversion.',
+            description: 'The palette to use for the conversion',
             type: forgescript_1.ArgType.Json,
             required: true,
             rest: false
         },
         {
             name: 'transparent',
-            description: 'The index of the transparent color in the palette.',
+            description: 'The index of the transparent color in the palette',
             type: forgescript_1.ArgType.Number,
             required: false,
             rest: false
         },
         {
             name: 'alwaysAlpha',
-            description: 'Determines whether to always include the alpha channel in the output. (default: false)',
+            description: 'Determines whether to always include the alpha channel in the output (default: false)',
             type: forgescript_1.ArgType.Boolean,
             required: false,
             rest: false
         },
         {
             name: 'allowShort',
-            description: 'Whether to allow short hex output. (default: false)',
+            description: 'Whether to allow short hex output (default: false)',
             type: forgescript_1.ArgType.Boolean,
             required: false,
             rest: false
         },
         {
             name: 'pixels',
-            description: 'The pixels to convert into HEX.',
+            description: 'The pixels to convert into HEX',
             type: forgescript_1.ArgType.Number,
             check: (x) => x >= 0 && x <= 255,
             required: true,

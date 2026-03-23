@@ -4,12 +4,12 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError } from '../../classes';
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$cropCanvas',
     aliases: ['$canvasCrop', '$canvasTrim', '$trimCanvas'],
-    description: 'Crops a canvas.',
+    description: 'Crops a canvas',
     version: '1.0.0',
     brackets: false,
     unwrap: true,
@@ -55,10 +55,8 @@ export default new NativeFunction({
         }
     ],
     execute (ctx, [name, top, left, right, bottom]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.get(name ?? '') ?? ctx.canvasManager?.current;
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
         return this.success(canvas.trim(
             top !== false,

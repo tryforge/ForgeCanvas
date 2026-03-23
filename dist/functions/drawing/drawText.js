@@ -9,7 +9,7 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$drawText',
     aliases: ['$placeText', '$text', '$writeText'],
-    description: 'Draws a filled/stroked text on a canvas.',
+    description: 'Draws a filled/stroked text on a canvas',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
@@ -104,7 +104,7 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'allowEmojis',
-            description: 'Indicates if custom emojis should be drawn',
+            description: 'Indicates if custom emojis should be drawn; emojis get cached into preload://cache_emoji_{id}',
             type: forgescript_1.ArgType.Boolean,
             required: false,
             rest: false,
@@ -112,19 +112,17 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset, nlAlign, allowEmojis]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.FCError.NoCanvas);
-        const valid = __1.CanvasUtil.validateFont(font);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
+        const valid = (0, __1.validateFont)(font);
         if (!valid || typeof valid === 'string')
             return this.customError(valid);
-        const s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        const s = await (0, __1.resolveStyle)(this, ctx, canvas, style);
         if (s instanceof forgescript_1.Return)
             return s;
         canvas.ctx[t === __1.FillOrStroke.fill ? 'fillStyle' : 'strokeStyle'] = s;
-        canvas.text(t, await __1.CanvasUtil.parseText(ctx.client, text, multiline === true, allowEmojis), x, y, font, typeof maxWidth === 'number' ? maxWidth : undefined, 
+        canvas.text(t, await (0, __1.parseText)(ctx.client, text, multiline === true, allowEmojis), x, y, font, typeof maxWidth === 'number' ? maxWidth : undefined, 
         // @ts-expect-error
         __1.TextAlign[wrap] !== undefined ? wrap : undefined, typeof lineOffset === 'number' ? lineOffset : undefined, 
         // @ts-expect-error

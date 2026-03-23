@@ -5,7 +5,8 @@
 
 import { NativeFunction } from '@tryforge/forgescript';
 import { clearAllCache } from '@napi-rs/canvas';
-import { charWidthCache, wordWidthCache } from '../../classes';
+
+import { charWidthCache, wordWidthCache, cacheRegex } from '../..';
 
 export default new NativeFunction({
     name: '$clearCanvasCache',
@@ -14,7 +15,15 @@ export default new NativeFunction({
     brackets: false,
     unwrap: true,
     args: [],
-    execute() {
+    execute(ctx) {
+        const preloaded = ctx.client.preloadImages;
+        preloaded.map.forEach((x, k) => {
+            if (cacheRegex.test(k)) { // @ts-ignore
+                x = undefined;
+                return preloaded.map.delete(k);
+            }
+        });
+
         charWidthCache.clear();
         wordWidthCache.clear();
         clearAllCache();

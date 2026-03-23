@@ -8,14 +8,14 @@ import { hexToRgba } from '@gifsx/gifsx';
 
 export default new NativeFunction({
     name: '$hexToRgba',
-    description: 'Converts HEX into RGBA.',
+    description: 'Converts HEX into RGBA',
     version: '1.2.1',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'hex',
-            description: 'The hex to convert into RGBA.',
+            description: 'The hex to convert into RGBA',
             type: ArgType.String,
             required: true,
             rest: true

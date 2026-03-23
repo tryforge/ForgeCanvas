@@ -4,12 +4,12 @@
 */
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError, LottieOption } from '../..';
+import { ForgeCanvasError, LottieOption } from '../..';
 
 export default new NativeFunction({
     name: '$lottieOption',
     aliases: ['$lottieProperty', '$lottieOpt', '$lottieAnimationOption', '$lottieAnimationProperty'],
-    description: 'Returns an option of the lottie animation.',
+    description: 'Returns an option of the lottie animation',
     version: '1.3.0',
     brackets: true,
     unwrap: true,
@@ -32,7 +32,7 @@ export default new NativeFunction({
     ],
     execute(ctx, [name, option]) {
         const lottie = ctx.lottieManager?.get(name);
-        if (!lottie) return this.customError(FCError.NoLottie);
+        if (!lottie) return this.customError(ForgeCanvasError.NoLottie);
 
         // @ts-expect-error
         return this.success(lottie[

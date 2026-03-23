@@ -3,47 +3,40 @@
 * Copyright © 2026 BotForge
 */
 
-import { hexToRgba, rgbaToHex } from '@gifsx/gifsx';
-import {
-    createCanvas,
-    loadImage,
-    SKRSContext2D,
-    Image,
-    Canvas
-} from '@napi-rs/canvas';
+import { Canvas, createCanvas, Image, loadImage, SKRSContext2D } from '@napi-rs/canvas';
 import {
     FillOrStroke,
     FillOrStrokeOrClear,
     FilterMethod,
     Filters,
-    CanvasUtil,
+    validateFont,
+    parseFilters,
     ProgressBarOptions,
     ColorDataType,
     PieChartOptions,
     BarData,
-    FCError,
+    ForgeCanvasError,
     RectAlign,
     RectBaseline,
     TextWrap,
     Spans,
     CanvasBuilderCustomProperties,
     wordRegex,
+    ImageFormat,
+    ImageManager,
 } from '..';
+import { hexToRgba, rgbaToHex } from '@gifsx/gifsx';
 
 export class CanvasBuilder {
+    /**
+     * The inner canvas.
+     */
+    public inner: Canvas;
+    
     /**
      * The inner canvas context.
      */
     public ctx: SKRSContext2D;
-    /**
-     * The inner canvas.
-     */
-    public canvas: Canvas;
-
-    /**
-     * Reference to the ``CanvasUtil`` class.
-     */
-    public util = CanvasUtil;
 
     /**
      * ``CanvasBuilder`` Exclusive Properties.
@@ -59,15 +52,15 @@ export class CanvasBuilder {
         rectBaseline: RectBaseline.bottom
     };
 
-    public get width() { return this.canvas.width }
-    public get height() { return this.canvas.height }
+    constructor(width: number, height: number) {
+        this.inner = createCanvas(width, height);
+        this.ctx = this.inner.getContext('2d');
+    }
+
+    public get width() { return this.inner.width }
+    public get height() { return this.inner.height }
     public set width(val: number) { this.resize(val, this.height) }
     public set height(val: number) { this.resize(this.width, val) }
-
-    constructor(width: number, height: number) {
-        this.canvas = createCanvas(width, height);
-        this.ctx = this.canvas.getContext('2d');
-    }
 
     /**
      * Draws a rectangle on the canvas.
@@ -87,8 +80,8 @@ export class CanvasBuilder {
         radius?: number | number[] | null
     ) {
         const ctx = this.ctx;
-        width ??= this.canvas.width - x;
-        height ??= this.canvas.height - y;
+        width ??= this.inner.width - x;
+        height ??= this.inner.height - y;
         radius ??= 0;
         [x, y] = this.align(x, y, width, height);
 
@@ -141,7 +134,7 @@ export class CanvasBuilder {
         if (!spans?.length || spans?.every(span => !span))
             return;
 
-        const fontm = CanvasUtil.validateFont(font);
+        const fontm = validateFont(font);
         if (typeof fontm === 'string') throw new Error(fontm);
 
         const ctx = this.ctx,
@@ -166,11 +159,13 @@ export class CanvasBuilder {
         let lineWidth = 0;
 
         const cache = wrap === TextWrap.character ? charWidthCache : wordWidthCache;
+        
         let fontCache = cache.get(font);
         if (!fontCache) {
             fontCache = new Map();
             cache.set(font, fontCache);
         }
+
         let charFontCache: Map<string, number> = null!;
         if (wrap === TextWrap.smart) {
             charFontCache = cache.get(font)!;
@@ -321,7 +316,8 @@ export class CanvasBuilder {
 
     /**
      * Draws an image on the canvas.
-     * Works the same as ``SKRSContext2D.drawImage`` but rounds it for you.
+     * Works the same as ``SKRSContext2D.drawImage`` but also handles loading and radius for you.
+     * @param manager - An ``ImageManager`` instance.
      * @param image - The image to draw.
      * @param x - The X coordinate of the image's starting point.
      * @param y - The Y coordinate of the image's starting point.
@@ -330,6 +326,7 @@ export class CanvasBuilder {
      * @param radius - The radius of the image's corners. If not provided, defaults to no rounding.
      */
     public async drawImage(
+        manager: ImageManager | null,
         image: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL,
         x: number,
         y: number,
@@ -342,21 +339,24 @@ export class CanvasBuilder {
         srcHeight?: number | null
     ) {
         const ctx = this.ctx;
-        image = await loadImage(image);
+
+        if (!(image instanceof Image))
+            image = manager ? await manager.load(image)
+                : await loadImage(image);
+
         width ??= image.width;
         height ??= image.height;
         [x, y] = this.align(x, y, width, height);
 
-        const args = [x, y, width, height];
+        const args = [x, y, width, height] as const;
         if (typeof srcX === 'number') // @ts-ignore
             args.unshift(srcX, srcY, srcWidth, srcHeight);
-        // @ts-ignore
         if (!radius) return ctx.drawImage(image, ...args);
 
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
-        ctx.clip(); // @ts-ignore
+        ctx.clip(); 
         ctx.drawImage(image, ...args);
         ctx.restore();
     }
@@ -393,7 +393,7 @@ export class CanvasBuilder {
         const background = config.background ?? {} as any;
 
         background.enabled ??= true;
-        background.style ??= '0';
+        background.style ??= '#fff';
 
         if (background.enabled) {
             ctx[background.type === 'fill' ? 'fillStyle' : 'strokeStyle'] = background.style; // @ts-ignore
@@ -457,7 +457,7 @@ export class CanvasBuilder {
         const ctx = this.ctx;
         const background = config.background ?? {} as any;
         background.enabled ??= true;
-        background.style ??= '0';
+        background.style ??= '#fff';
 
         [x, y] = this.align(x, y, width, height);
 
@@ -514,7 +514,6 @@ export class CanvasBuilder {
         value?: string | null
     ) {
         const ctx = this.ctx;
-        console.log(filter, value, method);
 
         const f = typeof filter === 'number' ? Filters[filter] : filter,
             unit = filter === Filters.grayscale || filter === Filters.sepia ? '%' :
@@ -523,18 +522,18 @@ export class CanvasBuilder {
 
         switch (method) {
             case FilterMethod.add: {
-                if (!f || !value) throw new Error(FCError.NoFilterOrValue);
+                if (!f || !value) throw new Error(ForgeCanvasError.NoFilterOrValue);
                 ctx.filter = ctx.filter !== 'none' ? ctx.filter += fstr : fstr;
                 return;
             }
             case FilterMethod.set: {
-                if (!f || !value) throw new Error(FCError.NoFilterOrValue);
+                if (!f || !value) throw new Error(ForgeCanvasError.NoFilterOrValue);
                 ctx.filter = fstr;
                 return;
             }
             case FilterMethod.remove: {
-                if (!f) throw new Error(FCError.NoFilter);
-                const filters = CanvasUtil.parseFilters(ctx.filter).filter(x => x.filter !== f);
+                if (!f) throw new Error(ForgeCanvasError.NoFilter);
+                const filters = parseFilters(ctx.filter).filter(x => x.filter !== f);
                 ctx.filter = filters.length ? filters.map(x => x.raw).join(' ') : 'none';
                 return;
             }
@@ -543,9 +542,9 @@ export class CanvasBuilder {
                 return;
             }
             case FilterMethod.get: return ctx.filter;
-            case FilterMethod.json: return CanvasUtil.parseFilters(ctx.filter);
+            case FilterMethod.json: return parseFilters(ctx.filter);
             case FilterMethod.setRaw: {
-                if (!value) throw new Error(FCError.NoFilterOrValue);
+                if (!value) throw new Error(ForgeCanvasError.NoFilterOrValue);
                 ctx.filter = value;
                 return;
             }
@@ -559,8 +558,8 @@ export class CanvasBuilder {
     public rotate(angle: number) {
         const ctx = this.ctx;
 
-        const centerX = this.canvas.width / 2;
-        const centerY = this.canvas.height / 2;
+        const centerX = this.inner.width / 2;
+        const centerY = this.inner.height / 2;
 
         ctx.translate(centerX, centerY);
         ctx.rotate((angle * Math.PI) / 180);
@@ -577,9 +576,9 @@ export class CanvasBuilder {
         tBottom: boolean = true
     ) {
         if (!tTop && !tLeft && !tRight && !tBottom) return;
-        const { width, height } = this.canvas,
+        const { width, height } = this.inner,
               ctx = this.ctx,
-              data = new Uint32Array(this.canvas.data().buffer);
+              data = new Uint32Array(this.inner.data().buffer);
 
         let top = 0,
             bottom = height - 1,
@@ -587,38 +586,47 @@ export class CanvasBuilder {
             right = width - 1;
 
         if (tTop) {
-            while (top < height && this.checkRow(data, top, width)) top++;
+            while (top < height && CanvasBuilder.checkRow(data, top, width)) top++;
             if (top > bottom) return;
         }
 
-        if (tBottom) while (bottom > top && this.checkRow(data, bottom, width)) bottom--;
+        if (tBottom) while (bottom > top && CanvasBuilder.checkRow(data, bottom, width)) bottom--;
 
-        if (tLeft) while (left < width && this.checkColumn(data, left, top, bottom, width)) left++;
-        if (tRight) while (right > left && this.checkColumn(data, right, top, bottom, width)) right--;
+        if (tLeft) while (left < width && CanvasBuilder.checkColumn(data, left, top, bottom, width))
+            left++;
+        if (tRight) while (right > left && CanvasBuilder.checkColumn(data, right, top, bottom, width))
+            right--;
 
         right -= left - 1;
         bottom -= top - 1;
         if (right === width && bottom === height) return;
 
         const trimmed = ctx.getImageData(left, top, right, bottom);
-        this.canvas.width = right;
-        this.canvas.height = bottom;
+        this.inner.width = right;
+        this.inner.height = bottom;
         ctx.putImageData(trimmed, 0, 0);
     }
 
-    private checkRow(data: Uint32Array, y: number, width: number): boolean {
-        const offset = y * width;
-        for (let x = 0; x < width; x++)
-            if (data[offset + x]) return false;
+    private static checkRow(data: Uint32Array, y: number, width: number): boolean {
+        const start = y * width,
+              end = start + width;
+        for (let i = start; i < end; i++)
+            if (data[i]) return false;
         return true;
     }
 
-    private checkColumn(data: Uint32Array, x: number, top: number, bottom: number, width: number): boolean {
-        for (let y = top; y <= bottom; y++)
-            if (data[y * width + x]) return false;
+    private static checkColumn(data: Uint32Array, x: number, top: number, bottom: number, width: number): boolean {
+        let i = top * width + x;
+        const end = bottom * width + x;
+        
+        while (i <= end) {
+            if (data[i]) return false;
+            i += width;
+        }
         return true;
     }
 
+    /** Returns an array of pixels at a rectangle */
     public getPixels<T extends ColorDataType>(
         x: number,
         y: number,
@@ -627,8 +635,8 @@ export class CanvasBuilder {
         t?: T | null
     ): T extends ColorDataType.Rgba ? number[] : string[] {
         const ctx = this.ctx;
-        width ??= this.canvas.width;
-        height ??= this.canvas.height;
+        width ??= this.inner.width;
+        height ??= this.inner.height;
 
         const data = ctx.getImageData(x, y, width, height).data;
         if (t === ColorDataType.Rgba)
@@ -639,6 +647,7 @@ export class CanvasBuilder {
         ) as T extends ColorDataType.Rgba ? number[] : string[];
     }
 
+    /** Returns an array of pixels at a rectangle */
     public setPixels<T extends ColorDataType>(
         x: number,
         y: number,
@@ -649,8 +658,8 @@ export class CanvasBuilder {
         t?: T | null
     ) {
         const ctx = this.ctx;
-        width ??= this.canvas.width;
-        height ??= this.canvas.height;
+        width ??= this.inner.width;
+        height ??= this.inner.height;
 
         const data = ctx.createImageData(width, height);
 
@@ -661,9 +670,10 @@ export class CanvasBuilder {
         ctx.putImageData(data, x, y);
     }
 
+    /** Resizes the canvas */
     public resize(width: number, height: number) {
         const ctx = this.ctx,
-              canvas = this.canvas,
+              canvas = this.inner,
               data = ctx.getImageData(0, 0, width, height);
 
         canvas.width = width;
@@ -671,6 +681,7 @@ export class CanvasBuilder {
         ctx.putImageData(data, 0, 0);
     }
 
+    /** Calculates the alignment coordinates */
     public align(x: number, y: number, width: number, height: number): [number, number] {
         const { rectAlign, rectBaseline } = this.customProperties;
         return [
@@ -681,11 +692,14 @@ export class CanvasBuilder {
         ];
     }
 
-    public dataUrl(mime: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif' = 'image/png') {
-        return this.canvas.toDataURL(mime);
+    public async dataUrl(format?: ImageFormat | null) { // @ts-ignore
+        return this.inner.toDataURLAsync('image/' + (typeof format === 'number' ? ImageFormat[format] : format) ?? 'png');
     }
-    public buffer(mime: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif' = 'image/png') {
-        return this.canvas.toBuffer(mime as any);
+    public buffer(format?: ImageFormat | null) { // @ts-ignore
+        return this.inner.toBuffer('image/' + (typeof format === 'number' ? ImageFormat[format] : format) ?? 'png');
+    }
+    public async encode(format?: ImageFormat | null) {
+        return this.inner.encode((typeof format === 'number' ? ImageFormat[format] : format) as any);
     }
 }
 

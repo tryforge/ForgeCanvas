@@ -3,37 +3,27 @@
 * Copyright © 2026 BotForge
 */
 
-import { createCanvas, Image, LottieAnimation, SKRSContext2D, loadImage } from '@napi-rs/canvas';
-import { CanvasBuilder } from './builder';
-import { GradientType } from '../';
+import { SKRSContext2D, createCanvas, CanvasGradient, Image, loadImage, LottieAnimation, LoadImageOptions } from '@napi-rs/canvas';
 import { DecodeOptions, Decoder, Encoder, Frame, NeuQuant } from '@gifsx/gifsx';
+
+import { ForgeFunction, IForgeFunction, Logger } from '@tryforge/forgescript';
+
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { IForgeFunction, Logger } from '@tryforge/forgescript';
-import { ForgeFunction } from '@tryforge/forgescript';
+
+import { CanvasBuilder, GradientType } from '..';
 
 class Manager<T> {
     public map: Map<string, T>;
 
-    constructor() {
-        this.map = new Map();
-    }
+    constructor() { this.map = new Map() }
 
     public get(name: string) { return this.map.get(name) }
     public remove(name: string) { this.map.delete(name) }
 }
 
 export class CanvasManager extends Manager<CanvasBuilder> {
-    public current: CanvasBuilder[];
-
-    constructor() {
-        super();
-        this.current = [];
-    }
-
-    public get lastCurrent() {
-        return this.current[this.current.length - 1];
-    }
+    public current: CanvasBuilder | undefined;
 
     set(name: string, canvas: CanvasBuilder): void;
     set(name: string, width: number, height: number): void;
@@ -42,40 +32,9 @@ export class CanvasManager extends Manager<CanvasBuilder> {
             this.map.set(name, new CanvasBuilder(a, b ?? a));
         else this.map.set(name, a);
     }
-}
 
-export class GradientManager extends Manager<CanvasGradient> {
-    private ctx: SKRSContext2D;
-    public stops: [number, string][];
-
-    constructor() {
-        super();
-        this.ctx = createCanvas(1,1).getContext('2d');
-        this.stops = [];
-    }
-
-    set(name: string, gradient: CanvasGradient): void;
-    set(name: string, type: GradientType.radial, x1: number, y1: number, r1: number, x2: number, y2: number, r2: number): void;
-    set(name: string, type: GradientType.conic, startAngle: number, x: number, y: number): void;
-    set(name: string, type: GradientType.linear, x1: number, y1: number, x2: number, y2: number): void;
-    public set(name: string, a: CanvasGradient | GradientType, ...options: number[]) {
-        if (GradientType?.[a as any])
-            this.map.set(
-                name, a === GradientType.radial
-                    ? this.ctx.createRadialGradient(...options as [number, number, number, number, number, number])
-                : a === GradientType.conic
-                    ? this.ctx.createConicGradient(...options as [number, number, number])
-                : this.ctx.createLinearGradient(...options as [number, number, number, number])
-            );
-        else this.map.set(name, a as CanvasGradient);
-    }
-}
-
-export class ImageManager extends Manager<Image> {
-    public set(name: string, image: Image) { this.map.set(name, image) }
-    
-    public async load(name: string, path: string) {
-        this.map.set(name, await loadImage(path));
+    public getOrCurrent(name: string | null) { // @ts-ignore
+        return this.map.get(name) ?? this.current;
     }
 }
 
@@ -84,20 +43,18 @@ export class GIFManager {
     public decoders: Map<string, Decoder>;
     public decodeOptions: Map<string, DecodeOptions>;
     public frames: Map<string, Frame>;
-    public currentOptions: DecodeOptions | null;
-    public currentEncoder: Encoder[];
+    public currentOptions: DecodeOptions | undefined;
+    public currentEncoder: Encoder | undefined;
 
     constructor() {
         this.encoders = new Map();
         this.decoders = new Map();
         this.decodeOptions = new Map();
         this.frames = new Map();
-        this.currentOptions = null;
-        this.currentEncoder = [];
     }
 
-    public get lastCurrentEncoder() {
-        return this.currentEncoder[this.currentEncoder.length - 1];
+    public getEncoderOrCurrent(name: string | null) { // @ts-ignore
+        return this.encoders.get(name) ?? this.currentEncoder;
     }
 
     public setEncoder(name: string, encoder: Encoder) { this.encoders.set(name, encoder) }
@@ -114,6 +71,63 @@ export class GIFManager {
     public removeDecoder(name: string) { this.decoders.delete(name) }
     public removeDecodeOptions(name: string) { this.decodeOptions.delete(name) }
     public removeFrame(name: string) { this.frames.delete(name) }
+}
+
+export class GradientManager extends Manager<CanvasGradient> {
+    private ctx: SKRSContext2D;
+    public stops: [number, string][];
+
+    constructor() {
+        super();
+        this.ctx = createCanvas(0,0).getContext('2d');
+        this.stops = [];
+    }
+
+    set(name: string, gradient: CanvasGradient): void;
+    set(name: string, type: GradientType.radial, x1: number, y1: number, r1: number, x2: number, y2: number, r2: number): void;
+    set(name: string, type: GradientType.conic, startAngle: number, x: number, y: number): void;
+    set(name: string, type: GradientType.linear, x1: number, y1: number, x2: number, y2: number): void;
+    public set(name: string, a: CanvasGradient | GradientType, ...options: number[]) {
+        if (typeof a !== 'object')
+            this.map.set(
+                name, a === GradientType.radial
+                    ? this.ctx.createRadialGradient(...options as [number, number, number, number, number, number])
+                : a === GradientType.conic
+                    ? this.ctx.createConicGradient(...options as [number, number, number])
+                : this.ctx.createLinearGradient(...options as [number, number, number, number])
+            );
+        else this.map.set(name, a);
+    }
+}
+
+export class ImageManager extends Manager<Image> {
+    public loadOptions?: LoadImageOptions;
+
+    public set(name: string, image: Image) { this.map.set(name, image) }
+    
+    load(src: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL): Promise<Image>;
+    load(name: string, src: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL): Promise<Image>;
+    public async load(
+        name: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL,
+        src?: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL
+    ) {
+        if (name instanceof Image) return name;
+        
+        const image = await loadImage(src ?? name, this.loadOptions);
+        if (typeof name === 'string') this.map.set(name, image);
+
+        return image;
+    }
+
+    public async tryGet(name: string, src: string | Buffer | Uint8Array | Image | ArrayBufferLike | URL) {
+        let image = this.map.get(name);
+        if (image) return image;
+
+        image = await this.load(name, src);
+        this.map.set(name, image);
+
+        return image;
+    }
 }
 
 export class NeuQuantManager extends Manager<NeuQuant> {

@@ -51,22 +51,21 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [cname, name, x, y, options]) {
-        const canvas = cname
-            ? ctx.canvasManager?.get(cname)
-            : ctx.canvasManager?.lastCurrent;
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.FCError.NoCanvas);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
         const cctx = canvas.ctx;
         const component = __1.ForgeCanvas.components.get(name);
         if (!component)
-            return this.customError(__1.FCError.NoComponent);
+            return this.customError(__1.ForgeCanvasError.NoComponent);
         let oldmatrix;
         if (x || y) {
             oldmatrix = cctx.getTransform();
             cctx.translate(x, y);
         }
-        const { canvasManager } = ctx;
-        canvasManager.current.push(canvas);
+        const canvasManager = ctx.canvasManager;
+        const previous = canvasManager.current;
+        canvasManager.current = canvas;
         const context = ctx.clone({
             data: component.compiled ?? forgescript_1.Compiler.compile(component.data.code, component.data.path),
             doNotSend: true,
@@ -88,7 +87,7 @@ exports.default = new forgescript_1.NativeFunction({
             context.setEnvironmentKey(name, options[i]);
         }
         const r = await forgescript_1.Interpreter.run(context);
-        canvasManager.current.pop();
+        canvasManager.current = previous;
         if (oldmatrix)
             cctx.setTransform(oldmatrix);
         return r === null ? this.stop() : this.success(r);

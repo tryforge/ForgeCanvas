@@ -23,7 +23,7 @@ exports.default = new forgescript_1.ApplicationCommand({
         .setName('ephemeral')
         .setDescription('meow')
         .setRequired(false))
-        .setIntegrationTypes([0, 1]), // fuck you typescript haha ni
+        .setIntegrationTypes([0, 1]),
     code: `
         $if[$option[ephemeral]==true;$ephemeral]
 		$onlyIf[$authorID==$botOwnerID;nuh uh]

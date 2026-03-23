@@ -4,12 +4,12 @@
 */
 
 import { ArgType, NativeFunction, Return } from '@tryforge/forgescript';
-import { CanvasUtil, FCError, FillOrStroke, TextAlign, TextWrap } from '../..';
+import { ForgeCanvasError, FillOrStroke, TextAlign, TextWrap, validateFont, resolveStyle, parseText } from '../..';
 
 export default new NativeFunction({
     name: '$drawText',
     aliases: ['$placeText', '$text', '$writeText'],
-    description: 'Draws a filled/stroked text on a canvas.',
+    description: 'Draws a filled/stroked text on a canvas',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
@@ -104,7 +104,7 @@ export default new NativeFunction({
         },
         {
             name: 'allowEmojis',
-            description: 'Indicates if custom emojis should be drawn',
+            description: 'Indicates if custom emojis should be drawn; emojis get cached into preload://cache_emoji_{id}',
             type: ArgType.Boolean,
             required: false,
             rest: false,
@@ -112,21 +112,19 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset, nlAlign, allowEmojis]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
-        const valid = CanvasUtil.validateFont(font);
+        const valid = validateFont(font);
         if (!valid || typeof valid === 'string') return this.customError(valid);
 
-        const s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
+        const s = await resolveStyle(this, ctx, canvas, style);
         if (s instanceof Return) return s;
 
         canvas.ctx[t === FillOrStroke.fill ? 'fillStyle' : 'strokeStyle'] = s;
         canvas.text(
             t,
-            await CanvasUtil.parseText(
+            await parseText(
                 ctx.client, text,
                 multiline === true, allowEmojis
             ),

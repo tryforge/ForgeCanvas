@@ -7,21 +7,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 exports.default = new forgescript_1.NativeFunction({
     name: '$barData',
-    description: 'Adds data to the progress bar.',
+    description: 'Adds data to the progress bar',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'value',
-            description: 'Value for the data segment (percentage or absolute).',
+            description: 'Value for the data segment (percentage or absolute)',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'style',
-            description: 'Style for the data segment.',
+            description: 'Style for the data segment',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false

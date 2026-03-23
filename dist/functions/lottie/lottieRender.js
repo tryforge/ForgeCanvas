@@ -60,10 +60,10 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, canvas, x, y, width, height]) {
         const lottie = ctx.lottieManager?.get(name);
         if (!lottie)
-            return this.customError(__1.FCError.NoLottie);
+            return this.customError(__1.ForgeCanvasError.NoLottie);
         const context = ctx.canvasManager?.get(canvas)?.ctx;
         if (!context)
-            return this.customError(__1.FCError.NoCanvas);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
         lottie.render(context, // @ts-expect-error
         x !== null && typeof x !== 'string'
             ? { x, y, width, height } : undefined);

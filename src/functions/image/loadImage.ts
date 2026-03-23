@@ -4,26 +4,26 @@
 */
 
 import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
-import { CanvasUtil, ImageManager } from '../..';
+import { ImageManager, resolveImage } from '../..';
 
 export default new NativeFunction({
     name: '$loadImage',
     aliases: ['$createImage', '$newImage'],
-    description: 'Loads an image.',
+    description: 'Loads an image from an URL, File path, SVG, or other data',
     version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'name',
-            description: 'The image name.',
+            description: 'The image name',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'src',
-            description: 'The image source.',
+            description: 'The image source',
             type: ArgType.String,
             required: true,
             rest: false
@@ -33,10 +33,10 @@ export default new NativeFunction({
         if (!(ctx.imageManager instanceof ImageManager))
             ctx.imageManager = new ImageManager();
 
-        const img = await CanvasUtil.resolveImage(this, ctx, src);
+        const img = await resolveImage(this, ctx, src);
         if (img instanceof Return) return img;
 
-        ctx.imageManager.set(name, img);
+        ctx.imageManager.map.set(name, img);
         return this.success();
     }
 });

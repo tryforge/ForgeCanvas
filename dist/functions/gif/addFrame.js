@@ -8,35 +8,35 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$addFrame',
-    description: 'Adds a frame to the GIF.',
+    description: 'Adds a frame to the GIF',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the GIF.',
+            description: 'Name of the GIF',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'frame',
-            description: 'Frame source.',
+            description: 'Frame source',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'options',
-            description: 'Frame options.',
+            description: 'Frame options',
             type: forgescript_1.ArgType.Json,
             required: false,
             rest: false
         },
         {
             name: 'speed',
-            description: 'Frame rgb quantization speed.',
+            description: 'Frame rgb quantization speed',
             type: forgescript_1.ArgType.Number,
             check: (x) => x >= 1 && x <= 30,
             required: false,
@@ -44,12 +44,10 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [name, frame, options, speed]) {
-        const gif = name
-            ? ctx.gifManager?.getEncoder(name)
-            : ctx.gifManager?.lastCurrentEncoder;
+        const gif = ctx.gifManager?.getEncoderOrCurrent(name);
         if (!gif)
-            return this.customError(__1.FCError.NoEncoder);
-        const f = await __1.CanvasUtil.resolveFrame(this, ctx, frame, speed);
+            return this.customError(__1.ForgeCanvasError.NoEncoder);
+        const f = await (0, __1.resolveFrame)(this, ctx, frame, speed);
         if (f instanceof forgescript_1.Return)
             return f;
         if (options) {

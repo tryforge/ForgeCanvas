@@ -12,7 +12,7 @@
                 "simplify": true
             }
         },
-        "target": "esnext",
+        "target": "es2022",
         "loose": true,
         "externalHelpers": false,
         "keepClassNames": true

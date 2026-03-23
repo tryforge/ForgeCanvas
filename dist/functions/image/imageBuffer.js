@@ -5,11 +5,10 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const canvas_1 = require("@napi-rs/canvas");
-const classes_1 = require("../../classes");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$imageBuffer',
-    description: 'Stores the image\'s buffer.',
+    description: 'Stores the image\'s buffer which can be accessed with $env',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
@@ -24,7 +23,7 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'path',
-            description: 'The image path.',
+            description: 'The image path',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
@@ -42,10 +41,10 @@ exports.default = new forgescript_1.NativeFunction({
             image = manager?.get(path);
         }
         else
-            image = await (0, canvas_1.loadImage)(path);
+            image = await ctx.imageManager?.load(path);
         if (!image)
-            return this.customError(classes_1.FCError.NoImage);
-        ctx.setEnvironmentKey(vname, await image.getBuffer());
+            return this.customError(__1.ForgeCanvasError.NoImage);
+        ctx.setEnvironmentKey(vname, Buffer.from(image.src));
         return this.success();
     }
 });

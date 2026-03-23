@@ -4,7 +4,7 @@
 */
 
 import { ArgType, ForgeClient } from '@tryforge/forgescript';
-import { ForgeCanvas, registerFonts } from '../';
+import { ForgeCanvas, registerFonts } from '..';
 
 const client = new ForgeClient({
     intents: [

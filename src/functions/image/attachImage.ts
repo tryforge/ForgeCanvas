@@ -5,26 +5,27 @@
 
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { AttachmentBuilder } from 'discord.js';
-import { FCError } from '../../classes';
+
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$attachImage',
     aliases: ['$sendImage', '$renderImage', '$imageRender'],
-    description: 'Attaches the image.',
+    description: 'Attaches the image',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'image',
-            description: 'Name of the image.',
+            description: 'Name of the image',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'filename',
-            description: 'The name with the extension of the image to be attached as.',
+            description: 'The name with the extension of the image to be attached as',
             type: ArgType.String,
             required: false,
             rest: false
@@ -37,11 +38,11 @@ export default new NativeFunction({
             manager = ctx.client.preloadImages;
         }
         
-        const img = await manager?.get(name)?.getBuffer();
-        if (!img) return this.customError(FCError.NoImage);
+        const img = manager?.get(name)?.src;
+        if (!img || typeof img === 'string') return this.customError(ForgeCanvasError.NoImage);
         
         ctx.container.files.push(new AttachmentBuilder(
-            img, { name: filename ?? `${name}.png` }
+            Buffer.from(img), { name: filename ?? `${name}.png` }
         ));
         return this.success();
     }
