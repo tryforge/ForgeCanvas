@@ -57,8 +57,8 @@ Contributor|Contribution|Contact
 -|-|-
 Aggelos|Founder|[Discord](https://discord.com/users/637648484979441706) [GitHub](https://github.com/aggelos-007)
 Lordex|Developer|[Discord](https://discord.com/users/1096717977304453160) [GitHub](https://github.com/devlordduck)
-Aurea|Readme Editors|[Discord](https://discord.com/users/976413539076026388) [GitHub](https://github.com/aurea6)
-Aditya|Readme Editors|[Discord](https://discord.com/users/903681538842054686) [GitHub](https://github.com/Clyders)
+Aurea|Readme Editor|[Discord](https://discord.com/users/976413539076026388) [GitHub](https://github.com/aurea6)
+Aditya|Readme Editor|[Discord](https://discord.com/users/903681538842054686) [GitHub](https://github.com/Clyders)
 
 
 <strong>P.S.:</strong> We may or may not accept bribes in form of pizza!
