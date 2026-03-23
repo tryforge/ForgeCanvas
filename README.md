@@ -51,15 +51,15 @@
 <h3 align="center">Credits</h3>
 
 *We hope you enjoy using ForgeCanvas!*
-This package was made with ♥️ by [Aggelos](https://discord.com/users/637648484979441706)
+This package was made with ♥️ by [LordDuck](https://discord.com/users/1096717977304453160)
 
 Contributor|Contribution|Contact
 -|-|-
 Aggelos|Founder|[Discord](https://discord.com/users/637648484979441706) [GitHub](https://github.com/aggelos-007)
 LordDuck|Developer|[Discord](https://discord.com/users/1096717977304453160) [GitHub](https://github.com/devlordduck)
-Econome|Ducks Helper/Middleman|[Discord](https://discord.com/users/838105973985771520) [GitHub](https://github.com/project-econome)
+Econome|$drawProgressBar function base|[Discord](https://discord.com/users/838105973985771520) [GitHub](https://github.com/project-econome)
 Aurea|Readme|[Discord](https://discord.com/users/976413539076026388) [GitHub](https://github.com/aurea6)
-Aditya|Readme Answer|[Discord](https://discord.com/users/903681538842054686) [GitHub](https://github.com/Clyders)
+Aditya|Readme Answers|[Discord](https://discord.com/users/903681538842054686) [GitHub](https://github.com/Clyders)
 
 
 <strong>P.S.:</strong> We may or may not accept bribes in form of pizza!
