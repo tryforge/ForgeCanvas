@@ -8,3 +8,4 @@ tsconfig.json
 dist/@build
 dist/__tests__
 dist/docgen.ts
+.swcrc
