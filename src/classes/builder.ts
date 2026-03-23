@@ -319,11 +319,15 @@ export class CanvasBuilder {
      * Works the same as ``SKRSContext2D.drawImage`` but also handles loading and radius for you.
      * @param manager - An ``ImageManager`` instance.
      * @param image - The image to draw.
-     * @param x - The X coordinate of the image's starting point.
-     * @param y - The Y coordinate of the image's starting point.
-     * @param width - The width of the image. If not provided, defaults to the image's width.
-     * @param height - The height of the image. If not provided, defaults to the image's height.
-     * @param radius - The radius of the image's corners. If not provided, defaults to no rounding.
+     * @param x - The X coordinate of the image's destination starting point.
+     * @param y - The Y coordinate of the image's destination starting point.
+     * @param width - The width of the drawn image. If not provided, defaults to ``srcWidth`` or the image's width.
+     * @param height - The height of the drawn image. If not provided, defaults to ``srcHeight`` or the image's height.
+     * @param radius - The radius of the drawn image's corners. If not provided, defaults to no rounding.
+     * @param srcX - The X coordinate of the image area's starting point.
+     * @param srcY - The Y coordinate of the image area's starting point.
+     * @param srcWidth - The width of the image area. If not provided, defaults to the ``width``.
+     * @param srcHeight - The height of the image area. If not provided, defaults to ``height``.
      */
     public async drawImage(
         manager: ImageManager | null,
@@ -344,13 +348,14 @@ export class CanvasBuilder {
             image = manager ? await manager.load(image)
                 : await loadImage(image);
 
-        width ??= image.width;
-        height ??= image.height;
+        width ??= srcWidth ?? image.width;
+        height ??= srcHeight ?? image.height;
         [x, y] = this.align(x, y, width, height);
 
         const args = [x, y, width, height] as const;
         if (typeof srcX === 'number') // @ts-ignore
-            args.unshift(srcX, srcY, srcWidth, srcHeight);
+            args.unshift(srcX, srcY, srcWidth ?? width, srcHeight ?? height);
+
         if (!radius) return ctx.drawImage(image, ...args);
 
         ctx.save();
