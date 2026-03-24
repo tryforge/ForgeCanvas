@@ -14,7 +14,7 @@ exports.ForgeCanvasError = {
     NoFilter: 'No filter provided',
     NoFilterOrValue: 'No filter or value provided',
     ImageFail: 'Failed to load an image',
-    InvalidOffset: 'Offset must be between 0 and 100',
+    InvalidOffset: 'The offset must be between 0 and 100',
     InvalidRectType: 'Invalid rect type provided (Expected fill/stroke/clear)',
     InvalidLineDashSegments: 'Invalid line dash segments provided (Expected array of numbers)',
     InvalidFontFormat: 'Invalid font format provided',
