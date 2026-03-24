@@ -1,8 +1,11 @@
-*/__tests__/
+.env
 templates
 docs
 metadata
 src
-TODO.meow
 assets
 tsconfig.json
+dist/@build
+dist/__tests__
+dist/docgen.ts
+.swcrc

@@ -1,33 +1,36 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError } from '../../classes';
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$lineDashOffset',
-    description: 'Sets or returns the line dash offset in a canvas.',
+    description: 'Sets or returns the line dash offset in a canvas',
     version: '1.0.0',
     brackets: false,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'offset',
-            description: 'The new offset.',
+            description: 'The new offset',
             type: ArgType.Number,
             required: false,
             rest: false
         }
     ],
     execute (ctx, [name, offset]) {
-        const canvas = (name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent)?.ctx;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.getOrCurrent(name)?.ctx;
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
         return this.success(offset
             ? (canvas.lineDashOffset = offset, undefined)

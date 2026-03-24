@@ -1,39 +1,43 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$createFrame',
     aliases: ['$createGIFFrame', '$newFrame', '$newGIFFrame'],
-    description: 'Creates a new GIF Frame.',
+    description: 'Creates a new GIF Frame',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'frame',
-            description: 'Name of the new GIF Frame.',
+            description: 'Name of the new GIF Frame',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'src',
-            description: 'Source of the GIF Frame.',
+            description: 'Source of the GIF Frame',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'options',
-            description: 'Options for the GIF Frame.',
+            description: 'Options for the GIF Frame',
             type: forgescript_1.ArgType.Json,
             required: false,
             rest: false
         },
         {
             name: 'speed',
-            description: 'Frame rgb quantization speed.',
+            description: 'Frame rgb quantization speed',
             type: forgescript_1.ArgType.Number,
             check: (x) => x >= 1 && x <= 30,
             required: false,
@@ -41,9 +45,9 @@ exports.default = new forgescript_1.NativeFunction({
         }
     ],
     async execute(ctx, [name, frame, options, speed]) {
-        if (!ctx.gifManager || !(ctx.gifManager instanceof __1.GIFManager))
-            ctx.gifManager = new __1.GIFManager();
-        const f = await __1.CanvasUtil.resolveFrame(this, ctx, frame, speed);
+        const manager = ctx.gifManager instanceof __1.GIFManager ?
+            ctx.gifManager : ctx.gifManager = new __1.GIFManager();
+        const f = await (0, __1.resolveFrame)(this, ctx, frame, speed);
         if (f instanceof forgescript_1.Return)
             return f;
         if (options) {
@@ -66,7 +70,7 @@ exports.default = new forgescript_1.NativeFunction({
                 f.setPalette(Uint8Array.from(options.palette));
         }
         ;
-        ctx.gifManager.setFrame(name, f);
+        manager.setFrame(name, f);
         return this.success();
     }
 });

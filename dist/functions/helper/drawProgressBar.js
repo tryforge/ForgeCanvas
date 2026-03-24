@@ -1,75 +1,77 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$drawProgressBar',
-    description: 'Creates and draws progress bars on a canvas.',
+    description: 'Creates and draws progress bars on a canvas',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'x',
-            description: 'The X coordinate.',
+            description: 'The X coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'y',
-            description: 'The Y coordinate.',
+            description: 'The Y coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'width',
-            description: 'The width.',
+            description: 'The width',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'height',
-            description: 'The height.',
+            description: 'The height',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'config',
-            description: 'The progress bar configuration.',
-            type: forgescript_1.ArgType.Json,
+            description: 'The progress bar configuration',
+            type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
     ],
     async execute(ctx, [name, x, y, width, height]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError('No canvas');
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
         const data = (ctx.getEnvironmentKey('progressBarData') ?? []);
         const options = (ctx.getEnvironmentKey('progressBarOptions') ?? {});
         const type = options.type ?? 'normal';
-        const background = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, options['background-style'] ?? '#000000');
+        const background = await (0, __1.resolveStyle)(this, ctx, canvas, options['background-style'] ?? '#0');
         if (background instanceof forgescript_1.Return)
             return background;
         let res;
         if (type === 'normal') {
             const progress = data[0];
             if (!progress)
-                return this.customError(__1.FCError.NoBarData);
-            const style = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, progress.style ?? '#000');
+                return this.customError(__1.ForgeCanvasError.NoBarData);
+            const style = await (0, __1.resolveStyle)(this, ctx, canvas, progress.style ?? '#0');
             if (style instanceof forgescript_1.Return)
                 return style;
             res = canvas.drawProgressBar(x, y, width, height, progress.value, {
@@ -86,7 +88,8 @@ exports.default = new forgescript_1.NativeFunction({
                 radius: options.radius,
                 direction: options.direction,
                 clip: options['clip-radius'],
-                left: options.left
+                left: options.left,
+                leftType: options['left-type']
             });
         }
         else {

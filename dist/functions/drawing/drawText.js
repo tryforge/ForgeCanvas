@@ -1,25 +1,29 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$drawText',
-    aliases: ['$placeText', '$text', '$writeText', '$addText'],
-    description: 'Draws a filled/stroked text on a canvas.',
+    aliases: ['$placeText', '$text', '$writeText'],
+    description: 'Draws a filled/stroked text on a canvas',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'type',
-            description: 'The text type.',
+            description: 'The text type',
             type: forgescript_1.ArgType.Enum,
             enum: __1.FillOrStroke,
             required: true,
@@ -27,81 +31,102 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'text',
-            description: 'The text to draw.',
+            description: 'The text to draw',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'font',
-            description: 'The text font. ({size}px {font name})',
+            description: 'The text font ({size}px {font name})',
             type: forgescript_1.ArgType.String,
-            check: (i) => __1.CanvasUtil.isValidFont(i),
             required: true,
             rest: false
         },
         {
             name: 'style',
-            description: 'The style. (color/gradient/pattern)',
+            description: 'The style (color/gradient/pattern)',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'x',
-            description: 'The text start X coordinate.',
+            description: 'The text start X coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'y',
-            description: 'The text start Y coordinate.',
+            description: 'The text start Y coordinate',
             type: forgescript_1.ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'maxWidth',
-            description: 'Maximum font width.',
+            description: 'Maximum font width',
             type: forgescript_1.ArgType.Number,
             required: false,
             rest: false
         },
         {
             name: 'multiline',
-            description: 'Indicates if the text should be drawn in multiple lines if it exceeds the maximum width.',
+            description: 'Indicates if new lines should be allowed',
             type: forgescript_1.ArgType.Boolean,
             required: false,
             rest: false
         },
         {
             name: 'wrap',
-            description: 'Wraps the text if true.',
-            type: forgescript_1.ArgType.Boolean,
+            description: 'Indicates how the text should be wrapped if it exceeds the maximum width',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.TextWrap,
             required: false,
             rest: false
         },
         {
             name: 'lineOffset',
-            description: 'The text lines offset.',
+            description: 'The text lines offset',
             type: forgescript_1.ArgType.Number,
             required: false,
             rest: false
+        },
+        {
+            name: 'newlineBeginning',
+            description: 'The alignment of the text when a new line is encountered',
+            type: forgescript_1.ArgType.Enum,
+            enum: __1.TextAlign,
+            required: false,
+            rest: false,
+            version: '1.3.0'
+        },
+        {
+            name: 'allowEmojis',
+            description: 'Indicates if custom emojis should be drawn; emojis get cached into preload://cache_emoji_{id}',
+            type: forgescript_1.ArgType.Boolean,
+            required: false,
+            rest: false,
+            version: '1.3.0'
         }
     ],
-    async execute(ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
+    async execute(ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset, nlAlign, allowEmojis]) {
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.FCError.NoCanvas);
-        const styleT = t === __1.FillOrStroke.fill ? 'fillStyle' : 'strokeStyle', oldstyle = canvas.ctx[styleT], s = await __1.CanvasUtil.resolveStyle(this, ctx, canvas, style);
+            return this.customError(__1.ForgeCanvasError.NoCanvas);
+        const valid = (0, __1.validateFont)(font);
+        if (!valid || typeof valid === 'string')
+            return this.customError(valid);
+        const s = await (0, __1.resolveStyle)(this, ctx, canvas, style);
         if (s instanceof forgescript_1.Return)
             return s;
-        canvas.ctx[styleT] = s;
-        canvas.text(t, text, x, y, font, maxWidth, multiline, wrap, lineOffset);
-        canvas.ctx[styleT] = oldstyle;
+        canvas.ctx[t === __1.FillOrStroke.fill ? 'fillStyle' : 'strokeStyle'] = s;
+        canvas.text(t, await (0, __1.parseText)(ctx.client, text, multiline === true, allowEmojis), x, y, font, typeof maxWidth === 'number' ? maxWidth : undefined, 
+        // @ts-expect-error
+        __1.TextAlign[wrap] !== undefined ? wrap : undefined, typeof lineOffset === 'number' ? lineOffset : undefined, 
+        // @ts-expect-error
+        typeof nlAlign === 'number' ? __1.TextAlign[nlAlign] : nlAlign);
         return this.success();
     }
 });

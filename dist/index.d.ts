@@ -1,28 +1,25 @@
-import { ForgeExtension } from '@tryforge/forgescript';
-import { CanvasManager, GradientManager, ImageManager, GIFManager, NeuQuantManager } from './classes';
-export declare function registerFonts(fonts: {
-    src: string;
-    name?: string | null;
-}[], log: boolean): Promise<void>;
+import { ForgeClient, ForgeExtension } from '@tryforge/forgescript';
+import { CanvasManager, ComponentManager, GIFManager, GradientManager, ImageManager, LottieManager, NeuQuantManager } from './classes';
+export declare const version: string;
 export declare class ForgeCanvas extends ForgeExtension {
     name: string;
     description: string;
     version: string;
-    init(): void;
+    init(client: ForgeClient): void;
+    static components: ComponentManager;
 }
 declare module '@tryforge/forgescript' {
+    interface ForgeClient {
+        preloadImages: ImageManager;
+    }
     interface Context {
         canvasManager?: CanvasManager;
         gradientManager?: GradientManager;
         imageManager?: ImageManager;
         gifManager?: GIFManager;
         neuquantManager?: NeuQuantManager;
+        lottieManager?: LottieManager;
     }
 }
-declare module '@napi-rs/canvas' {
-    interface Image {
-        getBuffer(): Promise<Buffer | undefined>;
-    }
-}
+export * from './structures';
 export * from './classes';
-export * from './typings';

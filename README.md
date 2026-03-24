@@ -1,4 +1,4 @@
-<p align="center"><img height="128" width="128" src="https://raw.githubusercontent.com/tryforge/ForgeCanvas/main/assets/forgecanvas.png" alt="ForgeCanvas logo"></p>
+﻿<p align="center"><img height="128" width="128" src="https://raw.githubusercontent.com/tryforge/ForgeCanvas/main/assets/forgecanvas.png" alt="ForgeCanvas logo"></p>
 <h1 align="center">ForgeCanvas</h1>
 <p align="center">Elevate your Discord app's visual appeal with ease. Create beautiful images using simple canvas functions.</p>
 <p align="center">
@@ -51,15 +51,14 @@
 <h3 align="center">Credits</h3>
 
 *We hope you enjoy using ForgeCanvas!*
-This package was made with ♥️ by [Aggelos](https://discord.com/users/637648484979441706)
+This package was made with ♥️ by [Lordex](https://discord.com/users/1096717977304453160)
 
 Contributor|Contribution|Contact
 -|-|-
-Aggelos|Owner of the package|[Discord](https://discord.com/users/637648484979441706) [GitHub](https://github.com/aggelos-007)
-LordDuck|Developer|[Discord](https://discord.com/users/1096717977304453160) [GitHub](https://github.com/devlordduck)
-Econome|Ducks Helper/Middleman|[Discord](https://discord.com/users/838105973985771520) [GitHub](https://github.com/project-econome)
-Aurea|Readme|[Discord](https://discord.com/users/976413539076026388) [GitHub](https://github.com/aurea6)
-Aditya|Readme Answer|[Discord](https://discord.com/users/903681538842054686) [GitHub](https://github.com/Clyders)
+Aggelos|Founder|[Discord](https://discord.com/users/637648484979441706) [GitHub](https://github.com/aggelos-007)
+Lordex|Developer|[Discord](https://discord.com/users/1096717977304453160) [GitHub](https://github.com/devlordduck)
+Aurea|Readme Editor|[Discord](https://discord.com/users/976413539076026388) [GitHub](https://github.com/aurea6)
+Aditya|Readme Editor|[Discord](https://discord.com/users/903681538842054686) [GitHub](https://github.com/Clyders)
 
 
 <strong>P.S.:</strong> We may or may not accept bribes in form of pizza!

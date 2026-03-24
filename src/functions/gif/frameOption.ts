@@ -1,25 +1,31 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
 import { Frame } from '@gifsx/gifsx';
+
 import { FrameOption } from '../..';
 
 export default new NativeFunction({
     name: '$frameOption',
     aliases: ['$frameProperty', '$gifFrameOption', '$frameProp', '$frameOpt'],
-    description: 'Sets or returns a GIF Frame option.',
+    description: 'Sets or returns a GIF Frame option',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'frame',
-            description: 'Name of the GIF Frame.',
+            description: 'Name of the GIF Frame',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'option',
-            description: 'Option to get.',
+            description: 'Option to get',
             type: ArgType.Enum,
             enum: FrameOption,
             required: true,

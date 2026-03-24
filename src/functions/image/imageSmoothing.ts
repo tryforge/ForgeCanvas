@@ -1,0 +1,41 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
+import { NativeFunction, ArgType } from '@tryforge/forgescript';
+import { ForgeCanvasError } from '../..';
+
+export default new NativeFunction({
+    name: '$imageSmoothing',
+    description: 'Sets or returns the image smoothing in a canvas',
+    version: '1.0.0',
+    aliases: ["$imageSmooth"],
+    brackets: false,
+    unwrap: true,
+    args: [
+        {
+            name: 'canvas',
+            description: 'Name of the canvas',
+            type: ArgType.String,
+            required: false,
+            rest: false
+        },
+        {
+            name: 'enabled',
+            description: 'Determines whether scaled images are smoothed or not',
+            type: ArgType.Boolean,
+            required: false,
+            rest: false
+        }
+    ],
+    execute (ctx, [name, enabled]) {
+        const canvas = ctx.canvasManager?.getOrCurrent(name)?.ctx;
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
+
+        return this.success(enabled !== null && enabled !== undefined
+            ? (canvas.imageSmoothingEnabled = enabled, undefined)
+            : canvas.imageSmoothingEnabled
+        );
+    }
+});

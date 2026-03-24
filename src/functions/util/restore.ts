@@ -1,26 +1,29 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError } from '../../classes';
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$restore',
-    description: 'Restores the most recently saved canvas state.',
+    description: 'Restores the most recently saved canvas state',
     version: '1.0.0',
     brackets: false,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: ArgType.String,
             required: false,
             rest: false
         }
     ],
     execute (ctx, [name]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
         canvas.ctx.restore();
         return this.success();

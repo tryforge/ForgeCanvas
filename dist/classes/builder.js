@@ -1,315 +1,502 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CanvasBuilder = void 0;
-const gifsx_1 = require("@gifsx/gifsx");
+exports.wordWidthCache = exports.charWidthCache = exports.CanvasBuilder = void 0;
 const canvas_1 = require("@napi-rs/canvas");
 const __1 = require("..");
+const gifsx_1 = require("@gifsx/gifsx");
 class CanvasBuilder {
+    /**
+     * The inner canvas.
+     */
+    inner;
+    /**
+     * The inner canvas context.
+     */
     ctx;
-    util = __1.CanvasUtil;
-    customProperties = {};
-    get width() { return this.ctx.canvas.width; }
-    get height() { return this.ctx.canvas.height; }
+    /**
+     * ``CanvasBuilder`` Exclusive Properties.
+     *
+     * ## Rect & Image alignment
+     *  - rectAlign: The horizontal alignment of the rectangle. Defaults to ``RectAlign.right``
+     *  - rectBaseline: The vertical alignment of the rectangle. Defaults to ``RectBaseline.bottom``
+     *
+     * Both apply to ``CanvasBuilder.rect``, ``CanvasBuilder.drawImage``, ``CanvasBuilder.drawProgressBar``, and ``CanvasBuilder.drawPieChart``.
+     */
+    customProperties = {
+        rectAlign: __1.RectAlign.right,
+        rectBaseline: __1.RectBaseline.bottom
+    };
+    constructor(width, height) {
+        this.inner = (0, canvas_1.createCanvas)(width, height);
+        this.ctx = this.inner.getContext('2d');
+    }
+    get width() { return this.inner.width; }
+    get height() { return this.inner.height; }
     set width(val) { this.resize(val, this.height); }
     set height(val) { this.resize(this.width, val); }
-    constructor(width, height) {
-        this.ctx = (0, canvas_1.createCanvas)(width, height).getContext('2d');
-    }
+    /**
+     * Draws a rectangle on the canvas.
+     * @param type - The type of drawing operation to perform for the rectangle. (fill/stroke/clear)
+     * @param x - The X coordinate of the of the rectangle.
+     * @param y - The Y coordinate of the of the rectangle.
+     * @param width - The width of the rectangle. ``canvas.width - x`` by default.
+     * @param height - The height of the rectangle. ``canvas.height - y`` by default.
+     * @param radius - The radius of the rounded corners. 0 by default.
+     */
     rect(type, x, y, width, height, radius) {
         const ctx = this.ctx;
-        width ??= ctx.canvas.width - x;
-        height ??= ctx.canvas.height - y;
+        width ??= this.inner.width - x;
+        height ??= this.inner.height - y;
         radius ??= 0;
-        if (this.customProperties.rectAlign)
-            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
-        if (this.customProperties.rectBaseline)
-            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
+        [x, y] = this.align(x, y, width, height);
         if (type === __1.FillOrStrokeOrClear.none)
             return ctx.roundRect(x, y, width, height, radius);
         if (!radius) {
             if (type === __1.FillOrStrokeOrClear.fill)
                 ctx.fillRect(x, y, width, height);
-            if (type === __1.FillOrStrokeOrClear.stroke)
+            else if (type === __1.FillOrStrokeOrClear.stroke)
                 ctx.strokeRect(x, y, width, height);
-            if (type === __1.FillOrStrokeOrClear.clear)
+            else
                 ctx.clearRect(x, y, width, height);
             return;
         }
-        ctx.save();
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
-        ({
-            [__1.FillOrStrokeOrClear.clear]: () => (ctx.clip(), ctx.clearRect(x, y, width, height)),
-            [__1.FillOrStrokeOrClear.fill]: () => ctx.fill(),
-            [__1.FillOrStrokeOrClear.stroke]: () => ctx.stroke()
-        })[type]();
-        ctx.restore();
+        if (type === __1.FillOrStrokeOrClear.fill)
+            ctx.fill();
+        else if (type === __1.FillOrStrokeOrClear.stroke)
+            ctx.stroke();
+        else if (type === __1.FillOrStrokeOrClear.clear) {
+            ctx.save();
+            ctx.clip();
+            ctx.clearRect(x, y, width, height);
+            ctx.restore();
+        }
+        ;
     }
     ;
-    text(type, text, x, y, font, maxWidth, multiline, wrap, lineOffset) {
-        const ctx = this.ctx, oldfont = ctx.font, fontsize = Number.parseFloat(__1.fontRegex.exec(font)[4]), lines = multiline ? text.split('\n') : [text], func = (text, x, y, maxWidth) => type === __1.FillOrStroke.fill
-            ? ctx.fillText(text, x, y, maxWidth)
-            : ctx.strokeText(text, x, y, maxWidth);
-        let offset = y;
-        maxWidth ??= undefined;
-        lineOffset ??= 0;
+    /**
+     * Draws text on the canvas.
+     * @param type - Whether to fill or stroke the text.
+     * @param spans - The text to draw, split into spans.
+     * @param x - The X coordinate of the text.
+     * @param y - The Y coordinate of the text.
+     * @param font - The font to use for the text.
+     * @param maxWidth - The maximum width of the text.
+     * @param wrap - The text wrapping behavior. If not provided, doesn't wrap the text at all.
+     * @param lineOffset - The vertical offset between lines of text.
+     * @param nlBegin - The beginning position of new lines within the text. ``SKRSContext2D.textAlign`` by default.
+     */
+    text(type, spans, x, y, font, maxWidth, wrap, lineOffset, nlBegin) {
+        if (!spans?.length || spans?.every(span => !span))
+            return;
+        const fontm = (0, __1.validateFont)(font);
+        if (typeof fontm === 'string')
+            throw new Error(fontm);
+        const ctx = this.ctx, fontsize = Number.parseFloat(fontm[4]), imgsize = fontsize * 1.25, func = `${typeof type === 'number' ? __1.FillOrStroke[type] : type}Text`;
+        lineOffset = fontsize * 0.25 - (lineOffset ?? 0);
+        wrap ??= undefined;
         ctx.font = font;
-        if (multiline || wrap) {
-            for (const t of lines) {
-                if (wrap) {
-                    let line = '';
-                    t.split(' ').forEach((word, i) => {
-                        if (word?.trim() === '')
-                            return;
-                        if (maxWidth && ctx.measureText(line + word + ' ').width > maxWidth && i > 0) {
-                            func(line, x, offset, maxWidth);
-                            line = word + ' ';
-                            offset += fontsize + lineOffset;
-                        }
-                        else
-                            line += word + ' ';
-                    });
-                    func(line, x, offset, maxWidth);
-                    offset += fontsize + lineOffset;
-                }
-                else {
-                    func(t, x, offset, maxWidth);
-                    offset += fontsize + lineOffset;
-                }
+        if (spans.length === 1 && wrap === null || wrap === undefined) {
+            const span = spans[0];
+            if (typeof span === 'string')
+                ctx[func](span, x, y, maxWidth ?? undefined);
+            else
+                ctx.drawImage(span, x, y, Math.min(imgsize, maxWidth || imgsize), imgsize);
+            return;
+        }
+        const lines = [[]];
+        let lineWidth = 0;
+        const cache = wrap === __1.TextWrap.character ? exports.charWidthCache : exports.wordWidthCache;
+        let fontCache = cache.get(font);
+        if (!fontCache) {
+            fontCache = new Map();
+            cache.set(font, fontCache);
+        }
+        let charFontCache = null;
+        if (wrap === __1.TextWrap.smart) {
+            charFontCache = cache.get(font);
+            if (!charFontCache) {
+                charFontCache = new Map();
+                cache.set(font, charFontCache);
             }
         }
-        else
-            func(text, x, y, maxWidth);
-        ctx.font = oldfont;
+        for (const span of spans) {
+            if (!span) {
+                lines.push([]);
+                lineWidth = 0;
+                continue;
+            }
+            if (typeof span === 'string') {
+                if (!maxWidth || wrap === undefined) {
+                    lines[lines.length - 1].push({ item: span, w: ctx.measureText(span).width });
+                    continue;
+                }
+                if (wrap === __1.TextWrap.character || wrap === __1.TextWrap['erase-character']) {
+                    let line = '';
+                    let current = 0;
+                    for (const char of span) {
+                        let charWidth = fontCache.get(char);
+                        if (charWidth === undefined) {
+                            charWidth = ctx.measureText(char).width;
+                            fontCache?.set(char, charWidth);
+                        }
+                        if (lineWidth + current + charWidth > maxWidth) {
+                            if (wrap === __1.TextWrap['erase-character'])
+                                break;
+                            lines[lines.length - 1].push({ item: line, w: current });
+                            lines.push([]);
+                            line = char;
+                            current = charWidth;
+                            lineWidth = 0;
+                            continue;
+                        }
+                        line += char;
+                        current += charWidth;
+                    }
+                    lines[lines.length - 1].push({ item: line, w: current });
+                    lineWidth = current;
+                }
+                else {
+                    for (const word of span.match(__1.wordRegex) ?? []) {
+                        let wordWidth = fontCache.get(word);
+                        if (wordWidth === undefined) {
+                            wordWidth = ctx.measureText(word).width;
+                            fontCache.set(word, wordWidth);
+                        }
+                        if (lineWidth + wordWidth > maxWidth) {
+                            if (wrap === __1.TextWrap['erase-word'])
+                                break;
+                            if (wrap !== __1.TextWrap.smart || wordWidth < maxWidth) {
+                                lines.push([]);
+                                lineWidth = 0;
+                                continue;
+                            }
+                            if (lines[lines.length - 1].length) {
+                                lines.push([]);
+                                lineWidth = 0;
+                            }
+                            let line = '';
+                            let current = 0;
+                            for (const char of word) {
+                                let charWidth = charFontCache.get(char);
+                                if (charWidth === undefined) {
+                                    charWidth = ctx.measureText(char).width;
+                                    charFontCache.set(char, charWidth);
+                                }
+                                if (lineWidth + current + charWidth > maxWidth) {
+                                    lines[lines.length - 1].push({ item: line, w: current });
+                                    lines.push([]);
+                                    line = char;
+                                    current = charWidth;
+                                    lineWidth = 0;
+                                    continue;
+                                }
+                                line += char;
+                                current += charWidth;
+                            }
+                            lines[lines.length - 1].push({ item: line, w: current });
+                            lineWidth = current;
+                            continue;
+                        }
+                        lines[lines.length - 1].push({ item: word, w: wordWidth });
+                        lineWidth += wordWidth;
+                    }
+                }
+            }
+            else {
+                if (wrap !== undefined && maxWidth && (lineWidth + imgsize) > maxWidth && lineWidth) {
+                    lines.push([]);
+                    lineWidth = 0;
+                }
+                lines[lines.length - 1].push({ item: span, w: imgsize });
+                lineWidth += imgsize;
+            }
+        }
+        const baseline = ctx.textBaseline, imgyoffset = baseline === 'top' ? fontsize * 0.25
+            : baseline === 'middle' ? imgsize * 0.5
+                : fontsize;
+        let align = ctx.textAlign;
+        ctx.textAlign = 'left';
+        let cy = y;
+        for (const line of lines) {
+            let linewidth = 0;
+            for (let i = 0; i < line.length; i++) {
+                linewidth += line[i].w;
+            }
+            let cx = align === 'center' ? x - linewidth / 2
+                : (align === 'right' || align === 'end') ? x - linewidth
+                    : x;
+            for (const { item, w } of line) {
+                if (typeof item === 'string')
+                    (ctx[func])(item, cx, cy);
+                else
+                    ctx.drawImage(item, cx, cy - imgyoffset, imgsize, imgsize);
+                cx += w;
+            }
+            cy += fontsize + lineOffset;
+            if (nlBegin && nlBegin !== align) {
+                x += ((nlBegin === 'right' || nlBegin === 'end' ? 1 : nlBegin === 'center' ? 0.5 : 0) -
+                    (align === 'right' || align === 'end' ? 1 : align === 'center' ? 0.5 : 0)) * linewidth;
+                align = nlBegin;
+                nlBegin = null;
+            }
+        }
+        ctx.textAlign = align;
     }
-    async drawImage(image, x, y, width, height, radius) {
+    /**
+     * Draws an image on the canvas.
+     * Works the same as ``SKRSContext2D.drawImage`` but also handles loading and radius for you.
+     * @param manager - An ``ImageManager`` instance.
+     * @param image - The image to draw.
+     * @param x - The X coordinate of the image's destination starting point.
+     * @param y - The Y coordinate of the image's destination starting point.
+     * @param width - The width of the drawn image. If not provided, defaults to ``srcWidth`` or the image's width.
+     * @param height - The height of the drawn image. If not provided, defaults to ``srcHeight`` or the image's height.
+     * @param radius - The radius of the drawn image's corners. If not provided, defaults to no rounding.
+     * @param srcX - The X coordinate of the image area's starting point.
+     * @param srcY - The Y coordinate of the image area's starting point.
+     * @param srcWidth - The width of the image area. If not provided, defaults to the ``width``.
+     * @param srcHeight - The height of the image area. If not provided, defaults to ``height``.
+     */
+    async drawImage(manager, image, x, y, width, height, radius, srcX, srcY, srcWidth, srcHeight) {
         const ctx = this.ctx;
-        image = await (0, canvas_1.loadImage)(image);
-        width ??= image.width;
-        height ??= image.height;
-        if (this.customProperties.rectAlign)
-            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
-        if (this.customProperties.rectBaseline)
-            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
+        if (!(image instanceof canvas_1.Image))
+            image = manager ? await manager.load(image)
+                : await (0, canvas_1.loadImage)(image);
+        width ??= srcWidth ?? image.width;
+        height ??= srcHeight ?? image.height;
+        [x, y] = this.align(x, y, width, height);
+        const args = [x, y, width, height];
+        if (typeof srcX === 'number') // @ts-ignore
+            args.unshift(srcX, srcY, srcWidth ?? width, srcHeight ?? height);
         if (!radius)
-            return ctx.drawImage(image, x, y, width, height);
+            return ctx.drawImage(image, ...args);
         ctx.save();
         ctx.beginPath();
         ctx.roundRect(x, y, width, height, radius);
         ctx.clip();
-        ctx.drawImage(image, x, y, width, height);
+        ctx.drawImage(image, ...args);
         ctx.restore();
     }
+    /**
+     * A helper function that draws a progress bar on the canvas.
+     * @param x The X coordinate of the progress bar.
+     * @param y The Y coordinate of the progress bar.
+     * @param width The width of the progress bar.
+     * @param height The height of the progress bar.
+     * @param progress The progress value between 0 and 100.
+     * @param config The configuration options for the progress bar.
+     */
     drawProgressBar(x, y, width, height, progress, config = {}) {
         const ctx = this.ctx;
         progress = Math.min(progress || 0, 100) / 100;
-        const options = {
-            style: config?.style ?? '#FFFFFF',
-            background: {
-                enabled: config?.background?.enabled ?? true,
-                style: config?.background?.style ?? '#000000',
-                radius: config?.background?.radius,
-                type: config?.background?.type ?? 'fill',
-                padding: config?.background?.padding ?? 0
-            },
-            type: config?.type ?? 'fill',
-            radius: config?.radius,
-            direction: config?.direction ?? 'horizontal',
-            clip: config?.clip,
-            left: config?.left
-        };
-        if (this.customProperties.rectAlign)
-            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
-        if (this.customProperties.rectBaseline)
-            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
-        if (options.background.enabled) {
-            if (options.background.type !== 'clear') {
-                ctx.save();
-                ctx[`${options.background.type}Style`] = options.background.style;
-                ctx.beginPath();
-                ctx.roundRect(x, y, width, height, options.background.radius);
-                ctx[options.background.type]();
-                ctx.restore();
-            }
-            else
-                this.rect(__1.FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
+        [x, y] = this.align(x, y, width, height);
+        const { style = '#fff', type = 'fill', radius, direction = 'horizontal', clip = false, left, leftType = 'fill' } = config;
+        const background = config.background ?? {};
+        background.enabled ??= true;
+        background.style ??= '#fff';
+        if (background.enabled) {
+            ctx[background.type === 'fill' ? 'fillStyle' : 'strokeStyle'] = background.style; // @ts-ignore
+            this.rect(__1.FillOrStrokeOrClear[background.type ?? 'fill'], x, y, width, height, background.radius);
         }
-        if (options.background.padding) {
-            width = width - options.background.padding * 2;
-            height = height - options.background.padding * 2;
-            x = x + options.background.padding;
-            y = y + +options.background.padding;
+        if (background.padding) {
+            width -= background.padding * 2;
+            height -= background.padding * 2;
+            x += background.padding;
+            y += background.padding;
         }
-        const pwidth = Math.min(['horizontal', 'both'].includes(options.direction)
+        const dir = direction === 'both';
+        const pwidth = Math.min((!dir && direction === 'horizontal')
             ? width * progress : width, width);
-        const pheight = Math.min(['vertical', 'both'].includes(options.direction)
+        const pheight = Math.min((!dir && direction === 'vertical')
             ? height * progress : height, height);
-        if (options.type === 'clear')
-            return (this.rect(__1.FillOrStrokeOrClear.clear, x, y, pwidth, pheight, options.radius), [x, y, width, height, pwidth, pheight]);
-        ctx.save();
-        if (options.clip !== undefined) {
-            ctx.beginPath();
-            ctx.roundRect(x, y, width, height, options.clip);
-            ctx.clip();
-        }
-        if (options.left) {
-            ctx.fillStyle = options.left;
-            ctx.beginPath();
-            ctx.roundRect(x, y, width, height, options.radius);
-            ctx.fill();
-        }
-        ctx[`${options.type}Style`] = options.style;
-        ctx.beginPath();
-        ctx.roundRect(x, y, pwidth, pheight, options.radius);
-        ctx[options.type]();
-        ctx.restore();
-        return [x, y, width, height, pwidth, pheight];
-    }
-    drawPieChart(x, y, width, height, data, config = {}) {
-        const ctx = this.ctx;
-        const options = {
-            type: config.type ?? 'fill',
-            background: {
-                enabled: config.background?.enabled ?? true,
-                style: config.background?.style ?? '#000000',
-                radius: config.background?.radius,
-                type: config.background?.type ?? 'fill',
-                padding: config.background?.padding ?? 0
-            },
-            radius: config.radius ?? Math.min(width, height) / 2,
-        };
-        if (this.customProperties.rectAlign)
-            x = __1.CanvasUtil.calculateRectAlignOrBaseline(x, width, this.customProperties.rectAlign);
-        if (this.customProperties.rectBaseline)
-            y = __1.CanvasUtil.calculateRectAlignOrBaseline(y, height, this.customProperties.rectBaseline);
-        if (options.background.enabled) {
-            if (options.background.type !== 'clear') {
-                ctx.save();
-                ctx[`${options.background.type}Style`] = options.background.style;
-                ctx.beginPath();
-                ctx.roundRect(x, y, width, height, options.background.radius);
-                ctx[options.background.type]();
-                ctx.restore();
-            }
-            else
-                this.rect(__1.FillOrStrokeOrClear.clear, x, y, width, height, options.background.radius);
-        }
-        if (options.background.padding) {
-            width = width - options.background.padding * 2;
-            height = height - options.background.padding * 2;
-            x = x + options.background.padding;
-            y = y + options.background.padding;
-        }
-        const total = data.reduce((acc, val) => acc + val.value, 0);
-        let angle = 0;
-        for (const seg of data) {
-            const angl = angle + (seg.value / total) * Math.PI * 2;
+        if (clip) {
             ctx.save();
             ctx.beginPath();
-            ctx.moveTo(x + width / 2, y + height / 2);
-            ctx.arc(x + width / 2, y + height / 2, Math.min(width, height) / 2, angle, angl);
-            ctx.arc(x + width / 2, y + height / 2, options.radius ?? 0, angl, angle, true);
-            ctx.lineTo(x + width / 2, y + height / 2);
+            ctx.roundRect(x, y, width, height, clip);
+            ctx.clip();
+        }
+        if (left) {
+            ctx[leftType === 'fill' ? 'fillStyle' : 'strokeStyle'] = left;
+            this.rect(__1.FillOrStrokeOrClear[leftType], x, y, width, height, radius);
+        }
+        if (type !== 'clear')
+            ctx[`${type}Style`] = style;
+        this.rect(__1.FillOrStrokeOrClear[type], x, y, pwidth, pheight, radius);
+        if (clip)
+            ctx.restore();
+        return [x, y, width, height, pwidth, pheight];
+    }
+    /**
+     * A helper function that draws a pie chart on the canvas.
+     * @param x The X coordinate of the chart.
+     * @param y The Y coordinate of the chart.
+     * @param width The width of the chart.
+     * @param height The height of the chart.
+     * @param data The data for the chart.
+     * @param config The configuration options for the chart.
+     */
+    drawPieChart(x, y, width, height, data, config = {}) {
+        const ctx = this.ctx;
+        const background = config.background ?? {};
+        background.enabled ??= true;
+        background.style ??= '#fff';
+        [x, y] = this.align(x, y, width, height);
+        if (background.enabled)
+            this.rect(// @ts-ignore
+            __1.FillOrStrokeOrClear[background.type ?? 'fill'], x, y, width, height, background.radius);
+        if (background.padding) {
+            width -= background.padding * 2;
+            height -= background.padding * 2;
+            x += background.padding;
+            y += background.padding;
+        }
+        const total = data.reduce((acc, val) => acc + val.value, 0);
+        if (total <= 0)
+            return;
+        const cx = x + width / 2, cy = y + height / 2, r = Math.min(width, height) / 2, sf = (Math.PI * 2) / total;
+        let prev = 0;
+        for (const seg of data) {
+            if (!seg.value)
+                continue;
+            const angle = seg.value * sf + prev;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, prev, angle);
+            if (r)
+                ctx.arc(cx, cy, r, angle, prev, true);
+            else
+                ctx.lineTo(cx, cy);
             ctx.closePath();
             ctx.fillStyle = seg.style;
             ctx.fill();
-            ctx.restore();
-            angle = angl;
+            prev = angle;
         }
     }
-    measureText(text, font) {
-        const ctx = this.ctx, oldcolor = ctx.fillStyle, oldfont = ctx.font;
-        ctx.fillStyle = '#000000';
-        ctx.font = font;
-        const metrics = ctx.measureText(text);
-        ctx.fillStyle = oldcolor;
-        ctx.font = oldfont;
-        return metrics;
-    }
+    /**
+     * Adds/sets/removes a filter of the canvas.
+     * @param method - The method AKA filter action to perform.
+     * @param filter - The filter to add, set, or remove.
+     * @param value - The value of the filter.
+     */
     filter(method, filter, value) {
         const ctx = this.ctx;
-        if (filter && typeof filter === 'string')
-            filter = __1.Filters[filter];
-        const PxOrPerc = filter === __1.Filters.grayscale || filter === __1.Filters.sepia ? '%' :
-            (filter === __1.Filters.blur ? 'px' : '');
-        if (method === __1.FilterMethod.add) {
-            if (!filter || !value)
-                throw new Error('No filter or value provided');
-            const result = __1.CanvasUtil.parseFilters((ctx.filter === 'none' ? '' : ctx.filter)
-                + `${__1.Filters[filter]}(${value + PxOrPerc})`);
-            ctx.filter = result?.map(x => x?.raw)?.join(' ')?.trim() || 'none';
+        const f = typeof filter === 'number' ? __1.Filters[filter] : filter, unit = filter === __1.Filters.grayscale || filter === __1.Filters.sepia ? '%' :
+            (filter === __1.Filters.blur ? 'px' : ''), fstr = ` ${f}(${value}${unit})`;
+        switch (method) {
+            case __1.FilterMethod.add: {
+                if (!f || !value)
+                    throw new Error(__1.ForgeCanvasError.NoFilterOrValue);
+                ctx.filter = ctx.filter !== 'none' ? ctx.filter += fstr : fstr;
+                return;
+            }
+            case __1.FilterMethod.set: {
+                if (!f || !value)
+                    throw new Error(__1.ForgeCanvasError.NoFilterOrValue);
+                ctx.filter = fstr;
+                return;
+            }
+            case __1.FilterMethod.remove: {
+                if (!f)
+                    throw new Error(__1.ForgeCanvasError.NoFilter);
+                const filters = (0, __1.parseFilters)(ctx.filter).filter(x => x.filter !== f);
+                ctx.filter = filters.length ? filters.map(x => x.raw).join(' ') : 'none';
+                return;
+            }
+            case __1.FilterMethod.clear: {
+                ctx.filter = 'none';
+                return;
+            }
+            case __1.FilterMethod.get: return ctx.filter;
+            case __1.FilterMethod.json: return (0, __1.parseFilters)(ctx.filter);
+            case __1.FilterMethod.setRaw: {
+                if (!value)
+                    throw new Error(__1.ForgeCanvasError.NoFilterOrValue);
+                ctx.filter = value;
+                return;
+            }
         }
-        else if (method === __1.FilterMethod.set) {
-            if (!filter || !value)
-                throw new Error('No filter or value provided');
-            ctx.filter = `${__1.Filters[filter]}(${value + PxOrPerc})`;
-        }
-        else if (method === __1.FilterMethod.remove) {
-            if (!filter)
-                throw new Error('No filter provided');
-            const filters = __1.CanvasUtil.parseFilters(ctx.filter);
-            const index = filters.findIndex((obj) => obj?.filter === __1.Filters[filter]);
-            if (index !== -1)
-                filters.splice(index, 1);
-            ctx.filter = filters.length > 0 ? filters?.map(x => x?.raw)?.join(' ')?.trim() : 'none';
-        }
-        else if (method === __1.FilterMethod.clear)
-            ctx.filter = 'none';
-        else if (method === __1.FilterMethod.get)
-            return ctx.filter;
-        else if (method === __1.FilterMethod.json)
-            return __1.CanvasUtil.parseFilters(ctx.filter);
-        return undefined;
     }
+    /**
+     * Sets the canvas rotation angle.
+     * @param angle The angle in degrees.
+     */
     rotate(angle) {
         const ctx = this.ctx;
-        const centerX = ctx.canvas.width / 2;
-        const centerY = ctx.canvas.height / 2;
+        const centerX = this.inner.width / 2;
+        const centerY = this.inner.height / 2;
         ctx.translate(centerX, centerY);
         ctx.rotate((angle * Math.PI) / 180);
         ctx.translate(-centerX, -centerY);
     }
-    trim() {
-        let ctx = this.ctx, canvas = ctx.canvas, pixels = ctx.getImageData(0, 0, canvas.width, canvas.height), l = pixels.data.length, i, bound = {
-            top: canvas.height,
-            left: canvas.width,
-            right: 0,
-            bottom: 0
-        }, x, y;
-        for (i = 0; i < l; i += 4) {
-            if (pixels.data[i + 3] === 0)
-                continue;
-            x = (i / 4) % canvas.width;
-            y = Math.floor((i / 4) / canvas.width);
-            if (x < bound.left)
-                bound.left = x;
-            if (y < bound.top)
-                bound.top = y;
-            if (y > bound.bottom)
-                bound.bottom = y;
-            if (x > bound.right)
-                bound.right = x;
+    /**
+     * Trims the canvas by resizing the canvas only for the visible area.
+     */
+    trim(tTop = true, tLeft = true, tRight = true, tBottom = true) {
+        if (!tTop && !tLeft && !tRight && !tBottom)
+            return;
+        const { width, height } = this.inner, ctx = this.ctx, data = new Uint32Array(this.inner.data().buffer);
+        let top = 0, bottom = height - 1, left = 0, right = width - 1;
+        if (tTop) {
+            while (top < height && CanvasBuilder.checkRow(data, top, width))
+                top++;
+            if (top > bottom)
+                return;
         }
-        const height = bound.bottom - bound.top + 1;
-        const width = bound.right - bound.left + 1;
-        const trimmed = ctx.getImageData(bound.left, bound.top, width, height);
-        canvas.width = width;
-        canvas.height = height;
+        if (tBottom)
+            while (bottom > top && CanvasBuilder.checkRow(data, bottom, width))
+                bottom--;
+        if (tLeft)
+            while (left < width && CanvasBuilder.checkColumn(data, left, top, bottom, width))
+                left++;
+        if (tRight)
+            while (right > left && CanvasBuilder.checkColumn(data, right, top, bottom, width))
+                right--;
+        right -= left - 1;
+        bottom -= top - 1;
+        if (right === width && bottom === height)
+            return;
+        const trimmed = ctx.getImageData(left, top, right, bottom);
+        this.inner.width = right;
+        this.inner.height = bottom;
         ctx.putImageData(trimmed, 0, 0);
     }
+    static checkRow(data, y, width) {
+        const start = y * width, end = start + width;
+        for (let i = start; i < end; i++)
+            if (data[i])
+                return false;
+        return true;
+    }
+    static checkColumn(data, x, top, bottom, width) {
+        let i = top * width + x;
+        const end = bottom * width + x;
+        while (i <= end) {
+            if (data[i])
+                return false;
+            i += width;
+        }
+        return true;
+    }
+    /** Returns an array of pixels at a rectangle */
     getPixels(x, y, width, height, t) {
         const ctx = this.ctx;
-        width ??= ctx.canvas.width;
-        height ??= ctx.canvas.height;
+        width ??= this.inner.width;
+        height ??= this.inner.height;
         const data = ctx.getImageData(x, y, width, height).data;
         if (t === __1.ColorDataType.Rgba)
             return Array.from(data);
         return (0, gifsx_1.rgbaToHex)(Uint8Array.from(data), false, true);
     }
+    /** Returns an array of pixels at a rectangle */
     setPixels(x, y, width, height, colors, t) {
         const ctx = this.ctx;
-        width ??= ctx.canvas.width;
-        height ??= ctx.canvas.height;
+        width ??= this.inner.width;
+        height ??= this.inner.height;
         const data = ctx.createImageData(width, height);
         if (t !== __1.ColorDataType.Rgba)
             data.data.set(Uint8ClampedArray.from((0, gifsx_1.hexToRgba)(colors)));
@@ -317,18 +504,33 @@ class CanvasBuilder {
             data.data.set(Uint8ClampedArray.from(colors));
         ctx.putImageData(data, x, y);
     }
+    /** Resizes the canvas */
     resize(width, height) {
-        const ctx = this.ctx, data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.canvas.width = width;
-        ctx.canvas.height = height;
+        const ctx = this.ctx, canvas = this.inner, data = ctx.getImageData(0, 0, width, height);
+        canvas.width = width;
+        canvas.height = height;
         ctx.putImageData(data, 0, 0);
     }
-    dataUrl(mime) {
-        return this.ctx.canvas.toDataURL(mime ?? 'image/png');
+    /** Calculates the alignment coordinates */
+    align(x, y, width, height) {
+        const { rectAlign, rectBaseline } = this.customProperties;
+        return [
+            rectAlign === __1.RectAlign.center ? x - width / 2 :
+                rectAlign === __1.RectAlign.left ? x - width : x,
+            rectBaseline === __1.RectBaseline.center ? y - height / 2 :
+                rectBaseline === __1.RectBaseline.top ? y - height : y
+        ];
     }
-    buffer(mime) {
-        // @ts-ignore
-        return this.ctx.canvas.toBuffer(mime ?? 'image/png');
+    async dataUrl(format) {
+        return this.inner.toDataURLAsync('image/' + (typeof format === 'number' ? __1.ImageFormat[format] : format) ?? 'png');
+    }
+    buffer(format) {
+        return this.inner.toBuffer('image/' + (typeof format === 'number' ? __1.ImageFormat[format] : format) ?? 'png');
+    }
+    async encode(format) {
+        return this.inner.encode((typeof format === 'number' ? __1.ImageFormat[format] : format));
     }
 }
 exports.CanvasBuilder = CanvasBuilder;
+exports.charWidthCache = new Map();
+exports.wordWidthCache = new Map();

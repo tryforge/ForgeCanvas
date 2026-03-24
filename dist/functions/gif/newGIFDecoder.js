@@ -1,4 +1,8 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const gifsx_1 = require("@gifsx/gifsx");
@@ -8,36 +12,36 @@ const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$newGIFDecoder',
     aliases: ['$createGIFDecoder', '$createDecoder', '$GIFDecoder', '$newDecoder'],
-    description: 'Creates a new GIF Decoder.',
+    description: 'Creates a new GIF Decoder',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the new GIF Decoder.',
+            description: 'Name of the new GIF Decoder',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'path',
-            description: 'Path to the GIF file.',
+            description: 'Path to the GIF file',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'options',
-            description: 'Options for the GIF Decoder.',
+            description: 'Options for the GIF Decoder',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
         }
     ],
     async execute(ctx, [name, path, options]) {
-        if (!ctx.gifManager || !(ctx.gifManager instanceof __1.GIFManager))
-            ctx.gifManager = new __1.GIFManager();
+        const manager = ctx.gifManager instanceof __1.GIFManager ?
+            ctx.gifManager : ctx.gifManager = new __1.GIFManager();
         let gif;
         if (path.startsWith('http://') || path.startsWith('https://')) {
             const response = await (0, undici_1.fetch)(path);
@@ -46,14 +50,14 @@ exports.default = new forgescript_1.NativeFunction({
             gif = await response.arrayBuffer();
         }
         else if (path.startsWith('encoder://')) {
-            const encoder = ctx.gifManager.getEncoder(path.slice(10));
+            const encoder = manager.getEncoder(path.slice(10));
             if (!encoder)
-                return this.customError(__1.FCError.NoEncoder);
+                return this.customError(__1.ForgeCanvasError.NoEncoder);
             gif = encoder.getBuffer();
         }
         else
             gif = await (0, promises_1.readFile)(path, null);
-        ctx.gifManager.setDecoder(name, new gifsx_1.Decoder(Buffer.from(gif), options ? ctx.gifManager.getDecodeOptions(options) : undefined));
+        manager.setDecoder(name, new gifsx_1.Decoder(new Uint8Array(gif), options ? manager.getDecodeOptions(options) : undefined));
         return this.success();
     }
 });

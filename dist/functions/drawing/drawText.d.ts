@@ -1,5 +1,5 @@
-import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FillOrStroke } from '../..';
+import { ArgType, NativeFunction } from '@tryforge/forgescript';
+import { FillOrStroke, TextAlign, TextWrap } from '../..';
 declare const _default: NativeFunction<[{
     name: string;
     description: string;
@@ -23,7 +23,6 @@ declare const _default: NativeFunction<[{
     name: string;
     description: string;
     type: ArgType.String;
-    check: (i: string) => boolean;
     required: true;
     rest: false;
 }, {
@@ -59,7 +58,8 @@ declare const _default: NativeFunction<[{
 }, {
     name: string;
     description: string;
-    type: ArgType.Boolean;
+    type: ArgType.Enum;
+    enum: typeof TextWrap;
     required: false;
     rest: false;
 }, {
@@ -68,5 +68,20 @@ declare const _default: NativeFunction<[{
     type: ArgType.Number;
     required: false;
     rest: false;
+}, {
+    name: string;
+    description: string;
+    type: ArgType.Enum;
+    enum: typeof TextAlign;
+    required: false;
+    rest: false;
+    version: string;
+}, {
+    name: string;
+    description: string;
+    type: ArgType.Boolean;
+    required: false;
+    rest: false;
+    version: string;
 }], true>;
 export default _default;

@@ -1,35 +1,38 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError } from '../../classes';
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$shadowOptions',
     aliases: ['$shadowConfig'],
-    description: 'Sets or returns the shadow options in a canvas.',
+    description: 'Sets or returns the shadow options in a canvas',
     version: '1.1.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'options',
-            description: 'The options. (color, blur, offsetX, offsetY)',
+            description: 'The options (color, blur, offsetX, offsetY)',
             type: ArgType.Json,
             required: true,
             rest: false
         }
     ],
     execute (ctx, [name, options]) {
-        const canvas = (name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent)?.ctx;
+        const canvas = ctx.canvasManager?.getOrCurrent(name)?.ctx;
 
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
         if (typeof options === 'string') options = JSON.parse(options);
 
         const shadowOptions: Record<string, 'shadowColor' | 'shadowBlur' | 'shadowOffsetX' | 'shadowOffsetY'> = {

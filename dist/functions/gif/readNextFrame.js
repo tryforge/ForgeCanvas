@@ -1,24 +1,28 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const classes_1 = require("../../classes");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$readNextFrame',
-    description: 'Reads and saves the next frame (including the buffer) of the GIF Decoder into an env.',
+    description: 'Reads and saves the next frame (including the buffer) of the GIF Decoder into an env',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the Decoder.',
+            description: 'Name of the Decoder',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'name',
-            description: 'Name of the env to save the frame info.',
+            description: 'Name of the env to save the frame info',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
@@ -27,7 +31,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, f]) {
         const gif = ctx.gifManager?.getDecoder(name);
         if (!gif)
-            return this.customError(classes_1.FCError.NoDecoder);
+            return this.customError(__1.ForgeCanvasError.NoDecoder);
         const frame = gif.readNextFrame();
         if (frame) {
             ctx.gifManager?.setFrame(f, frame);

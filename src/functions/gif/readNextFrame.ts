@@ -1,23 +1,28 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError } from '../../classes';
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$readNextFrame',
-    description: 'Reads and saves the next frame (including the buffer) of the GIF Decoder into an env.',
+    description: 'Reads and saves the next frame (including the buffer) of the GIF Decoder into an env',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the Decoder.',
+            description: 'Name of the Decoder',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'name',
-            description: 'Name of the env to save the frame info.',
+            description: 'Name of the env to save the frame info',
             type: ArgType.String,
             required: true,
             rest: false
@@ -25,7 +30,7 @@ export default new NativeFunction({
     ],
     execute (ctx, [name, f]) {
         const gif = ctx.gifManager?.getDecoder(name);
-        if (!gif) return this.customError(FCError.NoDecoder);
+        if (!gif) return this.customError(ForgeCanvasError.NoDecoder);
 
         const frame = gif.readNextFrame();
         if (frame) {

@@ -1,3 +1,8 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
 import { indexedToRgba } from '@gifsx/gifsx';
 
@@ -10,21 +15,21 @@ export default new NativeFunction({
     args: [
         {
             name: 'palette',
-            description: 'The palette to use for the conversion.',
+            description: 'The palette to use for the conversion',
             type: ArgType.Json,
             required: true,
             rest: false
         },
         {
             name: 'transparent',
-            description: 'The index of the transparent color in the palette.',
+            description: 'The index of the transparent color in the palette',
             type: ArgType.Number,
             required: false,
             rest: false
         },
         {
             name: 'pixels',
-            description: 'The pixels to convert into RGBA.',
+            description: 'The pixels to convert into RGBA',
             type: ArgType.Number,
             check: (x: number) => x >= 0 && x <= 255,
             required: true,

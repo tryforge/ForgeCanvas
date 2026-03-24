@@ -1,24 +1,29 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType, Return } from '@tryforge/forgescript';
-import { CanvasUtil, FCError, FillRule } from '../..';
+import { ForgeCanvasError, FillRule, resolveStyle } from '../..';
 
 export default new NativeFunction({
     name: '$fill',
     aliases: ['$pathFill', '$fillPath'],
-    description: 'Fills the current path.',
+    description: 'Fills the current path',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'style',
-            description: 'The style. (color/gradient/pattern)',
+            description: 'The style (color/gradient/pattern)',
             type: ArgType.String,
             required: true,
             rest: false
@@ -33,13 +38,11 @@ export default new NativeFunction({
         }
     ],
     async execute (ctx, [name, style, rule]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
         const oldstyle = canvas.ctx.fillStyle,
-              s = await CanvasUtil.resolveStyle(this, ctx, canvas, style);
+              s = await resolveStyle(this, ctx, canvas, style);
         if (s instanceof Return) return s;
 
         canvas.ctx.fillStyle = s;

@@ -1,26 +1,30 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const discord_js_1 = require("discord.js");
-const classes_1 = require("../../classes");
+const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$attachGIF',
     aliases: ['$sendGIF', '$renderGIF', '$gifRender'],
-    description: 'Attaches the GIF.',
+    description: 'Attaches the GIF',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the GIF.',
+            description: 'Name of the GIF',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'filename',
-            description: 'The name of the GIF to be attached as.',
+            description: 'The name of the GIF to be attached as',
             type: forgescript_1.ArgType.String,
             required: false,
             rest: false
@@ -30,7 +34,7 @@ exports.default = new forgescript_1.NativeFunction({
         const gif = ctx.gifManager?.getEncoder(name);
         filename = `${filename ?? name}.gif`;
         if (!gif)
-            return this.customError(classes_1.FCError.NoEncoder);
+            return this.customError(__1.ForgeCanvasError.NoEncoder);
         ctx.container.files.push(new discord_js_1.AttachmentBuilder(Buffer.from(gif.getBuffer()), { name: filename }));
         return this.success();
     }

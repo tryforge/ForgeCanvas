@@ -1,5 +1,10 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError } from '../../classes';
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$setEncoderLoops',
@@ -10,31 +15,29 @@ export default new NativeFunction({
         '$setLoops',
         '$setRepeat'
     ],
-    description: 'Sets the number of loops for the GIF Encoder.',
+    description: 'Sets the number of loops for the GIF Encoder',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the GIF.',
+            description: 'Name of the GIF',
             type: ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'loops',
-            description: 'Number of loops.',
+            description: 'Number of loops',
             type: ArgType.Number,
             required: true,
             rest: false
         }
     ],
     execute (ctx, [name, loops]) {
-        const gif = name
-            ? ctx.gifManager?.getEncoder(name)
-            : ctx.gifManager?.lastCurrentEncoder;
-        if (!gif) return this.customError(FCError.NoEncoder);
+        const gif = ctx.gifManager?.getEncoderOrCurrent(name);
+        if (!gif) return this.customError(ForgeCanvasError.NoEncoder);
 
         gif.setRepeat(loops);
         return this.success();

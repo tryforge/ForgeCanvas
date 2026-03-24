@@ -1,24 +1,26 @@
 {
   "name": "@tryforge/forge.canvas",
-  "version": "1.2.3",
-  "description": "A ForgeScript extension that allows you to create and edit images with ease.",
+  "version": "1.3.0",
+  "description": "A ForgeScript extension allowing you to create and edit images with ease.",
   "main": "dist/index.js",
-  "scripts": {
-    "docgen": "tsc && typedoc src/index.ts && node dist/docgen",
-    "test": "tsc && echo Done Compiling! && node dist/__tests__/index.js"
+  "author": "lordex",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/tryforge/ForgeCanvas/issues"
   },
+  "homepage": "https://github.com/tryforge/ForgeCanvas#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tryforge/ForgeCanvas.git"
   },
   "keywords": [
     "forgescript",
+    "botforge",
     "forge",
     "canvas",
     "image",
     "png",
     "jpeg",
-    "botforge",
     "gif"
   ],
   "author": "lordex",
@@ -35,6 +37,16 @@
   },
   "dependencies": {
     "@gifsx/gifsx": "^1.0.15",
-    "@napi-rs/canvas": "^0.1.67"
+    "@napi-rs/canvas": "0.1.96"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.8.0",
+    "@tryforge/forgescript": "^2.6.0",
+    "@types/node": "^25.5.0",
+    "typedoc": "^0.28.17",
+    "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "@tryforge/forgescript": "^2"
   }
 }

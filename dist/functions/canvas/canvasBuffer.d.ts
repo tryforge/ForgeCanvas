@@ -9,6 +9,13 @@ declare const _default: NativeFunction<[{
 }, {
     name: string;
     description: string;
+    type: ArgType.String;
+    required: true;
+    rest: false;
+    version: string;
+}, {
+    name: string;
+    description: string;
     type: ArgType.Enum;
     enum: typeof ImageFormat;
     required: false;

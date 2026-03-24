@@ -1,24 +1,29 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError, WidthOrHeight } from '../..';
+import { ForgeCanvasError, WidthOrHeight } from '../..';
 
 export default new NativeFunction({
     name: '$GIFDecoderSize',
     aliases: ['$decoderSize'],
-    description: 'Returns the size of the GIF Decoder.',
+    description: 'Returns the size of the GIF Decoder',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'gif',
-            description: 'Name of the Decoder.',
+            description: 'Name of the Decoder',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'property',
-            description: 'The size property to return.',
+            description: 'The size property to return',
             type: ArgType.Enum,
             enum: WidthOrHeight,
             required: false,
@@ -27,7 +32,7 @@ export default new NativeFunction({
     ],
     execute (ctx, [name, property]) {
         const gif = ctx.gifManager?.getDecoder(name);
-        if (!gif) return this.customError(FCError.NoDecoder);
+        if (!gif) return this.customError(ForgeCanvasError.NoDecoder);
 
         return this.success(property !== null // @ts-ignore
             ? gif[WidthOrHeight[

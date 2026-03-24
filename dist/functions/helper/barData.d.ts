@@ -2,7 +2,7 @@ import { NativeFunction, ArgType } from '@tryforge/forgescript';
 declare const _default: NativeFunction<[{
     name: string;
     description: string;
-    type: ArgType.String;
+    type: ArgType.Number;
     required: true;
     rest: false;
 }, {

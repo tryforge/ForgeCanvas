@@ -1,69 +1,72 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { NativeFunction, ArgType } from '@tryforge/forgescript';
-import { FCError } from '../../classes';
+import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$bezierCurveTo',
     aliases: ['$bezierCurve', '$bezierLineTo'],
-    description: 'Draws a cubic Bézier curve in the current path.',
+    description: 'Draws a cubic Bézier curve in the current path',
     version: '1.0.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'canvas',
-            description: 'Name of the canvas.',
+            description: 'Name of the canvas',
             type: ArgType.String,
             required: false,
             rest: false
         },
         {
             name: 'cx1',
-            description: 'The X coordinate of the first control point.',
+            description: 'The X coordinate of the first control point',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'cy1',
-            description: 'The Y coordinate of the first control point.',
+            description: 'The Y coordinate of the first control point',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'cx2',
-            description: 'The X coordinate of the second control point.',
+            description: 'The X coordinate of the second control point',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'cy2',
-            description: 'The Y coordinate of the second control point.',
+            description: 'The Y coordinate of the second control point',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'x',
-            description: 'The X coordinate of the end point.',
+            description: 'The X coordinate of the end point',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'y',
-            description: 'The Y coordinate of the end point.',
+            description: 'The Y coordinate of the end point',
             type: ArgType.Number,
             required: true,
             rest: false
         }
     ],
     execute (ctx, [name, ...args]) {
-        const canvas = name
-            ? ctx.canvasManager?.get(name)
-            : ctx.canvasManager?.lastCurrent;
-        if (!canvas) return this.customError(FCError.NoCanvas);
+        const canvas = ctx.canvasManager?.getOrCurrent(name);
+        if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
         canvas.ctx.bezierCurveTo(...args);
         return this.success();

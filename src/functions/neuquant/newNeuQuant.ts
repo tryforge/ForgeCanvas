@@ -1,39 +1,45 @@
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
+
 import { ArgType, NativeFunction } from '@tryforge/forgescript';
 import { NeuQuant } from '@gifsx/gifsx';
+
 import { NeuQuantManager } from '../..';
 
 export default new NativeFunction({
     name: '$newNeuQuant',
     aliases: ['$createNeuQuant', '$NeuQuant'],
-    description: 'Creates a new NeuQuant instance.',
+    description: 'Creates a new NeuQuant instance',
     version: '1.2.1',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'name',
-            description: 'Name of the new NeuQuant instance.',
+            description: 'Name of the new NeuQuant instance',
             type: ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'sample',
-            description: 'Sample factor.',
+            description: 'Sample factor',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'maxColors',
-            description: 'Maximum number of colors.',
+            description: 'Maximum number of colors',
             type: ArgType.Number,
             required: true,
             rest: false
         },
         {
             name: 'pixels',
-            description: 'The pixels.',
+            description: 'The pixels',
             type: ArgType.Json,
             required: true,
             rest: false

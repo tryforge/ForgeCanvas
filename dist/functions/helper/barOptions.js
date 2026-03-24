@@ -1,17 +1,21 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$barOptions',
-    description: 'Sets options for progress bars.',
+    description: 'Sets options for progress bars',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'options',
-            description: 'Options (type:normal/ratio/pie, draw-type:fill/stroke/clear/none, background-style:color/gradient/pattern, background-radius:number, background-padding:number, background-type:fill/stroke/clear/none, radius:number, direction:horizontal/vertical, clip-radius:number, left:number).',
+            description: 'Options (type:normal/ratio/pie, draw-type:fill/stroke/clear/none, background-style:color/gradient/pattern, background-radius:number, background-padding:number, background-type:fill/stroke/clear/none, radius:number, direction:horizontal/vertical, clip-radius:number, left:number)',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: true
@@ -28,13 +32,13 @@ exports.default = new forgescript_1.NativeFunction({
             switch (option) {
                 case 'type':
                     if (!['normal', 'pie', 'none'].includes(value[0]))
-                        return this.customError(__1.FCError.InvalidBarType);
+                        return this.customError(__1.ForgeCanvasError.InvalidBarType);
                     barOptions.type = value[0] !== 'none'
                         ? value[0] : undefined;
                     break;
                 case 'draw-type':
                     if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
-                        return this.customError(__1.FCError.InvalidRectType);
+                        return this.customError(__1.ForgeCanvasError.InvalidRectType);
                     barOptions['draw-type'] = value[0] !== 'none'
                         ? value[0] : undefined;
                     break;
@@ -55,7 +59,7 @@ exports.default = new forgescript_1.NativeFunction({
                     break;
                 case 'background-type':
                     if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
-                        return this.customError(__1.FCError.InvalidRectType);
+                        return this.customError(__1.ForgeCanvasError.InvalidRectType);
                     barOptions['background-type'] = value[0] !== 'none'
                         ? value[0] : undefined;
                     break;
@@ -68,7 +72,7 @@ exports.default = new forgescript_1.NativeFunction({
                 }
                 case 'direction':
                     if (!['horizontal', 'vertical', 'none'].includes(value[0]))
-                        return this.customError(__1.FCError.InvalidBarDirection);
+                        return this.customError(__1.ForgeCanvasError.InvalidBarDirection);
                     barOptions.direction = value[0] !== 'none'
                         ? value[0] : undefined;
                     break;
@@ -82,6 +86,12 @@ exports.default = new forgescript_1.NativeFunction({
                 case 'left':
                     barOptions.left = value[0] !== 'none'
                         ? value.join(':') : undefined;
+                    break;
+                case 'left-type':
+                    if (!['fill', 'stroke', 'clear', 'none'].includes(value[0]))
+                        return this.customError(__1.ForgeCanvasError.InvalidRectType);
+                    barOptions['left-type'] = value[0] !== 'none'
+                        ? value[0] : undefined;
                     break;
                 default: return this.customError(`Unknown bar option: ${option}`);
             }

@@ -1,25 +1,29 @@
 "use strict";
+/*
+* SPDX-License-Identifier: LGPL-3.0-or-later
+* Copyright © 2026 BotForge
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$frameOption',
     aliases: ['$frameProperty', '$gifFrameOption', '$frameProp', '$frameOpt'],
-    description: 'Sets or returns a GIF Frame option.',
+    description: 'Sets or returns a GIF Frame option',
     version: '1.2.0',
     brackets: true,
     unwrap: true,
     args: [
         {
             name: 'frame',
-            description: 'Name of the GIF Frame.',
+            description: 'Name of the GIF Frame',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
         },
         {
             name: 'option',
-            description: 'Option to get.',
+            description: 'Option to get',
             type: forgescript_1.ArgType.Enum,
             enum: __1.FrameOption,
             required: true,

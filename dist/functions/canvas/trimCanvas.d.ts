@@ -5,5 +5,33 @@ declare const _default: NativeFunction<[{
     type: ArgType.String;
     required: false;
     rest: false;
+}, {
+    name: string;
+    description: string;
+    type: ArgType.Boolean;
+    required: false;
+    rest: false;
+    version: string;
+}, {
+    name: string;
+    description: string;
+    type: ArgType.Boolean;
+    required: false;
+    rest: false;
+    version: string;
+}, {
+    name: string;
+    description: string;
+    type: ArgType.Boolean;
+    required: false;
+    rest: false;
+    version: string;
+}, {
+    name: string;
+    description: string;
+    type: ArgType.Boolean;
+    required: false;
+    rest: false;
+    version: string;
 }], true>;
 export default _default;
