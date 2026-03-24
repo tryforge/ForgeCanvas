@@ -23,14 +23,14 @@ export default new NativeFunction({
         },
         {
             name: 'type',
-            description: 'Type of seek',
+            description: 'Type of position used to seek',
             type: ArgType.Enum,
             enum: LottieSeekType,
             required: true,
             rest: false
         },
         {
-            name: 't',
+            name: 'position',
             description: 'The position/frame/time to seek to',
             type: ArgType.Number,
             required: true,

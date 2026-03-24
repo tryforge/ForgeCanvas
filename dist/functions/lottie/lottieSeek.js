@@ -23,14 +23,14 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'type',
-            description: 'Type of seek',
+            description: 'Type of position used to seek',
             type: forgescript_1.ArgType.Enum,
             enum: __1.LottieSeekType,
             required: true,
             rest: false
         },
         {
-            name: 't',
+            name: 'position',
             description: 'The position/frame/time to seek to',
             type: forgescript_1.ArgType.Number,
             required: true,

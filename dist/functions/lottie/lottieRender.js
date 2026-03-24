@@ -8,7 +8,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$lottieRender',
-    aliases: ['$drawLottie', '$lottieAnimationRender', '$drawLottieAnimation'],
+    aliases: ['$renderLottie', '$drawLottie', '$lottieAnimationRender', '$drawLottieAnimation'],
     description: 'Renders the current frame of a lottie animation on a canvas',
     version: '1.3.0',
     brackets: true,

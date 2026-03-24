@@ -8,7 +8,7 @@ import { ForgeCanvasError } from '../..';
 
 export default new NativeFunction({
     name: '$lottieRender',
-    aliases: ['$drawLottie', '$lottieAnimationRender', '$drawLottieAnimation'],
+    aliases: ['$renderLottie', '$drawLottie', '$lottieAnimationRender', '$drawLottieAnimation'],
     description: 'Renders the current frame of a lottie animation on a canvas',
     version: '1.3.0',
     brackets: true,
