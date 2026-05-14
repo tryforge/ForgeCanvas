@@ -88,7 +88,7 @@ export enum FilterMethod { add, set, remove, clear, get, json, setRaw }
 export enum Filters { none, blur, sepia, grayscale, brightness, contrast, invert, saturate, 'drop-shadow' }
 export enum TextBaseline { top, hanging, middle, alphabetic, ideographic, bottom }
 export enum TextAlign { start, right, center, left, end }
-export enum GradientType { linear, radial, conic }
+export const enum GradientType { linear, radial, conic }
 export enum FillRule { evenodd, nonzero }
 export enum LineJoinShape { round, bevel, miter }
 export enum MeasureTextProperty {

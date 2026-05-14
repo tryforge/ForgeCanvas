@@ -5,7 +5,6 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$imageBuffer',
     description: 'Stores the image\'s buffer which can be accessed with $env',
@@ -43,7 +42,7 @@ exports.default = new forgescript_1.NativeFunction({
         else
             image = await ctx.imageManager?.load(path);
         if (!image)
-            return this.customError(__1.ForgeCanvasError.NoImage);
+            return this.customError("No image with provided name found" /* ForgeCanvasError.NoImage */);
         ctx.setEnvironmentKey(vname, Buffer.from(image.src));
         return this.success();
     }

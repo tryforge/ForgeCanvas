@@ -51,7 +51,7 @@ exports.default = new forgescript_1.NativeFunction({
         if (!r?.success)
             return r;
         if (!name?.trim()?.length)
-            return this.customError(__1.ForgeCanvasError.EmptyName);
+            return this.customError("The name argument cannot be empty" /* ForgeCanvasError.EmptyName */);
         const previous = manager.current;
         manager.current = new __1.CanvasBuilder(w, h);
         const fields = this.data.fields;

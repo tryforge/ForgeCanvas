@@ -5,7 +5,6 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$NQlookup',
     description: 'Lookup pixel values for color at idx in the color map',
@@ -31,7 +30,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, idx]) {
         const nq = ctx.neuquantManager?.get(name);
         if (!nq)
-            return this.customError(__1.ForgeCanvasError.NoNeuQuant);
+            return this.customError("No NeuQuant Instance with provided name found" /* ForgeCanvasError.NoNeuQuant */);
         return this.success(nq.lookup(idx));
     }
 });

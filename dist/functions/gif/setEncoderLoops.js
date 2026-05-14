@@ -5,7 +5,6 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$setEncoderLoops',
     aliases: [
@@ -38,7 +37,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, loops]) {
         const gif = ctx.gifManager?.getEncoderOrCurrent(name);
         if (!gif)
-            return this.customError(__1.ForgeCanvasError.NoEncoder);
+            return this.customError("No GIF encoder with provided name found" /* ForgeCanvasError.NoEncoder */);
         gif.setRepeat(loops);
         return this.success();
     }

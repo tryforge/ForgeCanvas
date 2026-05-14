@@ -33,9 +33,9 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, baseline]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         return this.success(baseline !== null
-            ? (canvas.customProperties.rectBaseline = (typeof baseline === 'number' ? __1.RectBaseline[baseline] : baseline), undefined) : typeof canvas.customProperties?.rectBaseline === 'number'
+            ? (canvas.customProperties.rectBaseline = (typeof baseline === 'string' ? __1.RectBaseline[baseline] : baseline), undefined) : typeof canvas.customProperties?.rectBaseline === 'number'
             ? __1.RectBaseline[canvas.customProperties.rectBaseline]
             : canvas.customProperties.rectBaseline);
     }

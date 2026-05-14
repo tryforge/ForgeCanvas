@@ -32,7 +32,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, baseline]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name)?.ctx;
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         if (baseline !== null && baseline !== undefined) {
             canvas.textBaseline = (typeof baseline === 'number' ? __1.TextBaseline[baseline] : baseline);
             return this.success();

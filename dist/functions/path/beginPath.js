@@ -5,7 +5,6 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$beginPath',
     aliases: ['$startPath', '$pathStart'],
@@ -25,7 +24,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         canvas.ctx.beginPath();
         return this.success();
     }

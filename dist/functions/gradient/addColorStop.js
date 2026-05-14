@@ -38,12 +38,12 @@ exports.default = new forgescript_1.NativeFunction({
     ],
     execute(ctx, [name, offset, color]) {
         if (!(offset / 100 >= 0 && offset / 100 <= 1))
-            return this.customError(__1.ForgeCanvasError.InvalidOffset);
+            return this.customError("The offset must be between 0 and 100" /* ForgeCanvasError.InvalidOffset */);
         if (!(ctx.gradientManager instanceof __1.GradientManager))
             ctx.gradientManager = new __1.GradientManager();
         const gradient = ctx.gradientManager?.get(name);
         if (name && !gradient)
-            return this.customError(__1.ForgeCanvasError.NoGradient);
+            return this.customError("No gradient with provided name found" /* ForgeCanvasError.NoGradient */);
         if (gradient)
             gradient.addColorStop(offset, color);
         else

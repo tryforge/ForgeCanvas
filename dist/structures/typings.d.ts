@@ -137,7 +137,7 @@ export declare enum TextAlign {
     left = 3,
     end = 4
 }
-export declare enum GradientType {
+export declare const enum GradientType {
     linear = 0,
     radial = 1,
     conic = 2

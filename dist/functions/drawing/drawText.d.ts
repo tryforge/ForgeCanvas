@@ -83,5 +83,13 @@ declare const _default: NativeFunction<[{
     required: false;
     rest: false;
     version: string;
+}, {
+    name: string;
+    description: string;
+    type: ArgType.String;
+    required: false;
+    rest: false;
+    pointer: number;
+    version: string;
 }], true>;
 export default _default;

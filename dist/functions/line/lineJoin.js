@@ -32,7 +32,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, shape]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name)?.ctx;
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         return this.success(shape
             ? (canvas.lineJoin = (typeof shape === 'number'
                 ? __1.LineJoinShape[shape]

@@ -46,7 +46,7 @@ exports.default = new forgescript_1.NativeFunction({
     async execute(ctx, [name, frame, options, speed]) {
         const gif = ctx.gifManager?.getEncoderOrCurrent(name);
         if (!gif)
-            return this.customError(__1.ForgeCanvasError.NoEncoder);
+            return this.customError("No GIF encoder with provided name found" /* ForgeCanvasError.NoEncoder */);
         const f = await (0, __1.resolveFrame)(this, ctx, frame, speed);
         if (f instanceof forgescript_1.Return)
             return f;

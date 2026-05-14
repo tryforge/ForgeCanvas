@@ -33,7 +33,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, option]) {
         const lottie = ctx.lottieManager?.get(name);
         if (!lottie)
-            return this.customError(__1.ForgeCanvasError.NoLottie);
+            return this.customError("No Lottie animation with provided name found" /* ForgeCanvasError.NoLottie */);
         // @ts-expect-error
         return this.success(lottie[typeof option === 'number' ? __1.LottieOption[option] : option]);
     }

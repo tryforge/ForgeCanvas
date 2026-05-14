@@ -5,7 +5,6 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$imageSmoothing',
     description: 'Sets or returns the image smoothing in a canvas',
@@ -32,7 +31,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, enabled]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name)?.ctx;
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         return this.success(enabled !== null && enabled !== undefined
             ? (canvas.imageSmoothingEnabled = enabled, undefined)
             : canvas.imageSmoothingEnabled);

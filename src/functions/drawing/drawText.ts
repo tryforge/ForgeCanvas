@@ -38,7 +38,7 @@ export default new NativeFunction({
         },
         {
             name: 'font',
-            description: 'The text font ({size}px {font name})',
+            description: 'The text font following the \`{size}px {font name}\` format',
             type: ArgType.String,
             required: true,
             rest: false
@@ -104,11 +104,20 @@ export default new NativeFunction({
         },
         {
             name: 'allowEmojis',
-            description: 'Indicates if custom emojis should be drawn; emojis get cached into preload://cache_emoji_{id}',
+            description: 'Indicates if custom emojis should be drawn; Emojis get cached into preload://cache_emoji_{id}',
             type: ArgType.Boolean,
             required: false,
             rest: false,
             version: '1.3.0'
+        },
+        {
+            name: 'break',
+            description: 'A custom end of a wrapped line; None by default',
+            type: ArgType.String,
+            required: false,
+            rest: false,
+            pointer: 9,
+            version: '1.3.1'
         }
     ],
     async execute (ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset, nlAlign, allowEmojis]) {

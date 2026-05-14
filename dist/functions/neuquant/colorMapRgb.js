@@ -5,7 +5,6 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$colorMapRgb',
     aliases: ['$NQcolorMapRgb'],
@@ -25,7 +24,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name]) {
         const nq = ctx.neuquantManager?.get(name);
         if (!nq)
-            return this.customError(__1.ForgeCanvasError.NoNeuQuant);
+            return this.customError("No NeuQuant Instance with provided name found" /* ForgeCanvasError.NoNeuQuant */);
         return this.success(nq.colorMapRgb());
     }
 });

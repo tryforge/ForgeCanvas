@@ -75,9 +75,9 @@ exports.default = new forgescript_1.NativeFunction({
     async execute(ctx, [name, t, style, x, y, width, height, radius]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         if (!style?.length && (t === __1.FillOrStrokeOrClear.fill || t === __1.FillOrStrokeOrClear.stroke))
-            return this.customError(__1.ForgeCanvasError.NoStyle);
+            return this.customError("No style provided" /* ForgeCanvasError.NoStyle */);
         const s = await (0, __1.resolveStyle)(this, ctx, canvas, style);
         if (s instanceof forgescript_1.Return)
             return s;

@@ -6,7 +6,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const discord_js_1 = require("discord.js");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$attachImage',
     aliases: ['$sendImage', '$renderImage', '$imageRender'],
@@ -38,7 +37,7 @@ exports.default = new forgescript_1.NativeFunction({
         }
         const img = manager?.get(name)?.src;
         if (!img || typeof img === 'string')
-            return this.customError(__1.ForgeCanvasError.NoImage);
+            return this.customError("No image with provided name found" /* ForgeCanvasError.NoImage */);
         ctx.container.files.push(new discord_js_1.AttachmentBuilder(Buffer.from(img), { name: filename ?? `${name}.png` }));
         return this.success();
     }
