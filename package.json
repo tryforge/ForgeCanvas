@@ -23,12 +23,17 @@
     "jpeg",
     "gif"
   ],
-  "scripts": {
-    "build": "swc src -d dist --strip-leading-paths",
-    "docgen": "typedoc src/index.ts && node dist/docgen",
-    "test": "npm run build && node --env-file=.env dist/__tests__/index.js",
-    "license": "node dist/@build/license.js",
-    "prepublish": "npm run license && tsc && npm run docgen"
+  "author": "lordex",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/tryforge/ForgeCanvas/issues"
+  },
+  "homepage": "https://github.com/tryforge/ForgeCanvas#readme",
+  "devDependencies": {
+    "@tryforge/forgescript": "^2.2.0",
+    "@types/node": "^22.13.5",
+    "typedoc": "^0.26.11",
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "@gifsx/gifsx": "^1.0.15",
