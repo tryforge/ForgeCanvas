@@ -8,7 +8,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$renderCanvasComponent',
-    aliases: ['$renderComponent'],
+    aliases: ['$renderComponent', '$drawComponent'],
     description: 'Renders a Canvas Component on the provided coordinates',
     version: '1.3.0',
     brackets: true,
