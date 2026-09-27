@@ -69,9 +69,9 @@ class GradientManager extends Manager {
     }
     set(name, a, ...options) {
         if (typeof a !== 'object')
-            this.map.set(name, a === __1.GradientType.radial
+            this.map.set(name, a === 1 /* GradientType.radial */
                 ? this.ctx.createRadialGradient(...options)
-                : a === __1.GradientType.conic
+                : a === 2 /* GradientType.conic */
                     ? this.ctx.createConicGradient(...options)
                     : this.ctx.createLinearGradient(...options));
         else

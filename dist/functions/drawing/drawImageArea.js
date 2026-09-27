@@ -97,7 +97,7 @@ exports.default = new forgescript_1.NativeFunction({
             ctx.imageManager : ctx.imageManager = new __1.ImageManager();
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         srcwidth = num(srcwidth);
         srcheight = num(srcheight);
         width = num(width);

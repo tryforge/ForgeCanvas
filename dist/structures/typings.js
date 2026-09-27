@@ -4,7 +4,7 @@
 * Copyright © 2026 BotForge
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LottieSeekType = exports.LottieOption = exports.DecoderOption = exports.FrameOption = exports.DisposalMethod = exports.ColorOutput = exports.ColorDataType = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.GradientType = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.WidthOrHeight = exports.TextWrap = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.ImageFormat = void 0;
+exports.LottieSeekType = exports.LottieOption = exports.DecoderOption = exports.FrameOption = exports.DisposalMethod = exports.ColorOutput = exports.ColorDataType = exports.FontVariantCaps = exports.CompositingOperation = exports.MeasureTextProperty = exports.LineJoinShape = exports.FillRule = exports.TextAlign = exports.TextBaseline = exports.Filters = exports.FilterMethod = exports.WidthOrHeight = exports.TextWrap = exports.FillOrStrokeOrClear = exports.FillOrStroke = exports.RectBaseline = exports.RectAlign = exports.ImageFormat = void 0;
 ;
 ;
 var ImageFormat;
@@ -91,12 +91,6 @@ var TextAlign;
     TextAlign[TextAlign["left"] = 3] = "left";
     TextAlign[TextAlign["end"] = 4] = "end";
 })(TextAlign || (exports.TextAlign = TextAlign = {}));
-var GradientType;
-(function (GradientType) {
-    GradientType[GradientType["linear"] = 0] = "linear";
-    GradientType[GradientType["radial"] = 1] = "radial";
-    GradientType[GradientType["conic"] = 2] = "conic";
-})(GradientType || (exports.GradientType = GradientType = {}));
 var FillRule;
 (function (FillRule) {
     FillRule[FillRule["evenodd"] = 0] = "evenodd";

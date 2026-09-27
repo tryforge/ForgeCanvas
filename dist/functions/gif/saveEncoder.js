@@ -6,7 +6,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
 const node_fs_1 = require("node:fs");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$saveEncoder',
     aliases: [
@@ -41,9 +40,9 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, path]) {
         const gif = ctx.gifManager?.getEncoderOrCurrent(name);
         if (!gif)
-            return this.customError(__1.ForgeCanvasError.NoEncoder);
+            return this.customError("No GIF encoder with provided name found" /* ForgeCanvasError.NoEncoder */);
         if (!path)
-            return this.customError(__1.ForgeCanvasError.NoPath);
+            return this.customError("No path provided" /* ForgeCanvasError.NoPath */);
         (0, node_fs_1.writeFileSync)(path, gif.getBuffer());
         return this.success();
     }

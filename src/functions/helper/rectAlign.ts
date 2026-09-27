@@ -37,7 +37,7 @@ export default new NativeFunction({
         return this.success(align !== null
             ? (
                 canvas.customProperties.rectAlign = (
-                    typeof align === 'number' ? RectAlign[align] : align
+                    typeof align === 'string' ? RectAlign[align] : align
                 ) as unknown as RectAlign, undefined
             ) : typeof canvas.customProperties?.rectAlign === 'number'
                 ? RectAlign[canvas.customProperties.rectAlign]

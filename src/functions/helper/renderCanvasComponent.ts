@@ -10,7 +10,7 @@ import { ForgeCanvasError, ForgeCanvas } from '../..';
 
 export default new NativeFunction({
     name: '$renderCanvasComponent',
-    aliases: ['$renderComponent'],
+    aliases: ['$renderComponent', '$drawComponent'],
     description: 'Renders a Canvas Component on the provided coordinates',
     version: '1.3.0',
     brackets: true,

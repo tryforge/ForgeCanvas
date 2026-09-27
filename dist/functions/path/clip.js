@@ -33,7 +33,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, rule]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         canvas.ctx.clip((typeof rule === 'number' ? __1.FillRule[rule] : rule));
         return this.success();
     }

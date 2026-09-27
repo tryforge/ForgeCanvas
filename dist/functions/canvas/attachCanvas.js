@@ -40,7 +40,7 @@ exports.default = new forgescript_1.NativeFunction({
     async execute(ctx, [name, file, format]) {
         const canvas = ctx.canvasManager?.get(name)?.inner;
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         ctx.container.files.push(new discord_js_1.AttachmentBuilder(// @ts-ignore
         await canvas.encode((typeof format === 'number' ? __1.ImageFormat[format] : format) ?? 'png'), { name: file ?? `${name}.png` }));
         return this.success();

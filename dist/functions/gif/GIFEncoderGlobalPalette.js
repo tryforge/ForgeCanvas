@@ -5,7 +5,6 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$GIFEncoderGlobalPalette',
     aliases: ['$encoderGlobalPalette', '$globalPalette'],
@@ -25,7 +24,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name]) {
         const gif = ctx.gifManager?.getEncoderOrCurrent(name);
         if (!gif)
-            return this.customError(__1.ForgeCanvasError.NoEncoder);
+            return this.customError("No GIF encoder with provided name found" /* ForgeCanvasError.NoEncoder */);
         return this.success(gif.palette !== null
             ? `[${Array.from(gif.palette).join(', ')}]` : null);
     }

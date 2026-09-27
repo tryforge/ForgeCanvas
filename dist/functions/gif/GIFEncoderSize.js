@@ -33,7 +33,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, property]) {
         const gif = ctx.gifManager?.getEncoderOrCurrent(name);
         if (!gif)
-            return this.customError(__1.ForgeCanvasError.NoEncoder);
+            return this.customError("No GIF encoder with provided name found" /* ForgeCanvasError.NoEncoder */);
         return this.success(property !== null // @ts-ignore
             ? gif[__1.WidthOrHeight[(typeof property === 'string'
                 ? __1.WidthOrHeight[property] : property)]]

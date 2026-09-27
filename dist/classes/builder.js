@@ -390,19 +390,19 @@ class CanvasBuilder {
         switch (method) {
             case __1.FilterMethod.add: {
                 if (!f || !value)
-                    throw new Error(__1.ForgeCanvasError.NoFilterOrValue);
+                    throw new Error("No filter or value provided" /* ForgeCanvasError.NoFilterOrValue */);
                 ctx.filter = ctx.filter !== 'none' ? ctx.filter += fstr : fstr;
                 return;
             }
             case __1.FilterMethod.set: {
                 if (!f || !value)
-                    throw new Error(__1.ForgeCanvasError.NoFilterOrValue);
+                    throw new Error("No filter or value provided" /* ForgeCanvasError.NoFilterOrValue */);
                 ctx.filter = fstr;
                 return;
             }
             case __1.FilterMethod.remove: {
                 if (!f)
-                    throw new Error(__1.ForgeCanvasError.NoFilter);
+                    throw new Error("No filter provided" /* ForgeCanvasError.NoFilter */);
                 const filters = (0, __1.parseFilters)(ctx.filter).filter(x => x.filter !== f);
                 ctx.filter = filters.length ? filters.map(x => x.raw).join(' ') : 'none';
                 return;
@@ -415,7 +415,7 @@ class CanvasBuilder {
             case __1.FilterMethod.json: return (0, __1.parseFilters)(ctx.filter);
             case __1.FilterMethod.setRaw: {
                 if (!value)
-                    throw new Error(__1.ForgeCanvasError.NoFilterOrValue);
+                    throw new Error("No filter or value provided" /* ForgeCanvasError.NoFilterOrValue */);
                 ctx.filter = value;
                 return;
             }

@@ -52,7 +52,7 @@ exports.default = new forgescript_1.NativeFunction({
         else if (path.startsWith('encoder://')) {
             const encoder = manager.getEncoder(path.slice(10));
             if (!encoder)
-                return this.customError(__1.ForgeCanvasError.NoEncoder);
+                return this.customError("No GIF encoder with provided name found" /* ForgeCanvasError.NoEncoder */);
             gif = encoder.getBuffer();
         }
         else

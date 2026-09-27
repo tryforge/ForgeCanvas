@@ -40,7 +40,7 @@ exports.default = new forgescript_1.NativeFunction({
     async execute(ctx, [name, vname, f]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         ctx.setEnvironmentKey(vname, await canvas.encode(f));
         return this.success();
     }

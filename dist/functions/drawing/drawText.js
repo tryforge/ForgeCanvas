@@ -38,7 +38,7 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'font',
-            description: 'The text font ({size}px {font name})',
+            description: 'The text font following the \`{size}px {font name}\` format',
             type: forgescript_1.ArgType.String,
             required: true,
             rest: false
@@ -104,17 +104,26 @@ exports.default = new forgescript_1.NativeFunction({
         },
         {
             name: 'allowEmojis',
-            description: 'Indicates if custom emojis should be drawn; emojis get cached into preload://cache_emoji_{id}',
+            description: 'Indicates if custom emojis should be drawn; Emojis get cached into preload://cache_emoji_{id}',
             type: forgescript_1.ArgType.Boolean,
             required: false,
             rest: false,
             version: '1.3.0'
+        },
+        {
+            name: 'break',
+            description: 'A custom end of a wrapped line; None by default',
+            type: forgescript_1.ArgType.String,
+            required: false,
+            rest: false,
+            pointer: 9,
+            version: '1.3.1'
         }
     ],
     async execute(ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset, nlAlign, allowEmojis]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         const valid = (0, __1.validateFont)(font);
         if (!valid || typeof valid === 'string')
             return this.customError(valid);

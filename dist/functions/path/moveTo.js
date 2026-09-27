@@ -5,7 +5,6 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$moveTo',
     description: 'Begins a new path at the point specified by the given (x, y) coordinates',
@@ -38,7 +37,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, x, y]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         canvas.ctx.moveTo(x, y);
         return this.success();
     }

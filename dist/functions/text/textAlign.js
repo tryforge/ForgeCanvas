@@ -33,7 +33,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, align]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name)?.ctx;
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         if (align !== null && align !== undefined) {
             canvas.textAlign = (typeof align === 'number' ? __1.TextAlign[align] : align);
             return this.success();

@@ -5,7 +5,6 @@
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const forgescript_1 = require("@tryforge/forgescript");
-const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$lottieRender',
     aliases: ['$renderLottie', '$drawLottie', '$lottieAnimationRender', '$drawLottieAnimation'],
@@ -60,10 +59,10 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, canvas, x, y, width, height]) {
         const lottie = ctx.lottieManager?.get(name);
         if (!lottie)
-            return this.customError(__1.ForgeCanvasError.NoLottie);
+            return this.customError("No Lottie animation with provided name found" /* ForgeCanvasError.NoLottie */);
         const context = ctx.canvasManager?.get(canvas)?.ctx;
         if (!context)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         lottie.render(context, // @ts-expect-error
         x !== null && typeof x !== 'string'
             ? { x, y, width, height } : undefined);

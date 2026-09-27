@@ -56,7 +56,7 @@ exports.default = new forgescript_1.ForgeFunction({
         }
     ],
     code: `
-        $c[Original by ayansh; refactored by lordduck :P]
+        $c[Reference by ayansh; recreated by lordduck :P]
 
         $let[height;$divide[$env[width];3]]
         $if[$env[background]!=;
@@ -81,7 +81,7 @@ exports.default = new forgescript_1.ForgeFunction({
         $textBaseline[;top]
         $drawText[;fill;$env[name];bold $divide[$get[height];4.85]px $get[font];#fff;$get[afterAvatarX];$math[$get[pfpPosition]*1.5];$get[end];false;erase-character]
 
-        $drawProgressBar[;$get[afterAvatarX];$math[$get[height]-$get[pfpPosition]*2.1];$get[end];$divide[$get[height];6.5];
+        $!drawProgressBar[;$get[afterAvatarX];$math[$get[height]-$get[pfpPosition]*2.1];$get[end];$divide[$get[height];6.5];
             $barData[$math[$env[xp]/$env[maxXp]*100];#fff]
             $barOptions[
                 draw-type:fill;
@@ -98,12 +98,12 @@ exports.default = new forgescript_1.ForgeFunction({
         $let[xpFont;bold $get[fontsize]px $get[font]]
         $let[xpWidth;$measureText[;$env[xp] / $env[maxXp];$get[xpFont];width]]
 
-        $drawText[;fill;Level $env[level];$get[fontsize]px $get[font];#fff;$get[afterAvatarX];$get[levelY];$sub[$get[end];$get[xpWidth]]]
+        $drawText[;fill;Level $abbreviateNumber[$env[level]];$get[fontsize]px $get[font];#fff;$get[afterAvatarX];$get[levelY];$sub[$get[end];$get[xpWidth]]]
 
         $let[oldAlign;$textAlign]
         $textAlign[;right]
 
-        $drawText[;fill;$env[xp] / $env[maxXp];$get[xpFont];#fff;$sum[$get[end];$get[afterAvatarX]];$get[levelY]]
+        $drawText[;fill;$abbreviateNumber[$env[xp]] / $abbreviateNumber[$env[maxXp]];$get[xpFont];#fff;$sum[$get[end];$get[afterAvatarX]];$get[levelY]]
 
         $textAlign[;$get[oldAlign]]
         $textBaseline[;$get[oldBaseline]]

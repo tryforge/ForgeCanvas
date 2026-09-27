@@ -61,7 +61,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, x, y, w, h, t]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         return this.success(`[${canvas.getPixels(x, y, w, h, t)
             .map(x => typeof x === 'string' ? `"${x}"` : x)
             .join(', ')}]`);

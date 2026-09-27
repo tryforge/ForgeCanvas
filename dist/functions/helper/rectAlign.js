@@ -33,9 +33,9 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, align]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         return this.success(align !== null
-            ? (canvas.customProperties.rectAlign = (typeof align === 'number' ? __1.RectAlign[align] : align), undefined) : typeof canvas.customProperties?.rectAlign === 'number'
+            ? (canvas.customProperties.rectAlign = (typeof align === 'string' ? __1.RectAlign[align] : align), undefined) : typeof canvas.customProperties?.rectAlign === 'number'
             ? __1.RectAlign[canvas.customProperties.rectAlign]
             : canvas.customProperties.rectAlign);
     }

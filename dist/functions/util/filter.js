@@ -47,7 +47,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, method, filter, value]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         const res = canvas.filter(method, filter, value);
         return this.success(typeof res === 'object'
             ? JSON.stringify(res) : res);

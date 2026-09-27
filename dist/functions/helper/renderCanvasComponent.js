@@ -8,7 +8,7 @@ const forgescript_1 = require("@tryforge/forgescript");
 const __1 = require("../..");
 exports.default = new forgescript_1.NativeFunction({
     name: '$renderCanvasComponent',
-    aliases: ['$renderComponent'],
+    aliases: ['$renderComponent', '$drawComponent'],
     description: 'Renders a Canvas Component on the provided coordinates',
     version: '1.3.0',
     brackets: true,
@@ -53,11 +53,11 @@ exports.default = new forgescript_1.NativeFunction({
     async execute(ctx, [cname, name, x, y, options]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
-            return this.customError(__1.ForgeCanvasError.NoCanvas);
+            return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
         const cctx = canvas.ctx;
         const component = __1.ForgeCanvas.components.get(name);
         if (!component)
-            return this.customError(__1.ForgeCanvasError.NoComponent);
+            return this.customError("No component with provided name found" /* ForgeCanvasError.NoComponent */);
         let oldmatrix;
         if (x || y) {
             oldmatrix = cctx.getTransform();

@@ -37,7 +37,7 @@ export default new NativeFunction({
         return this.success(baseline !== null
             ? (
                 canvas.customProperties.rectBaseline = (
-                    typeof baseline === 'number' ? RectBaseline[baseline] : baseline
+                    typeof baseline === 'string' ? RectBaseline[baseline] : baseline
                 ) as unknown as RectBaseline, undefined
             ) : typeof canvas.customProperties?.rectBaseline === 'number'
                 ? RectBaseline[canvas.customProperties.rectBaseline]

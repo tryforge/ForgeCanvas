@@ -40,7 +40,7 @@ exports.default = new forgescript_1.NativeFunction({
             ? manager.getDecodeOptions(name)
             : manager.currentOptions;
         if (!options)
-            return this.customError(__1.ForgeCanvasError.NoDecodeOptions);
+            return this.customError("No decode options with provided name found" /* ForgeCanvasError.NoDecodeOptions */);
         options.setColorOutput(output);
         return this.success();
     }

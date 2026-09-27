@@ -33,7 +33,7 @@ exports.default = new forgescript_1.NativeFunction({
     execute(ctx, [name, option]) {
         const gif = ctx.gifManager?.getDecoder(name);
         if (!gif)
-            return this.customError(__1.ForgeCanvasError.NoDecoder);
+            return this.customError("No GIF decoder with provided name found" /* ForgeCanvasError.NoDecoder */);
         const opt = gif?.[(typeof option === 'number'
             ? __1.DecoderOption[option] : option)];
         if (opt instanceof Uint8ClampedArray || opt instanceof ArrayBuffer) {
