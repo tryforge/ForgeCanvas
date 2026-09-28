@@ -90,8 +90,9 @@ class CanvasBuilder {
      * @param wrap - The text wrapping behavior. If not provided, doesn't wrap the text at all.
      * @param lineOffset - The vertical offset between lines of text.
      * @param nlBegin - The beginning position of new lines within the text. ``SKRSContext2D.textAlign`` by default.
+     * @param brk - A custom end of a wrapped line; None by default
      */
-    text(type, spans, x, y, font, maxWidth, wrap, lineOffset, nlBegin) {
+    text(type, spans, x, y, font, maxWidth, wrap, lineOffset, nlBegin, brk) {
         if (!spans?.length || spans?.every(span => !span))
             return;
         const fontm = (0, __1.validateFont)(font);
@@ -116,6 +117,13 @@ class CanvasBuilder {
         if (!fontCache) {
             fontCache = new Map();
             cache.set(font, fontCache);
+        }
+        // Cache the brk width to avoid repetitive measureText calls
+        let brkWidth = 0;
+        if (brk) {
+            brkWidth = fontCache.get(brk) ?? ctx.measureText(brk).width;
+            if (!fontCache.has(brk))
+                fontCache.set(brk, brkWidth);
         }
         let charFontCache = null;
         if (wrap === __1.TextWrap.smart) {
@@ -149,6 +157,8 @@ class CanvasBuilder {
                             if (wrap === __1.TextWrap['erase-character'])
                                 break;
                             lines[lines.length - 1].push({ item: line, w: current });
+                            if (brk && lines[lines.length - 1].length)
+                                lines[lines.length - 1].push({ item: brk, w: brkWidth });
                             lines.push([]);
                             line = char;
                             current = charWidth;
@@ -159,7 +169,7 @@ class CanvasBuilder {
                         current += charWidth;
                     }
                     lines[lines.length - 1].push({ item: line, w: current });
-                    lineWidth = current;
+                    lineWidth += current;
                 }
                 else {
                     for (const word of span.match(__1.wordRegex) ?? []) {
@@ -172,11 +182,16 @@ class CanvasBuilder {
                             if (wrap === __1.TextWrap['erase-word'])
                                 break;
                             if (wrap !== __1.TextWrap.smart || wordWidth < maxWidth) {
+                                if (brk && lines[lines.length - 1].length)
+                                    lines[lines.length - 1].push({ item: brk, w: brkWidth });
                                 lines.push([]);
-                                lineWidth = 0;
+                                lines[lines.length - 1].push({ item: word, w: wordWidth });
+                                lineWidth = wordWidth;
                                 continue;
                             }
                             if (lines[lines.length - 1].length) {
+                                if (brk)
+                                    lines[lines.length - 1].push({ item: brk, w: brkWidth });
                                 lines.push([]);
                                 lineWidth = 0;
                             }
@@ -190,6 +205,8 @@ class CanvasBuilder {
                                 }
                                 if (lineWidth + current + charWidth > maxWidth) {
                                     lines[lines.length - 1].push({ item: line, w: current });
+                                    if (brk && lines[lines.length - 1].length)
+                                        lines[lines.length - 1].push({ item: brk, w: brkWidth });
                                     lines.push([]);
                                     line = char;
                                     current = charWidth;
@@ -200,7 +217,7 @@ class CanvasBuilder {
                                 current += charWidth;
                             }
                             lines[lines.length - 1].push({ item: line, w: current });
-                            lineWidth = current;
+                            lineWidth += current;
                             continue;
                         }
                         lines[lines.length - 1].push({ item: word, w: wordWidth });
@@ -210,6 +227,8 @@ class CanvasBuilder {
             }
             else {
                 if (wrap !== undefined && maxWidth && (lineWidth + imgsize) > maxWidth && lineWidth) {
+                    if (brk && lines[lines.length - 1].length)
+                        lines[lines.length - 1].push({ item: brk, w: brkWidth });
                     lines.push([]);
                     lineWidth = 0;
                 }

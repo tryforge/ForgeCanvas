@@ -119,6 +119,7 @@ export class CanvasBuilder {
      * @param wrap - The text wrapping behavior. If not provided, doesn't wrap the text at all.
      * @param lineOffset - The vertical offset between lines of text.
      * @param nlBegin - The beginning position of new lines within the text. ``SKRSContext2D.textAlign`` by default.
+     * @param brk - A custom end of a wrapped line; None by default
      */
     public text(
         type: FillOrStroke,
@@ -129,7 +130,8 @@ export class CanvasBuilder {
         maxWidth?: number | null,
         wrap?: TextWrap | null,
         lineOffset?: number | null,
-        nlBegin?: CanvasTextAlign | null
+        nlBegin?: CanvasTextAlign | null,
+        brk?: string | null,
     ) {
         if (!spans?.length || spans?.every(span => !span))
             return;
@@ -164,6 +166,13 @@ export class CanvasBuilder {
         if (!fontCache) {
             fontCache = new Map();
             cache.set(font, fontCache);
+        }
+
+        // Cache the brk width to avoid repetitive measureText calls
+        let brkWidth = 0;
+        if (brk) {
+            brkWidth = fontCache.get(brk) ?? ctx.measureText(brk).width;
+            if (!fontCache.has(brk)) fontCache.set(brk, brkWidth);
         }
 
         let charFontCache: Map<string, number> = null!;
@@ -202,6 +211,9 @@ export class CanvasBuilder {
                             if (wrap === TextWrap['erase-character']) break;
                             lines[lines.length - 1].push({ item: line, w: current });
 
+                            if (brk && lines[lines.length - 1].length)
+                                lines[lines.length - 1].push({ item: brk, w: brkWidth });
+
                             lines.push([]);
                             line = char;
                             current = charWidth;
@@ -214,7 +226,7 @@ export class CanvasBuilder {
                     }
 
                     lines[lines.length - 1].push({ item: line, w: current });
-                    lineWidth = current;
+                    lineWidth += current;
                 } else {
                     for (const word of span.match(wordRegex) ?? []) {
                         let wordWidth = fontCache.get(word);
@@ -226,12 +238,17 @@ export class CanvasBuilder {
                         if (lineWidth + wordWidth > maxWidth) {
                             if (wrap === TextWrap['erase-word']) break;
                             if (wrap !== TextWrap.smart || wordWidth < maxWidth) {
+                                if (brk && lines[lines.length - 1].length)
+                                    lines[lines.length - 1].push({ item: brk, w: brkWidth });
                                 lines.push([]);
-                                lineWidth = 0;
+                                
+                                lines[lines.length - 1].push({ item: word, w: wordWidth });
+                                lineWidth = wordWidth;
                                 continue;
                             }
 
                             if (lines[lines.length - 1].length) {
+                                if (brk) lines[lines.length - 1].push({ item: brk, w: brkWidth });
                                 lines.push([]);
                                 lineWidth = 0;
                             }
@@ -248,6 +265,9 @@ export class CanvasBuilder {
                                 if (lineWidth + current + charWidth > maxWidth) {
                                     lines[lines.length - 1].push({ item: line, w: current });
 
+                                    if (brk && lines[lines.length - 1].length)
+                                        lines[lines.length - 1].push({ item: brk, w: brkWidth });
+
                                     lines.push([]);
                                     line = char;
                                     current = charWidth;
@@ -260,7 +280,7 @@ export class CanvasBuilder {
                             }
 
                             lines[lines.length - 1].push({ item: line, w: current });
-                            lineWidth = current;
+                            lineWidth += current;
                             continue;
                         }
 
@@ -270,6 +290,8 @@ export class CanvasBuilder {
                 }
             } else {
                 if (wrap !== undefined && maxWidth && (lineWidth + imgsize) > maxWidth && lineWidth) {
+                    if (brk && lines[lines.length - 1].length)
+                        lines[lines.length - 1].push({ item: brk, w: brkWidth });
                     lines.push([]);
                     lineWidth = 0;
                 }

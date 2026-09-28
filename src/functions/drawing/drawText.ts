@@ -120,7 +120,13 @@ export default new NativeFunction({
             version: '1.3.1'
         }
     ],
-    async execute (ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset, nlAlign, allowEmojis]) {
+    async execute (ctx, [
+        name, t,
+        text, font, style,
+        x, y,
+        maxWidth,
+        multiline, wrap, lineOffset, nlAlign, allowEmojis, brk
+    ]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas) return this.customError(ForgeCanvasError.NoCanvas);
 
@@ -144,7 +150,8 @@ export default new NativeFunction({
             TextAlign[wrap] !== undefined ? wrap : undefined,
             typeof lineOffset === 'number' ? lineOffset : undefined,
             // @ts-expect-error
-            typeof nlAlign === 'number' ? TextAlign[nlAlign] : nlAlign
+            typeof nlAlign === 'number' ? TextAlign[nlAlign] : nlAlign,
+            brk
         );
 
         return this.success();
