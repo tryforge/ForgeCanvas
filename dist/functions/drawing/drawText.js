@@ -120,7 +120,7 @@ exports.default = new forgescript_1.NativeFunction({
             version: '1.3.1'
         }
     ],
-    async execute(ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset, nlAlign, allowEmojis]) {
+    async execute(ctx, [name, t, text, font, style, x, y, maxWidth, multiline, wrap, lineOffset, nlAlign, allowEmojis, brk]) {
         const canvas = ctx.canvasManager?.getOrCurrent(name);
         if (!canvas)
             return this.customError("No canvas with provided name found" /* ForgeCanvasError.NoCanvas */);
@@ -135,7 +135,7 @@ exports.default = new forgescript_1.NativeFunction({
         // @ts-expect-error
         __1.TextAlign[wrap] !== undefined ? wrap : undefined, typeof lineOffset === 'number' ? lineOffset : undefined, 
         // @ts-expect-error
-        typeof nlAlign === 'number' ? __1.TextAlign[nlAlign] : nlAlign);
+        typeof nlAlign === 'number' ? __1.TextAlign[nlAlign] : nlAlign, brk);
         return this.success();
     }
 });
